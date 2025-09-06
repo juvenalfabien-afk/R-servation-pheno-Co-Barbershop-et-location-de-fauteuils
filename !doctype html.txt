@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Hello Pheno</title>
+</head>
+<body>
+  <h1>Hello Pheno, ton site marche 🎉</h1>
+  <p>Si tu vois ce message en ligne, c’est que ton repo GitHub est bien configuré.</p>
+</body>
+</html>
