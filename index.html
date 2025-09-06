@@ -28,44 +28,39 @@
   .btn-yellow{background:var(--yellow);color:#000}
   .btn-grey{background:var(--grey);color:#fff;border:2px solid #464b54}
   .btn-green{background:var(--green);color:#000}
+  footer{margin-top:40px;color:#999;text-align:center;font-size:12px}
 
-  section.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;margin-top:36px}
-  h2{margin:0 0 10px;color:var(--yellow)}
-  p.lead{margin:8px 0 18px;color:var(--muted)}
+  /* MODAL (formulaire) */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:18px;z-index:999}
+  .modal .box{max-width:900px;width:100%;background:#0f0f0f;border:1px solid #222;border-radius:18px;padding:18px;max-height:88vh;overflow:auto}
+  .modal .box h2{margin:0 0 10px;color:var(--yellow)}
+  .close{display:inline-block;margin-top:10px;padding:10px 14px;background:#222;border:1px solid #333;border-radius:10px;color:#fff;text-decoration:none}
+
+  /* Form */
   label{display:block;margin:10px 0 6px}
   input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#121212;color:#fff;font-size:16px}
   input[type="date"]{padding:10px 12px;cursor:pointer}
-  select{cursor:pointer}
   textarea{min-height:96px;resize:vertical}
   .row{display:grid;gap:12px}
   @media(min-width:680px){.row{grid-template-columns:1fr 1fr}}
-
   .section-title{font-weight:900;color:#fff;margin:12px 0 6px}
-  .section-title .accent{color:#000;background:var(--yellow);padding:2px 8px;border-radius:8px;margin-left:8px}
-
+  .accent{color:#000;background:var(--yellow);padding:2px 8px;border-radius:8px;margin-left:8px}
   .prices-hint{margin-top:6px;color:#000;background:var(--yellow);display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900}
 
-  .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
-  .btn-submit,.btn-reset{flex:1;min-width:160px;padding:14px 16px;border-radius:14px;border:none;font-weight:800;cursor:pointer}
-  .btn-submit{background:var(--yellow);color:#000}
-  .btn-reset{background:var(--grey);color:#fff}
+  .date-wrap{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+  .small{font-size:12px;color:#9aa0a6}
+  .inline-fallback{display:none;background:#121212;border:1px dashed #2a2a2a;border-radius:10px;padding:8px}
+  .inline-fallback .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 
   .summary{border-top:1px dashed #2b2b2b;margin-top:16px;padding-top:12px;color:#e6e6e6}
   .summary small{color:var(--muted)}
   ul.packs{list-style:none;padding:0;margin:0;display:grid;gap:8px}
   ul.packs li{display:flex;align-items:center;gap:10px}
-  .note{color:#9aa0a6;font-size:12px}
-  footer{margin-top:40px;color:#999;text-align:center;font-size:12px}
 
-  /* Modal CGV */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:18px}
-  .modal .box{max-width:900px;width:100%;background:#0f0f0f;border:1px solid #222;border-radius:18px;padding:18px;max-height:85vh;overflow:auto}
-  .modal .box h3{margin:0 0 10px;color:var(--yellow)}
-  .close{display:inline-block;margin-top:10px;padding:10px 14px;background:#222;border:1px solid #333;border-radius:10px;color:#fff;text-decoration:none}
-  .contract h4{margin:14px 0 8px}
-  .contract p, .contract li{color:#ddd}
-  .contract ul{margin:0 0 8px 18px}
-  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+  .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+  .btn-submit,.btn-reset{flex:1;min-width:160px;padding:14px 16px;border-radius:14px;border:none;font-weight:800;cursor:pointer}
+  .btn-submit{background:var(--yellow);color:#000}
+  .btn-reset{background:var(--grey);color:#fff}
 </style>
 </head>
 <body>
@@ -78,15 +73,19 @@
 
   <!-- 3 boutons -->
   <div class="grid" role="navigation" aria-label="Actions principales">
-    <a class="btn btn-yellow" href="#fauteuil">Réserver Fauteuil 💺</a>
+    <a class="btn btn-yellow" href="#" id="openForm">Réserver Fauteuil 💺</a>
     <a class="btn btn-grey" href="https://phenoandco.com" target="_blank" rel="noopener">Prendre RDV Coiffure 💈</a>
     <a class="btn btn-green" href="https://wa.me/33769432605?text=Bonjour%20PHENO%26CO%20!" target="_blank" rel="noopener">Contact WhatsApp</a>
   </div>
 
-  <!-- Formulaire -->
-  <section id="fauteuil" class="card" aria-labelledby="title-fauteuil">
+  <footer>© PHENO&CO — Tous droits réservés</footer>
+</main>
+
+<!-- MODAL FORM -->
+<div class="modal" id="formModal" aria-hidden="true">
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="title-fauteuil">
     <h2 id="title-fauteuil">Réserver un fauteuil</h2>
-    <p class="lead">Calendriers cliquables, heures en liste, **formules visibles avec tarifs** en jaune, packs petit matériel en location. Total auto (HT, TVA 20%, TTC, acompte 50%).</p>
+    <p class="small">Calendriers cliquables (📅). Si votre navigateur n’affiche pas le calendrier, utilisez les menus “Jour/Mois/Année”.</p>
 
     <form id="chairForm" autocomplete="on" novalidate>
       <!-- Identité -->
@@ -105,38 +104,87 @@
       <div class="row">
         <div>
           <label for="f-start-date">Date de début</label>
-          <input id="f-start-date" type="date" name="startDate" required />
+          <div class="date-wrap">
+            <input id="f-start-date" type="date" required />
+            <button type="button" id="btn-sd">📅</button>
+          </div>
+          <div class="inline-fallback" id="fb-sd">
+            <div class="row3">
+              <select id="sd-day"></select>
+              <select id="sd-month"></select>
+              <select id="sd-year"></select>
+            </div>
+            <div class="small">Sélection manuelle (remplit la date ci-dessus)</div>
+          </div>
         </div>
         <div>
           <label for="f-start-time">Heure d’arrivée (10:00–18:00)</label>
-          <select id="f-start-time" name="startTime" required></select>
+          <select id="f-start-time" required>
+            <option value="10:00">10:00</option><option value="11:00">11:00</option>
+            <option value="12:00">12:00</option><option value="13:00">13:00</option>
+            <option value="14:00">14:00</option><option value="15:00">15:00</option>
+            <option value="16:00">16:00</option><option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+          </select>
         </div>
       </div>
+
       <div class="row">
         <div>
           <label for="f-end-date">Date de fin</label>
-          <input id="f-end-date" type="date" name="endDate" required />
+          <div class="date-wrap">
+            <input id="f-end-date" type="date" required />
+            <button type="button" id="btn-ed">📅</button>
+          </div>
+          <div class="inline-fallback" id="fb-ed">
+            <div class="row3">
+              <select id="ed-day"></select>
+              <select id="ed-month"></select>
+              <select id="ed-year"></select>
+            </div>
+            <div class="small">Sélection manuelle (remplit la date ci-dessus)</div>
+          </div>
         </div>
         <div>
           <label for="f-hours-per-day">Heures par jour</label>
-          <select id="f-hours-per-day" name="hoursPerDay" required></select>
-          <div class="note">Ex. 4h = 10:00 → 14:00</div>
+          <select id="f-hours-per-day" required>
+            <option value="0.5">0,5 h</option><option value="1">1 h</option>
+            <option value="1.5">1,5 h</option><option value="2">2 h</option>
+            <option value="2.5">2,5 h</option><option value="3">3 h</option>
+            <option value="3.5">3,5 h</option><option value="4">4 h</option>
+            <option value="4.5">4,5 h</option><option value="5">5 h</option>
+            <option value="5.5">5,5 h</option><option value="6">6 h</option>
+            <option value="6.5">6,5 h</option><option value="7">7 h</option>
+            <option value="7.5">7,5 h</option><option value="8">8 h</option>
+          </select>
+          <div class="small">Ex. 4h = 10:00 → 14:00</div>
         </div>
       </div>
 
       <!-- Formule (menu déroulant avec tarifs visibles) -->
       <div class="section-title">Formule <span class="accent">tarifs</span></div>
       <label for="f-formula">Choisir une formule (tarifs HT affichés)</label>
-      <select id="f-formula" name="formula" required></select>
-      <div class="prices-hint" id="formulaHint">—</div>
+      <select id="f-formula" required>
+        <option value="">Sélectionner…</option>
+        <option value="hour">Horaire — 1h = 10,00 € HT</option>
+        <option value="halfday">Demi-journée — 4h = 40,00 € HT</option>
+        <option value="fullday">Journée — 8h = 80,00 € HT</option>
+        <option value="week">Semaine — 40h = 400,00 € HT</option>
+        <option value="month">Mois — 160h = 1 600,00 € HT</option>
+      </select>
+      <div class="prices-hint">Horaire 10€/h • 1/2j 40€ • 1j 80€ • 1 sem. 400€ • 1 mois 1600€ (HT)</div>
 
       <!-- Packs petit matériel en location -->
       <div class="section-title">Packs petit matériel <span class="accent">en location</span></div>
-      <ul class="packs" id="packsList"></ul>
+      <ul class="packs">
+        <li><label><input type="checkbox" name="packs" value="5"> Pack Tondeuse Pro — 5,00 € HT</label></li>
+        <li><label><input type="checkbox" name="packs" value="8"> Pack Produits — 8,00 € HT</label></li>
+        <li><label><input type="checkbox" name="packs" value="4"> Pack Serviettes — 4,00 € HT</label></li>
+      </ul>
 
       <!-- Note -->
       <label for="f-note">Message (optionnel)</label>
-      <textarea id="f-note" name="note" placeholder="Ex. Poste miroir 2, stérilisateur, horaires 10h–14h…"></textarea>
+      <textarea id="f-note" placeholder="Ex. Poste miroir 2, stérilisateur, horaires 10h–14h…"></textarea>
 
       <!-- CGV -->
       <label style="display:flex;align-items:center;gap:8px;margin-top:14px">
@@ -164,14 +212,14 @@
         <button class="btn-reset" type="reset">Effacer</button>
         <a id="emailLink" class="btn btn-grey" href="#" target="_blank" rel="noopener">Envoyer aussi par e-mail</a>
       </div>
-      <p id="helper" class="lead" style="display:none;margin-top:10px;">WhatsApp s’ouvre. Si rien, vérifie le bloqueur de fenêtres. Un e-mail brouillon est aussi prêt.</p>
+      <p id="helper" class="small" style="display:none;margin-top:10px;">WhatsApp s’ouvre. Si rien, vérifie le bloqueur de fenêtres.</p>
     </form>
 
-    <!-- CGV Modal (avec récap dynamique) -->
-    <div class="modal" id="cgvModal" aria-hidden="true">
+    <!-- CGV Modal -->
+    <div class="modal" id="cgvModal" aria-hidden="true" style="background:rgba(0,0,0,.7)">
       <div class="box" role="dialog" aria-modal="true" aria-labelledby="cgvTitle">
-        <h3 id="cgvTitle">CGV & Contrat — PHENO&CO</h3>
-        <div class="contract">
+        <h3 id="cgvTitle" style="color:var(--yellow)">CGV & Contrat — PHENO&CO</h3>
+        <div class="contract" style="color:#ddd">
           <h4>Récapitulatif personnalisé</h4>
           <ul>
             <li><b>Période :</b> <span id="c_sum-period">—</span></li>
@@ -183,243 +231,166 @@
             <li><b>Total TTC :</b> <span id="c_sum-ttc">—</span></li>
             <li><b>Acompte 50% :</b> <span id="c_sum-deposit">—</span></li>
           </ul>
-
-          <h4>Engagements du salon</h4>
-          <ul>
-            <li>Poste propre et fonctionnel aux horaires convenus (10:00–18:00).</li>
-            <li>Normes d’hygiène et de sécurité respectées.</li>
-            <li>Information en cas d’indisponibilité exceptionnelle.</li>
-          </ul>
-
-          <h4>Responsabilités du locataire</h4>
-          <ul>
-            <li>Respect des horaires réservés et de l’hygiène du poste.</li>
-            <li>Soin du matériel ; déclaration immédiate de tout dommage.</li>
-            <li>Respect de la confidentialité clients et de la tranquillité du salon.</li>
-          </ul>
-
-          <h4>Matériel & Caution</h4>
-          <p>Packs petit matériel en location au choix. Caution possible selon la valeur du matériel.</p>
-
-          <h4>Acompte & Paiement</h4>
-          <p>Acompte de 50% du TTC à la confirmation (lien sécurisé envoyé). Solde à l’arrivée.</p>
-
-          <h4>Annulation</h4>
-          <p>Conditions et délais d’annulation communiqués lors de la confirmation.</p>
+          <h4>Principes</h4>
+          <p>Horaires 10:00–18:00, hygiène et matériel respectés, acompte 50% à la confirmation (lien envoyé), solde à l’arrivée.</p>
         </div>
         <a href="#" class="close" id="closeCgv">Fermer</a>
       </div>
     </div>
-  </section>
 
-  <footer>© PHENO&CO — Tous droits réservés</footer>
-</main>
+    <a href="#" class="close" id="closeForm">Fermer</a>
+  </div>
+</div>
 
 <script>
-/* ====== CONFIG TARIFS ====== */
+/* ===== CONFIG ===== */
 const PHONE = '33769432605';
 const EMAIL = 'location.phenoandco@gmail.com';
-const OPEN_HOUR = 10, CLOSE_HOUR = 18;
-const HOURLY_HT = 10;              // € HT / heure (modifiable)
+const HOURLY_HT = 10;  // € HT / h
 const TVA_RATE = 0.20;
 
-// Définition des formules avec le nombre d'heures par "bloc"
-const FORMULAE = [
-  { key:'hour',    label:'Horaire',         unitHours: 1  },  // facturation à l’heure
-  { key:'halfday', label:'Demi-journée',    unitHours: 4  },  // 4h
-  { key:'fullday', label:'Journée',         unitHours: 8  },  // 8h
-  { key:'week',    label:'Semaine',         unitHours: 40 },  // 5j x 8h
-  { key:'month',   label:'Mois',            unitHours: 160}   // 4 semaines x 40h
-];
-
-// Packs petit matériel en location
-const PACKS = [
-  { id:'tondeuse',  label:'Pack Tondeuse Pro', priceHt:5 },
-  { id:'produits',  label:'Pack Produits',     priceHt:8 },
-  { id:'serviettes',label:'Pack Serviettes',   priceHt:4 },
-];
-
-/* ===== Helpers ===== */
-const €  = new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
+/* ===== OUTILS ===== */
+const € = new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
 const id = s=>document.getElementById(s);
-const q  =(s,root=document)=>root.querySelector(s);
-const qa =(s,root=document)=>Array.from(root.querySelectorAll(s));
-const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-function parseDate(d){ if(!d) return null; const [y,m,day]=d.split('-').map(Number); return new Date(y,m-1,day); }
-function daysBetweenInclusive(sd, ed){
-  if(!sd || !ed) return 0;
-  const msDay = 86400000;
-  const a = new Date(sd.getFullYear(), sd.getMonth(), sd.getDate());
-  const b = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
-  return Math.floor((b - a)/msDay) + 1;
+const qa = (s,root=document)=>Array.from(root.querySelectorAll(s));
+
+/* ===== OUVERTURE/FERMETURE MODAL FORM ===== */
+const modal = id('formModal');
+id('openForm').addEventListener('click', (e)=>{ e.preventDefault(); modal.style.display='flex'; modal.setAttribute('aria-hidden','false'); initDefaults(); updateAll(); });
+id('closeForm').addEventListener('click', (e)=>{ e.preventDefault(); modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
+
+/* ===== Init dates par défaut + showPicker + fallback menus (J/M/A) ===== */
+function setTodayMin(input){
+  const t=new Date(), s=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  input.value=s; input.min=s;
+}
+function tryOpenPicker(input){
+  try{ if(typeof input.showPicker==='function'){ input.showPicker(); return true; } }catch(_){}
+  return false;
+}
+function buildDateFallback(prefix, targetInput){
+  const dSel=id(`${prefix}-day`), mSel=id(`${prefix}-month`), ySel=id(`${prefix}-year`);
+  // jours 1..31
+  for(let d=1; d<=31; d++) dSel.appendChild(new Option(String(d).padStart(2,'0'), String(d).padStart(2,'0')));
+  // mois 1..12
+  const mois=['01','02','03','04','05','06','07','08','09','10','11','12'];
+  mois.forEach(m=>mSel.appendChild(new Option(m,m)));
+  // années courantes (année en cours et +1)
+  const y=new Date().getFullYear();
+  [y, y+1].forEach(Y=>ySel.appendChild(new Option(String(Y), String(Y))));
+  // sync -> input type=date
+  function sync(){ targetInput.value = `${ySel.value}-${mSel.value}-${dSel.value}`; updateAll(); }
+  dSel.onchange = mSel.onchange = ySel.onchange = sync;
+}
+function initDefaults(){
+  setTodayMin(id('f-start-date'));
+  setTodayMin(id('f-end-date'));
+  // essais open picker via boutons
+  id('btn-sd').onclick=()=>{ if(!tryOpenPicker(id('f-start-date'))) id('fb-sd').style.display='block'; };
+  id('btn-ed').onclick=()=>{ if(!tryOpenPicker(id('f-end-date'))) id('fb-ed').style.display='block'; };
+  // fallback menus
+  buildDateFallback('sd', id('f-start-date'));
+  buildDateFallback('ed', id('f-end-date'));
+  // valeurs par défaut
+  id('f-start-time').value='10:00';
+  id('f-hours-per-day').value='4';
+  id('f-formula').value='';
 }
 
-/* ===== Init heures & heures/jour ===== */
-(function initTimeSelectors(){
-  const sel = id('f-start-time');
-  for(let h=OPEN_HOUR; h<=CLOSE_HOUR; h++){
-    for(let m of [0,30]){
-      if(h===CLOSE_HOUR && m>0) continue;
-      const label = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-      sel.appendChild(new Option(label,label));
-    }
-  }
-  sel.value = `${String(OPEN_HOUR).padStart(2,'0')}:00`;
-
-  const hpd = id('f-hours-per-day');
-  for(let v=0.5; v<=8; v+=0.5){
-    hpd.appendChild(new Option(v.toString().replace('.',',')+' h', v.toFixed(1)));
-  }
-  hpd.value='4.0';
-})();
-
-/* ===== Init dates (calendriers) ===== */
-(function initDates(){
-  const today=new Date();
-  const s=[today.getFullYear(), String(today.getMonth()+1).padStart(2,'0'), String(today.getDate()).padStart(2,'0')].join('-');
-  id('f-start-date').value=s; id('f-end-date').value=s;
-  id('f-start-date').min=s;   id('f-end-date').min=s;
-  // ouvrir le calendrier au focus/clic (si supporté)
-  ['f-start-date','f-end-date'].forEach(fid=>{
-    const el=id(fid);
-    ['focus','click'].forEach(evt=>{
-      el.addEventListener(evt, ()=>{ try{ el.showPicker && el.showPicker(); }catch(_){} });
-    });
-  });
-})();
-
-/* ===== Init formules (menu avec tarifs visibles) ===== */
-(function initFormulaSelect(){
-  const sel = id('f-formula');
-  sel.appendChild(new Option('Sélectionner…',''));
-  FORMULAE.forEach(f=>{
-    const price = HOURLY_HT * f.unitHours;
-    const text  = `${f.label} — ${f.unitHours}h = ${€.format(price)} HT`;
-    sel.appendChild(new Option(text, f.key));
-  });
-  sel.addEventListener('change', updateAll);
-  id('formulaHint').textContent = `Horaire: ${€.format(HOURLY_HT)}/h • 1/2j: ${€.format(4*HOURLY_HT)} • 1j: ${€.format(8*HOURLY_HT)} • 1 sem.: ${€.format(40*HOURLY_HT)} • 1 mois: ${€.format(160*HOURLY_HT)} (HT)`;
-})();
-
-/* ===== Init packs ===== */
-(function initPacks(){
-  const ul=id('packsList');
-  PACKS.forEach(p=>{
-    const li=document.createElement('li');
-    li.innerHTML=`<label style="cursor:pointer"><input type="checkbox" name="packs" value="${p.priceHt}"> ${p.label} — <span style="opacity:.8">${€.format(p.priceHt)} HT</span></label>`;
-    ul.appendChild(li);
-  });
-  qa('input[name="packs"]').forEach(c=>c.addEventListener('change', updateAll));
-})();
-
-/* ===== Calcul ===== */
+/* ===== CALCULS ===== */
 function sumPacks(){ return qa('input[name="packs"]:checked').reduce((s,el)=>s+Number(el.value),0); }
-function selectedFormulaKey(){ return id('f-formula').value || null; }
-function selectedFormulaObj(){ const k=selectedFormulaKey(); return FORMULAE.find(f=>f.key===k)||null; }
-
+function daysBetweenInclusive(a,b){
+  if(!a||!b) return 0;
+  const A=new Date(a), B=new Date(b); A.setHours(0,0,0,0); B.setHours(0,0,0,0);
+  return Math.floor((B-A)/86400000)+1;
+}
 function compute(){
-  const sd = parseDate(id('f-start-date').value);
-  const ed = parseDate(id('f-end-date').value);
-  const st = id('f-start-time').value;
-  const hpd = clamp(parseFloat(id('f-hours-per-day').value||'0'), 0.5, 8);
-  const days = daysBetweenInclusive(sd, ed);
-  const fObj = selectedFormulaObj();
-
-  const totalRequestedHours = (days>0 ? days : 0) * hpd;
-
-  let baseHours = 0;
-  if(fObj){
-    const unit=fObj.unitHours;
-    baseHours = (fObj.key==='hour') ? totalRequestedHours : Math.ceil(totalRequestedHours/unit)*unit;
-  }
-  const baseHt = baseHours * HOURLY_HT;
+  const sd=id('f-start-date').value, ed=id('f-end-date').value;
+  const st=id('f-start-time').value;
+  const hpd=parseFloat(id('f-hours-per-day').value||'0')||0;
+  const days=daysBetweenInclusive(sd,ed);
+  const key=id('f-formula').value;
+  const units = key==='hour'?1 : key==='halfday'?4 : key==='fullday'?8 : key==='week'?40 : key==='month'?160 : 0;
+  const totalRequestedHours = Math.max(0,days*hpd);
+  const baseHours = key==='hour' ? totalRequestedHours : Math.ceil(totalRequestedHours/units)*units;
+  const baseHt = baseHours*HOURLY_HT;
   const packsHt = sumPacks();
-  const totalHt = Math.max(0, baseHt + packsHt);
-  const tva = totalHt * TVA_RATE;
-  const ttc = totalHt + tva;
-  const deposit = ttc * 0.5;
-
-  return {sd,ed,st,hpd,days,totalRequestedHours,fObj,baseHt,packsHt,totalHt,tva,ttc,deposit};
+  const totalHt = baseHt+packsHt;
+  const tva = totalHt*TVA_RATE;
+  const ttc = totalHt+tva;
+  const deposit = ttc*0.5;
+  return {sd,ed,st,hpd,days,totalRequestedHours, key, units, baseHt, packsHt, totalHt, tva, ttc, deposit};
 }
-
-function updateSummary(c){
-  id('sum-period').textContent = (c.sd&&c.ed)?`${id('f-start-date').value} → ${id('f-end-date').value} (arrivée ${c.st||'—'})`:'—';
+function updateAll(){
+  const c=compute();
+  id('sum-period').textContent = (c.sd&&c.ed)?`${c.sd} → ${c.ed} (arrivée ${c.st||'—'})`:'—';
   id('sum-days').textContent = c.days;
-  id('sum-hpd').textContent  = c.hpd.toString().replace('.',',');
-  id('sum-hours').textContent= `${c.totalRequestedHours.toLocaleString('fr-FR')} h`;
-  id('sum-base').textContent = €.format(c.baseHt);
-  id('sum-packs').textContent= €.format(c.packsHt);
-  id('sum-ht').textContent   = €.format(c.totalHt);
-  id('sum-tva').textContent  = €.format(c.tva);
-  id('sum-ttc').textContent  = €.format(c.ttc);
-  id('sum-deposit').textContent = €.format(c.deposit);
-}
+  id('sum-hpd').textContent = (c.hpd||0).toString().replace('.',',');
+  id('sum-hours').textContent = `${(c.totalRequestedHours||0).toLocaleString('fr-FR')} h`;
+  id('sum-base').textContent = €.format(c.baseHt||0);
+  id('sum-packs').textContent= €.format(c.packsHt||0);
+  id('sum-ht').textContent   = €.format(c.totalHt||0);
+  id('sum-tva').textContent  = €.format(c.tva||0);
+  id('sum-ttc').textContent  = €.format(c.ttc||0);
+  id('sum-deposit').textContent = €.format(c.deposit||0);
 
-function updateContract(c){
-  const fLabel = c.fObj ? `${c.fObj.label} (${c.fObj.unitHours}h)` : '—';
-  id('c_sum-period').textContent  = (c.sd&&c.ed)?`${id('f-start-date').value} → ${id('f-end-date').value} (arrivée ${c.st||'—'})`:'—';
-  id('c_sum-hpd').textContent     = c.hpd.toString().replace('.',',')+' h';
-  id('c_sum-formula').textContent = fLabel;
-  id('c_sum-packs').textContent   = €.format(c.packsHt);
-  id('c_sum-ht').textContent      = €.format(c.totalHt);
-  id('c_sum-tva').textContent     = €.format(c.tva);
-  id('c_sum-ttc').textContent     = €.format(c.ttc);
-  id('c_sum-deposit').textContent = €.format(c.deposit);
-}
+  // CGV recap
+  const label = c.key==='hour'?'Horaire'
+              : c.key==='halfday'?'Demi-journée (4h)'
+              : c.key==='fullday'?'Journée (8h)'
+              : c.key==='week'?'Semaine (40h)'
+              : c.key==='month'?'Mois (160h)'
+              : '—';
+  document.getElementById('c_sum-period').textContent = id('sum-period').textContent;
+  document.getElementById('c_sum-hpd').textContent    = (c.hpd||0).toString().replace('.',',')+' h';
+  document.getElementById('c_sum-formula').textContent= label;
+  document.getElementById('c_sum-packs').textContent  = €.format(c.packsHt||0);
+  document.getElementById('c_sum-ht').textContent     = €.format(c.totalHt||0);
+  document.getElementById('c_sum-tva').textContent    = €.format(c.tva||0);
+  document.getElementById('c_sum-ttc').textContent    = €.format(c.ttc||0);
+  document.getElementById('c_sum-deposit').textContent= €.format(c.deposit||0);
 
-function updateMailLink(c){
-  const subject = encodeURIComponent(`Demande de location de fauteuil — ${id('f-name').value||''}`);
-  const body = encodeURIComponent(
+  // email link
+  const subject=encodeURIComponent(`Demande de location de fauteuil — ${id('f-name').value||''}`);
+  const body=encodeURIComponent(
 `Demande de location — PHENO&CO
 Nom: ${id('f-name').value||'-'}
 Téléphone: ${id('f-phone').value||'-'}
-Période: du ${id('f-start-date').value||'-'} ${id('f-start-time').value||'-'} au ${id('f-end-date').value||'-'}
-Heures/jour: ${c.hpd}
-Formule: ${c.fObj ? c.fObj.label : '-'}
-Packs HT: ${€.format(c.packsHt)}
-Total HT: ${€.format(c.totalHt)}
-TVA 20%: ${€.format(c.tva)}
-Total TTC: ${€.format(c.ttc)}
-Acompte 50%: ${€.format(c.deposit)}
+Période: du ${c.sd||'-'} ${c.st||'-'} au ${c.ed||'-'}
+Heures/jour: ${c.hpd||0}
+Formule: ${label}
+Packs HT: ${€.format(c.packsHt||0)}
+Total HT: ${€.format(c.totalHt||0)}
+TVA 20%: ${€.format(c.tva||0)}
+Total TTC: ${€.format(c.ttc||0)}
+Acompte 50%: ${€.format(c.deposit||0)}
 Message: ${id('f-note').value||'-'}
 
-CGV/Contrat: accepté si coché. Merci d’envoyer le lien de paiement de l’acompte 50%.`
-  );
-  id('emailLink').href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+CGV/Contrat: accepté si coché. Merci d’envoyer le lien de paiement de l’acompte 50%.`);
+  id('emailLink').href=`mailto:${EMAIL}?subject=${subject}&body=${body}`;
 }
 
-function updateAll(){
-  const c=compute();
-  updateSummary(c);
-  updateContract(c);
-  updateMailLink(c);
-}
-
-/* Listeners */
-['f-start-date','f-end-date','f-start-time','f-hours-per-day','f-note','f-name','f-phone']
+/* listeners */
+['f-start-date','f-end-date','f-start-time','f-hours-per-day','f-formula','f-note','f-name','f-phone']
   .forEach(fid=>id(fid).addEventListener('input', updateAll));
-id('f-formula').addEventListener('change', updateAll);
-qa('input[name="packs"]').forEach(c=>c.addEventListener('change', updateAll));
-
-/* Init calcul */
-updateAll();
 
 /* Soumission WhatsApp */
 id('chairForm').addEventListener('submit', (e)=>{
   e.preventDefault();
   const c=compute();
-  if(!(id('f-name').value.trim() && id('f-phone').value.trim() && id('f-start-date').value && id('f-end-date').value && id('f-start-time').value && id('f-hours-per-day').value && c.fObj)){
+  if(!(id('f-name').value.trim() && id('f-phone').value.trim() && c.sd && c.ed && c.st && id('f-formula').value)){
     alert('Merci de remplir identité, période, heures/jour et formule.'); return;
   }
-  if(!id('f-cgv').checked){ alert('Merci de lire et d’accepter les CGV & contrat.'); return; }
+  if(!id('f-cgv').checked){ alert('Merci d’accepter les CGV & contrat.'); return; }
 
+  const label = document.querySelector('#f-formula option:checked').textContent.split(' — ')[0];
   const msg =
 `Demande de location de fauteuil — PHENO&CO
 • Nom: ${id('f-name').value.trim()}
 • Téléphone: ${id('f-phone').value.trim()}
-• Période: ${id('f-start-date').value} → ${id('f-end-date').value} (arrivée ${id('f-start-time').value})
+• Période: ${c.sd} → ${c.ed} (arrivée ${c.st})
 • Heures/jour: ${c.hpd}
-• Formule: ${c.fObj.label} (${c.fObj.unitHours}h)
+• Formule: ${label}
 • Base HT: ${€.format(c.baseHt)}
 • Packs HT: ${€.format(c.packsHt)}
 • Total HT: ${€.format(c.totalHt)}
@@ -430,14 +401,16 @@ id('chairForm').addEventListener('submit', (e)=>{
 
 CGV/Contrat: accepté ✅
 Merci d’envoyer le lien de paiement 50%.`;
+
   id('helper').style.display='block';
   window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
 });
 
-/* CGV modal */
-const modal=id('cgvModal');
-id('openCgv').addEventListener('click',(e)=>{ e.preventDefault(); updateAll(); modal.style.display='flex'; modal.setAttribute('aria-hidden','false'); });
-id('closeCgv').addEventListener('click',(e)=>{ e.preventDefault(); modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
+/* CGV modal open/close */
+const cgvModal = document.getElementById('cgvModal');
+document.getElementById('openCgv').addEventListener('click',(e)=>{ e.preventDefault(); updateAll(); cgvModal.style.display='flex'; cgvModal.setAttribute('aria-hidden','false'); });
+document.getElementById('closeCgv').addEventListener('click',(e)=>{ e.preventDefault(); cgvModal.style.display='none'; cgvModal.setAttribute('aria-hidden','true'); });
+
 </script>
 </body>
 </html>
