@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PHENO&CO — Barbershop & Location de fauteuils</title>
+  <title>PHENO&CO — Réservation de fauteuil</title>
   <meta name="color-scheme" content="dark light">
   <style>
     :root{
@@ -12,136 +12,349 @@
       --yellow:#ffd400; --grey:#2d3138; --green:#25D366;
       --focus:#8ab4f8; --radius:20px;
     }
-    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--fg)}
     .wrap{max-width:980px;margin:0 auto;padding:28px 18px 64px}
-    header{display:flex;align-items:center;justify-content:center;margin:8px 0}
-    img.logo{width:260px;max-width:50vw;border-radius:12px}
-    h1{margin:8px 0 6px;font-size:42px;color:var(--yellow)}
+    header{text-align:center;margin-bottom:8px}
+    img.logo{width:260px;max-width:50vw;height:auto;border-radius:12px}
+    h1{margin:8px 0 6px;font-size:40px;color:var(--yellow)}
     .sub{margin:0 0 26px;color:var(--muted);text-align:center}
     .grid{display:grid;gap:14px;margin:0 auto 28px;grid-template-columns:1fr}
-    @media (min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
-    .btn{display:block;padding:18px 20px;border-radius:var(--radius);text-decoration:none;font-weight:800;text-align:center;line-height:1.2;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 28px rgba(0,0,0,.35);transition:transform .15s,filter .15s}
+    @media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .btn{display:block;padding:18px 20px;border-radius:var(--radius);text-decoration:none;font-weight:800;text-align:center;line-height:1.2;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 28px rgba(0,0,0,.35);transition:.15s}
     .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
     .btn:active{transform:translateY(1px)}
     .btn-yellow{background:var(--yellow);color:#000}
     .btn-grey{background:var(--grey);color:#fff;border:2px solid #464b54}
     .btn-green{background:var(--green);color:#000}
-    .btn:hover{filter:brightness(.96)}
     section.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;margin-top:36px}
     h2{margin:0 0 10px;color:var(--yellow)}
     p.lead{margin:8px 0 18px;color:var(--muted)}
     label{display:block;margin:10px 0 6px}
-    input,select,textarea{width:100%;padding:14px 12px;border-radius:12px;border:1px solid #2a2a2a;background:#121212;color:#fff;font-size:16px}
+    input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#121212;color:#fff;font-size:16px}
+    input[type="date"],input[type="time"],input[type="number"]{padding:10px 12px}
     textarea{min-height:96px;resize:vertical}
     .row{display:grid;gap:12px}
-    @media (min-width:680px){.row{grid-template-columns:1fr 1fr}}
+    @media(min-width:680px){.row{grid-template-columns:1fr 1fr}}
     .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
     .btn-submit,.btn-reset{flex:1;min-width:160px;padding:14px 16px;border-radius:14px;border:none;font-weight:800;cursor:pointer}
     .btn-submit{background:var(--yellow);color:#000}
     .btn-reset{background:var(--grey);color:#fff}
+    .summary{border-top:1px dashed #2b2b2b;margin-top:16px;padding-top:12px;color:#e6e6e6}
+    .summary small{color:var(--muted)}
+    ul.packs{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+    ul.packs li{display:flex;align-items:center;gap:10px}
+    .note{color:#9aa0a6;font-size:12px}
     footer{margin-top:40px;color:var(--muted);text-align:center;font-size:12px}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
   </style>
 </head>
 <body>
   <main class="wrap">
     <header>
-      <!-- Optionnel : mets l’URL de ton logo ci-dessous, sinon l’image se masque -->
-      <img class="logo" src="URL_DU_LOGO_ICI" alt="PHENO&CO" onerror="this.style.display='none'">
+      <img class="logo" src="URL_DU_LOGO_ICI" alt="Logo PHENO&CO" onerror="this.style.display='none'">
+      <h1>PHENO&CO</h1>
+      <p class="sub">Barbershop • Depuis 2009 • 18 Rue d'Alger, 34000 Montpellier</p>
     </header>
 
-    <h1 style="text-align:center">PHENO&CO</h1>
-    <p class="sub">Barbershop • Depuis 2009 • Montpellier</p>
-
-    <nav class="grid" aria-label="Actions principales">
+    <!-- 3 gros boutons -->
+    <div class="grid" role="navigation" aria-label="Actions principales">
       <a class="btn btn-yellow" href="#fauteuil">Réserver Fauteuil 💺</a>
       <a class="btn btn-grey" href="https://phenoandco.com" target="_blank" rel="noopener">Prendre RDV Coiffure 💈</a>
       <a class="btn btn-green" href="https://wa.me/33769432605?text=Bonjour%20PHENO%26CO%20!" target="_blank" rel="noopener">Contact WhatsApp</a>
-    </nav>
+    </div>
 
+    <!-- Formulaire -->
     <section id="fauteuil" class="card" aria-labelledby="title-fauteuil">
       <h2 id="title-fauteuil">Réserver un fauteuil</h2>
-      <p class="lead">Choisis une formule et envoie ta demande. Confirmation rapide sur WhatsApp.</p>
+      <p class="lead">Choisis ta période, tes heures/jour, ta formule et, si besoin, un pack matériel. Le prix se calcule automatiquement (HT, TVA 20%, TTC, acompte 50%). Ouverture du salon : <b>10:00 → 18:00</b>.</p>
 
       <form id="chairForm" autocomplete="on" novalidate>
+        <!-- Identité -->
         <div class="row">
           <div>
             <label for="f-name">Nom et prénom</label>
-            <input id="f-name" name="name" required placeholder="Ex. Jean Dupont" autocomplete="name">
+            <input id="f-name" name="name" required autocomplete="name" placeholder="Ex. Jean Dupont" />
           </div>
           <div>
             <label for="f-phone">Téléphone</label>
-            <input id="f-phone" name="phone" required inputmode="tel" placeholder="Ex. 06 12 34 56 78" autocomplete="tel">
+            <input id="f-phone" name="phone" required inputmode="tel" autocomplete="tel" placeholder="Ex. 06 12 34 56 78" />
           </div>
         </div>
 
+        <!-- Période -->
         <div class="row">
           <div>
-            <label for="f-plan">Formule</label>
-            <select id="f-plan" name="plan" required>
-              <option value="" disabled selected>Choisir…</option>
-              <option>À l’heure</option>
-              <option>Demi-journée</option>
-              <option>Journée</option>
-              <option>Semaine</option>
-              <option>Mois</option>
-            </select>
+            <label for="f-start-date">Date de début</label>
+            <input id="f-start-date" type="date" name="startDate" required />
           </div>
           <div>
-            <label for="f-start">Date de début</label>
-            <input id="f-start" type="date" name="start" required>
+            <label for="f-start-time">Heure d’arrivée (10:00–18:00)</label>
+            <input id="f-start-time" type="time" name="startTime" required min="10:00" max="18:00" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="f-end-date">Date de fin</label>
+            <input id="f-end-date" type="date" name="endDate" required />
+          </div>
+          <div>
+            <label for="f-hours-per-day">Heures par jour (0.5 à 8)</label>
+            <input id="f-hours-per-day" type="number" name="hoursPerDay" required min="0.5" max="8" step="0.5" value="4" />
+            <div class="note">Ex. samedi 10h → 14h = 4h</div>
           </div>
         </div>
 
-        <label for="f-note">Message (optionnel)</label>
-        <textarea id="f-note" name="note" placeholder="Ex. Poste miroir 2, horaires 10h–18h…"></textarea>
-
-        <div class="actions">
-          <button class="btn-submit" type="submit">Envoyer sur WhatsApp</button>
-          <button class="btn-reset" type="reset">Effacer</button>
+        <!-- Formule -->
+        <label>Formule (prix indicatifs)</label>
+        <div class="row" style="align-items:center">
+          <label><input type="radio" name="formula" value="hour" required> Horaire — <span id="label-hour"></span></label>
+          <label><input type="radio" name="formula" value="halfday"> Demi-journée (4h) — <span id="label-half"></span></label>
+          <label><input type="radio" name="formula" value="fullday"> Journée (8h) — <span id="label-day"></span></label>
+          <label><input type="radio" name="formula" value="week"> Semaine (40h) — <span id="label-week"></span></label>
         </div>
 
-        <p id="helper" class="lead" style="display:none;margin-top:10px;">Ouverture de WhatsApp… si rien ne s’ouvre, vérifie ton bloqueur de fenêtres.</p>
+        <!-- Packs matériel -->
+        <label>Packs matériel (optionnel)</label>
+        <ul class="packs" id="packsList"></ul>
+
+        <!-- Note -->
+        <label for="f-note">Message (optionnel)</label>
+        <textarea id="f-note" name="note" placeholder="Ex. Poste miroir 2, besoin d’un stérilisateur, horaires 10h–14h…"></textarea>
+
+        <!-- CGV -->
+        <label style="display:flex;align-items:center;gap:8px;margin-top:14px">
+          <input type="checkbox" id="f-cgv" required>
+          <span>J’accepte les <a href="#cgv" style="color:#8ab4f8">CGV & contrat</a> de PHENO&CO.</span>
+        </label>
+
+        <!-- Résumé -->
+        <div class="summary" id="summary">
+          <div><small>Période :</small> <span id="sum-period">—</span></div>
+          <div><small>Jours comptés :</small> <span id="sum-days">0</span></div>
+          <div><small>Heures/jour :</small> <span id="sum-hpd">0</span></div>
+          <div><small>Durée totale :</small> <span id="sum-hours">0 h</span></div>
+          <div><small>Base HT :</small> <span id="sum-base">0 €</span></div>
+          <div><small>Packs HT :</small> <span id="sum-packs">0 €</span></div>
+          <div><small>Total HT :</small> <span id="sum-ht">0 €</span></div>
+          <div><small>TVA (20%) :</small> <span id="sum-tva">0 €</span></div>
+          <div><b>Total TTC :</b> <span id="sum-ttc">0 €</span></div>
+          <div><small>Acompte 50% :</small> <span id="sum-deposit">0 €</span></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="btn-submit" type="submit">Confirmer & envoyer (WhatsApp)</button>
+          <button class="btn-reset" type="reset">Effacer</button>
+          <a id="emailLink" class="btn btn-grey" href="#" target="_blank" rel="noopener">Envoyer aussi par e-mail</a>
+        </div>
+        <p id="helper" class="lead" style="display:none;margin-top:10px;">Ouverture de WhatsApp… (si rien ne s’ouvre, vérifie ton bloqueur de fenêtres). Un brouillon d’email est aussi prêt.</p>
       </form>
+
+      <!-- CGV placeholder -->
+      <div id="cgv" class="note" style="margin-top:12px">
+        <b>CGV (résumé)</b> : Acompte 50% à la confirmation. Solde à l’arrivée. Respect des horaires (10:00–18:00). Caution matériel si applicable. Annulation & conditions détaillées : document complet à fournir par PHENO&CO.
+      </div>
     </section>
 
-    <footer>© PHENO&CO — 18 Rue d'Alger, 34000 Montpellier — WhatsApp : 07 69 43 26 05</footer>
+    <footer>© PHENO&CO — Tous droits réservés</footer>
   </main>
 
   <script>
-    // ✅ Numéro WhatsApp (format international, sans + / sans espace)
-    const PHONE = '33769432605';
+    /* ===== CONFIG ===== */
+    const PHONE = '33769432605';       // ✅ ton WhatsApp
+    const EMAIL = 'location.phenoandco@gmail.com';
+    const OPEN_HOUR = 10;              // 10h
+    const CLOSE_HOUR = 18;             // 18h
+    const HOURLY_HT = 10;              // € HT / heure
+    const TVA_RATE = 0.20;
+    const FORMULAE = {
+      hour:    { label: 'Horaire',        unitHours: 1 },
+      halfday: { label: 'Demi-journée',   unitHours: 4 },
+      fullday: { label: 'Journée',        unitHours: 8 },
+      week:    { label: 'Semaine',        unitHours: 40 }
+    };
+    const PACKS = [
+      { id:'tondeuse',  label:'Pack Tondeuse Pro', priceHt:5 },
+      { id:'produits',  label:'Pack Produits',     priceHt:8 },
+      { id:'serviettes',label:'Pack Serviettes',   priceHt:4 },
+    ];
 
-    const form = document.getElementById('chairForm');
-    const helper = document.getElementById('helper');
+    /* ===== Helpers ===== */
+    const € = new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
+    const id = s => document.getElementById(s);
+    const q = (s,root=document)=>root.querySelector(s);
+    const qa = (s,root=document)=>Array.from(root.querySelectorAll(s));
+    const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
 
-    function clean(v){return (v||'').toString().trim();}
+    function parseDate(d){ if(!d) return null; const [y,m,day]=d.split('-').map(Number); return new Date(y,m-1,day); }
+    function daysBetweenInclusive(sd, ed){
+      if(!sd || !ed) return 0;
+      const msDay = 86400000;
+      const a = new Date(sd.getFullYear(), sd.getMonth(), sd.getDate());
+      const b = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
+      return Math.floor((b - a)/msDay) + 1;
+    }
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form).entries());
-      const name = clean(data.name);
-      const phone = clean(data.phone);
-      const plan = clean(data.plan);
-      const start = clean(data.start);
-      const note = clean(data.note);
+    function sumPacks(){
+      return qa('input[name="packs"]:checked').reduce((s,el)=>s+Number(el.value),0);
+    }
+    function selectedFormula(){
+      const f = q('input[name="formula"]:checked'); return f?f.value:null;
+    }
 
-      if(!name || !phone || !plan || !start){
-        alert('Merci de remplir Nom, Téléphone, Formule et Date.');
-        return;
+    /* ===== Init UI (formules + packs) ===== */
+    id('label-hour').textContent = `${€.format(HOURLY_HT)}/h HT`;
+    id('label-half').textContent = `4h = ${€.format(4*HOURLY_HT)} HT`;
+    id('label-day').textContent  = `8h = ${€.format(8*HOURLY_HT)} HT`;
+    id('label-week').textContent = `40h = ${€.format(40*HOURLY_HT)} HT`;
+
+    const packsList = id('packsList');
+    PACKS.forEach(p=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<label style="cursor:pointer"><input type="checkbox" name="packs" value="${p.priceHt}"> ${p.label} — <span style="opacity:.8">${€.format(p.priceHt)} HT</span></label>`;
+      packsList.appendChild(li);
+    });
+
+    /* ===== Calcul en direct ===== */
+    const watchIds = ['f-start-date','f-start-time','f-end-date','f-hours-per-day','f-note','f-name','f-phone'];
+    watchIds.forEach(x=>id(x).addEventListener('input', updateSummary));
+    qa('input[name="formula"]').forEach(r=>r.addEventListener('change', updateSummary));
+    qa('input[name="packs"]').forEach(c=>c.addEventListener('change', updateSummary));
+
+    function updateSummary(){
+      const sd = parseDate(id('f-start-date').value);
+      const ed = parseDate(id('f-end-date').value);
+      const arrTime = id('f-start-time').value;
+      const hpdRaw = parseFloat(id('f-hours-per-day').value||'0');
+      const hpd = clamp(isNaN(hpdRaw)?0:hpdRaw, 0.5, 8);
+
+      // validation basique horaires
+      if(arrTime){
+        const [hh,mm] = arrTime.split(':').map(Number);
+        if(hh < OPEN_HOUR || hh > CLOSE_HOUR){ id('f-start-time').setCustomValidity('Arrivée entre 10:00 et 18:00'); }
+        else { id('f-start-time').setCustomValidity(''); }
+        // il faut pouvoir effectuer hpd dans la plage (10→18)
+        if(hh + hpd > CLOSE_HOUR){ id('f-hours-per-day').setCustomValidity('Heures/jour dépassent 18:00'); }
+        else { id('f-hours-per-day').setCustomValidity(''); }
       }
 
+      const days = daysBetweenInclusive(sd, ed);
+      const f = selectedFormula();
+
+      // total d'heures demandé par le client (multi-jours)
+      const totalRequestedHours = (days>0 ? days : 0) * hpd;
+
+      // prix base selon formule (arrondi par blocs)
+      let baseHours = 0;
+      if(f){
+        const unit = FORMULAE[f].unitHours;
+        if(f === 'hour'){
+          baseHours = totalRequestedHours;
+        } else {
+          const units = Math.ceil(totalRequestedHours / unit);
+          baseHours = units * unit;
+        }
+      }
+
+      const baseHt = baseHours * HOURLY_HT;
+      const packsHt = sumPacks();
+      const totalHt = Math.max(0, baseHt + packsHt);
+      const tva = totalHt * TVA_RATE;
+      const ttc = totalHt + tva;
+      const deposit = ttc * 0.5;
+
+      id('sum-period').textContent = (sd && ed) ? `${id('f-start-date').value} → ${id('f-end-date').value} (arrivée ${id('f-start-time').value||'—'})` : '—';
+      id('sum-days').textContent = days;
+      id('sum-hpd').textContent = hpd.toString().replace('.',',');
+      id('sum-hours').textContent = `${totalRequestedHours.toLocaleString('fr-FR')} h`;
+      id('sum-base').textContent = €.format(baseHt);
+      id('sum-packs').textContent = €.format(packsHt);
+      id('sum-ht').textContent = €.format(totalHt);
+      id('sum-tva').textContent = €.format(tva);
+      id('sum-ttc').textContent = €.format(ttc);
+      id('sum-deposit').textContent = €.format(deposit);
+
+      // prépare le mailto dynamique
+      const subject = encodeURIComponent(`Demande de location de fauteuil — ${id('f-name').value||''}`);
+      const body = encodeURIComponent(
+        `Demande de location — PHENO&CO
+Nom: ${id('f-name').value||'-'}
+Téléphone: ${id('f-phone').value||'-'}
+Période: du ${id('f-start-date').value||'-'} ${id('f-start-time').value||'-'} au ${id('f-end-date').value||'-'}
+Heures/jour: ${hpd}
+Formule: ${f ? FORMULAE[f].label : '-'}
+Packs HT: ${€.format(packsHt)}
+Total HT: ${€.format(totalHt)}
+TVA 20%: ${€.format(tva)}
+Total TTC: ${€.format(ttc)}
+Acompte 50%: ${€.format(deposit)}
+Message: ${id('f-note').value||'-'}
+
+J’accepte les CGV/contrat. Merci d’envoyer le lien de paiement de l’acompte 50%.`
+      );
+      id('emailLink').href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+    }
+
+    // pré-sélectionne la formule Horaire
+    q('input[name="formula"][value="hour"]').checked = true;
+    updateSummary();
+
+    /* ===== Soumission : WhatsApp + info email ===== */
+    const form = id('chairForm');
+    const helper = id('helper');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+
+      // validations clés
+      const name = id('f-name').value.trim();
+      const phone = id('f-phone').value.trim();
+      const sd = id('f-start-date').value, ed = id('f-end-date').value, st = id('f-start-time').value;
+      const hpd = parseFloat(id('f-hours-per-day').value || '0');
+      const f = selectedFormula();
+      if(!name || !phone || !sd || !ed || !st || !f){
+        alert('Merci de remplir identité, période (dates + heure), heures/jour et formule.');
+        return;
+      }
+      if(!id('f-cgv').checked){
+        alert('Merci d’accepter les CGV & contrat pour continuer.');
+        return;
+      }
+      // reconstruit les montants depuis le résumé affiché
+      const sum = {
+        period: id('sum-period').textContent,
+        hours: id('sum-hours').textContent,
+        base: id('sum-base').textContent,
+        packs: id('sum-packs').textContent,
+        ht: id('sum-ht').textContent,
+        tva: id('sum-tva').textContent,
+        ttc: id('sum-ttc').textContent,
+        deposit: id('sum-deposit').textContent
+      };
+
       const msg =
-`Demande de location de fauteuil — PHENO&CO (Montpellier)
+`Demande de location de fauteuil — PHENO&CO
 • Nom: ${name}
 • Téléphone: ${phone}
-• Formule: ${plan}
-• Début: ${start}
-• Message: ${note || '-'}`;
+• Période: ${sum.period}
+• Heures/jour: ${hpd}
+• Formule: ${FORMULAE[f].label}
+• Base HT: ${sum.base}
+• Packs HT: ${sum.packs}
+• Total HT: ${sum.ht}
+• TVA: ${sum.tva}
+• Total TTC: ${sum.ttc}
+• Acompte 50%: ${sum.deposit}
+• Message: ${(id('f-note').value||'-').trim()}
+
+CGV/Contrat: accepté ✅
+Merci d’envoyer le lien de paiement 50%.`;
 
       const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
       helper.style.display = 'block';
-      window.open(url, '_blank', 'noopener');
+      window.open(url,'_blank','noopener');   // WhatsApp
+      // l’email est prêt via le bouton “Envoyer aussi par e-mail”
     });
   </script>
 </body>
