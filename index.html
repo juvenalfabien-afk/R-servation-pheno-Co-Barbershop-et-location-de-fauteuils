@@ -1,42 +1,148 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>PHENO&CO</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PHENO&CO — Barbershop & Location de fauteuils</title>
+  <meta name="color-scheme" content="dark light">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: #f7f7f7;
-      text-align: center;
-      padding: 50px;
+    :root{
+      --bg:#0b0b0b; --card:#111; --line:#1f1f1f;
+      --fg:#f7f7f7; --muted:#bdbdbd;
+      --yellow:#ffd400; --grey:#2d3138; --green:#25D366;
+      --focus:#8ab4f8; --radius:20px;
     }
-    h1 {
-      color: #ffd400;
-      font-size: 3em;
-    }
-    p {
-      font-size: 1.2em;
-    }
-    .btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 15px 25px;
-      background: #ffd400;
-      color: #000;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-    }
-    .btn:hover {
-      background: #e0c000;
-    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 64px}
+    header{display:flex;align-items:center;justify-content:center;margin:8px 0}
+    img.logo{width:260px;max-width:50vw;border-radius:12px}
+    h1{margin:8px 0 6px;font-size:42px;color:var(--yellow)}
+    .sub{margin:0 0 26px;color:var(--muted);text-align:center}
+    .grid{display:grid;gap:14px;margin:0 auto 28px;grid-template-columns:1fr}
+    @media (min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .btn{display:block;padding:18px 20px;border-radius:var(--radius);text-decoration:none;font-weight:800;text-align:center;line-height:1.2;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 28px rgba(0,0,0,.35);transition:transform .15s,filter .15s}
+    .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+    .btn:active{transform:translateY(1px)}
+    .btn-yellow{background:var(--yellow);color:#000}
+    .btn-grey{background:var(--grey);color:#fff;border:2px solid #464b54}
+    .btn-green{background:var(--green);color:#000}
+    .btn:hover{filter:brightness(.96)}
+    section.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;margin-top:36px}
+    h2{margin:0 0 10px;color:var(--yellow)}
+    p.lead{margin:8px 0 18px;color:var(--muted)}
+    label{display:block;margin:10px 0 6px}
+    input,select,textarea{width:100%;padding:14px 12px;border-radius:12px;border:1px solid #2a2a2a;background:#121212;color:#fff;font-size:16px}
+    textarea{min-height:96px;resize:vertical}
+    .row{display:grid;gap:12px}
+    @media (min-width:680px){.row{grid-template-columns:1fr 1fr}}
+    .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+    .btn-submit,.btn-reset{flex:1;min-width:160px;padding:14px 16px;border-radius:14px;border:none;font-weight:800;cursor:pointer}
+    .btn-submit{background:var(--yellow);color:#000}
+    .btn-reset{background:var(--grey);color:#fff}
+    footer{margin-top:40px;color:var(--muted);text-align:center;font-size:12px}
   </style>
 </head>
 <body>
-  <h1>Bienvenue chez PHENO&CO ✂️</h1>
-  <p>20 ans de passion – 15 ans à vos côtés.</p>
-  <p>Réservez votre coupe ou découvrez nos offres de location de fauteuils.</p>
-  <a class="btn" href="https://phenoandco.com" target="_blank">Prendre rendez-vous</a>
+  <main class="wrap">
+    <header>
+      <!-- Optionnel : mets l’URL de ton logo ci-dessous, sinon l’image se masque -->
+      <img class="logo" src="URL_DU_LOGO_ICI" alt="PHENO&CO" onerror="this.style.display='none'">
+    </header>
+
+    <h1 style="text-align:center">PHENO&CO</h1>
+    <p class="sub">Barbershop • Depuis 2009 • Montpellier</p>
+
+    <nav class="grid" aria-label="Actions principales">
+      <a class="btn btn-yellow" href="#fauteuil">Réserver Fauteuil 💺</a>
+      <a class="btn btn-grey" href="https://phenoandco.com" target="_blank" rel="noopener">Prendre RDV Coiffure 💈</a>
+      <a class="btn btn-green" href="https://wa.me/33769432605?text=Bonjour%20PHENO%26CO%20!" target="_blank" rel="noopener">Contact WhatsApp</a>
+    </nav>
+
+    <section id="fauteuil" class="card" aria-labelledby="title-fauteuil">
+      <h2 id="title-fauteuil">Réserver un fauteuil</h2>
+      <p class="lead">Choisis une formule et envoie ta demande. Confirmation rapide sur WhatsApp.</p>
+
+      <form id="chairForm" autocomplete="on" novalidate>
+        <div class="row">
+          <div>
+            <label for="f-name">Nom et prénom</label>
+            <input id="f-name" name="name" required placeholder="Ex. Jean Dupont" autocomplete="name">
+          </div>
+          <div>
+            <label for="f-phone">Téléphone</label>
+            <input id="f-phone" name="phone" required inputmode="tel" placeholder="Ex. 06 12 34 56 78" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="f-plan">Formule</label>
+            <select id="f-plan" name="plan" required>
+              <option value="" disabled selected>Choisir…</option>
+              <option>À l’heure</option>
+              <option>Demi-journée</option>
+              <option>Journée</option>
+              <option>Semaine</option>
+              <option>Mois</option>
+            </select>
+          </div>
+          <div>
+            <label for="f-start">Date de début</label>
+            <input id="f-start" type="date" name="start" required>
+          </div>
+        </div>
+
+        <label for="f-note">Message (optionnel)</label>
+        <textarea id="f-note" name="note" placeholder="Ex. Poste miroir 2, horaires 10h–18h…"></textarea>
+
+        <div class="actions">
+          <button class="btn-submit" type="submit">Envoyer sur WhatsApp</button>
+          <button class="btn-reset" type="reset">Effacer</button>
+        </div>
+
+        <p id="helper" class="lead" style="display:none;margin-top:10px;">Ouverture de WhatsApp… si rien ne s’ouvre, vérifie ton bloqueur de fenêtres.</p>
+      </form>
+    </section>
+
+    <footer>© PHENO&CO — 18 Rue d'Alger, 34000 Montpellier — WhatsApp : 07 69 43 26 05</footer>
+  </main>
+
+  <script>
+    // ✅ Numéro WhatsApp (format international, sans + / sans espace)
+    const PHONE = '33769432605';
+
+    const form = document.getElementById('chairForm');
+    const helper = document.getElementById('helper');
+
+    function clean(v){return (v||'').toString().trim();}
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const name = clean(data.name);
+      const phone = clean(data.phone);
+      const plan = clean(data.plan);
+      const start = clean(data.start);
+      const note = clean(data.note);
+
+      if(!name || !phone || !plan || !start){
+        alert('Merci de remplir Nom, Téléphone, Formule et Date.');
+        return;
+      }
+
+      const msg =
+`Demande de location de fauteuil — PHENO&CO (Montpellier)
+• Nom: ${name}
+• Téléphone: ${phone}
+• Formule: ${plan}
+• Début: ${start}
+• Message: ${note || '-'}`;
+
+      const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
+      helper.style.display = 'block';
+      window.open(url, '_blank', 'noopener');
+    });
+  </script>
 </body>
 </html>
