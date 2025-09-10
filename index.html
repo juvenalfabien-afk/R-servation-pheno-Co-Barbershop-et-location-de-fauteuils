@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>PHENO&CO — Carte de visite virtuelle</title>
+<title>PHENO&CO — Barbershop depuis 2009</title>
 <meta name="color-scheme" content="dark light">
 <style>
   :root{
@@ -16,20 +16,16 @@
   header img{width:180px;margin-bottom:12px}
   h1{color:var(--yellow);margin:0;font-size:2.2rem}
   .sub{margin:6px 0 10px;color:#ddd}
-  .admin{font-size:.85rem;color:#aaa}
+
   /* NAV : boutons VERTICAUX */
   .nav{display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;margin:14px auto 18px}
   .btn{display:block;width:80%;max-width:520px;padding:18px 22px;border-radius:18px;font-weight:800;text-decoration:none;font-size:1.15rem;line-height:1.2}
   .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
   .btn-yellow{background:var(--yellow);color:#000}
   .btn-grey{background:var(--grey);color:#fff}
-  .btn-green{background:var(--green);color:#fff}
   .btn:hover{opacity:.95}
-  footer{padding:22px 18px;color:#aaa;font-size:.9rem;border-top:1px solid #1b1b1b}
 
-  /* Bandeau notice */
-  .notice{max-width:980px;margin:0 auto 22px;color:#ddd}
-  .notice b{color:#000;background:var(--yellow);padding:2px 8px;border-radius:8px}
+  footer{padding:22px 18px;color:#aaa;font-size:.9rem;border-top:1px solid #1b1b1b}
 
   /* MODAL via :target */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:18px;z-index:999}
@@ -47,7 +43,6 @@
   .section-title{font-weight:900;color:#fff;margin:14px 0 6px}
   .accent{color:#000;background:var(--yellow);padding:2px 8px;border-radius:8px;margin-left:8px}
   .hint{font-size:12px;color:#9aa0a6}
-  .prices-hint{margin-top:6px;color:#000;background:var(--yellow);display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900}
   .summary{border-top:1px dashed #2b2b2b;margin-top:16px;padding-top:12px;color:#e6e6e6}
   .summary small{color:var(--muted)}
   ul.checklist{list-style:none;padding:0;margin:0;display:grid;gap:8px}
@@ -62,26 +57,23 @@
   .modal.cgv h4{margin:14px 0 8px}
   .modal.cgv p,.modal.cgv li{color:#ddd}
   .modal.cgv ul{margin:0 0 8px 18px}
+  .cgv-recap{border:1px solid #2a2a2a;border-radius:12px;padding:12px;background:#111;margin:8px 0}
+  .cgv-recap h5{margin:0 0 6px;color:#ffd400}
+  .tag{display:inline-block;background:#222;border:1px solid #333;border-radius:999px;padding:2px 8px;margin-right:6px;color:#ddd;font-size:12px}
 </style>
 </head>
 <body>
   <header>
     <img src="1.png" alt="Logo PHENO&CO" onerror="this.style.display='none'">
-    <h1>PHENO&CO — Carte de visite virtuelle</h1>
-    <p class="sub">Barbershop • Depuis 2009 • Montpellier</p>
-    <p class="admin">Accès admin : <b>phenoco2025</b> (prototype — à sécuriser plus tard)</p>
+    <h1>PHENO&CO — Barbershop depuis 2009</h1>
+    <p class="sub">18 Rue d'Alger, 34000 Montpellier</p>
   </header>
 
   <!-- BOUTONS -->
   <nav class="nav" aria-label="Actions principales">
-    <a class="btn btn-yellow" href="#louer">🪑 Louer un fauteuil</a>
-    <a class="btn btn-grey" href="https://phenoandco.com" target="_blank" rel="noopener">✂️ Réserver une coiffure</a>
-    <a class="btn btn-green" href="https://wa.me/33769432605?text=Bonjour%20PHENO%26CO%20!" target="_blank" rel="noopener">Contact WhatsApp</a>
+    <a class="btn btn-yellow" href="#louer">Louer un fauteuil</a>
+    <a class="btn btn-grey" href="https://phenoandco.com" target="_blank" rel="noopener">Réserver une coiffure</a>
   </nav>
-
-  <div class="notice">
-    <p><b>Acompte 50% obligatoire</b> pour les locations • <a href="#cgv" style="color:#8ab4f8">CGV affichées avant validation</a></p>
-  </div>
 
   <footer>© 2025 PHENO&CO. Tous droits réservés.</footer>
 
@@ -89,7 +81,7 @@
   <div class="modal" id="louer" aria-hidden="true">
     <div class="box" role="dialog" aria-modal="true" aria-labelledby="title-fauteuil">
       <h2 id="title-fauteuil">Louer un fauteuil — Réservation</h2>
-      <p class="hint">Mobile-first. Sélectionne ton type de location (courte/longue durée), tes dates, ta formule et le matériel.</p>
+      <p class="hint">Sélectionne tes dates, choisis une formule (courte OU longue durée), ajoute le matériel si besoin, puis vérifie le récap dans les CGV.</p>
 
       <form id="rentForm" autocomplete="on" novalidate>
         <!-- Identité -->
@@ -99,79 +91,59 @@
         </div>
         <div class="row">
           <div><label for="f-email">Email (pour le récap)</label><input id="f-email" inputmode="email" placeholder="exemple@mail.com"></div>
-          <div><label for="f-note">Message (optionnel)</label><input id="f-note" placeholder="Ex. Poste miroir 2, horaires, besoin d’un shaver…"></div>
+          <div><label for="f-note">Message (optionnel)</label><input id="f-note" placeholder="Ex. Poste miroir 2, besoin d’un shaver…"></div>
         </div>
 
-        <!-- Type de location -->
-        <div class="section-title">Type de location <span class="accent">courte ou longue</span></div>
+        <!-- Période -->
+        <div class="section-title">Période <span class="accent">calendrier</span></div>
         <div class="row">
-          <div>
-            <label for="f-type">Choisir</label>
-            <select id="f-type" required>
-              <option value="short">Courte durée (1h / ½j / 1j / 1 semaine)</option>
-              <option value="long">Longue durée (1 / 3 / 6 / 12 mois)</option>
-            </select>
-          </div>
+          <div><label for="sd">Date de début</label><input type="date" id="sd" required></div>
+          <div><label for="ed">Date de fin</label><input type="date" id="ed" required></div>
+        </div>
+
+        <!-- Heures -->
+        <div class="row">
           <div>
             <label for="f-start-time">Heure d’arrivée (10:00–18:00)</label>
             <select id="f-start-time">
               <option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option>
               <option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
             </select>
-            <div class="hint">Ignoré en longue durée (info pour le 1er jour).</div>
+            <div class="hint">Info utile surtout pour la courte durée.</div>
           </div>
-        </div>
-
-        <!-- Dates (sélecteurs robustes) -->
-        <div class="section-title">Période <span class="accent">dates</span></div>
-        <div class="row">
           <div>
-            <label>Début</label>
-            <div class="row">
-              <select id="sd-day"></select><select id="sd-month"></select><select id="sd-year"></select>
-            </div>
-          </div>
-          <div id="endDateWrap">
-            <label>Fin</label>
-            <div class="row">
-              <select id="ed-day"></select><select id="ed-month"></select><select id="ed-year"></select>
-            </div>
-            <div class="hint" id="autoEndHint" style="display:none">Fin auto selon la durée (aperçu sous le récap).</div>
+            <label for="f-hours-per-day">Heures par jour</label>
+            <select id="f-hours-per-day">
+              <option>1</option><option>2</option><option>3</option><option selected>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+            <div class="hint">Des heures entières (1 à 8).</div>
           </div>
         </div>
 
         <!-- Formules -->
-        <div id="shortWrap">
-          <div class="section-title">Formule — Courte durée <span class="accent">tarifs</span></div>
-          <label for="f-formula-short">Choisir une formule</label>
-          <select id="f-formula-short">
-            <option value="hour">1h — 10,00 € HT (10€/h)</option>
-            <option value="halfday">½ journée (4h) — 45,00 € HT</option>
-            <option value="fullday">1 journée (8h) — 70,00 € HT</option>
-            <option value="week">1 semaine (5 jours) — 280,00 € HT</option>
-          </select>
-          <div class="prices-hint">Rappel HT : 1h = 10€, ½j = 45€, 1j = 70€, 1 semaine (5j) = 280€</div>
-
-          <label for="f-hours-per-day">Heures par jour (courte durée)</label>
-          <select id="f-hours-per-day">
-            <option value="0.5">0,5 h</option><option value="1">1 h</option><option value="1.5">1,5 h</option><option value="2">2 h</option>
-            <option value="2.5">2,5 h</option><option value="3">3 h</option><option value="3.5">3,5 h</option><option value="4">4 h</option>
-            <option value="4.5">4,5 h</option><option value="5">5 h</option><option value="5.5">5,5 h</option><option value="6">6 h</option>
-            <option value="6.5">6,5 h</option><option value="7">7 h</option><option value="7.5">7,5 h</option><option value="8">8 h</option>
-          </select>
-          <div class="hint">Changer de formule peut verrouiller la durée (½j=4h, 1j=8h, 1 semaine=5 jours).</div>
-        </div>
-
-        <div id="longWrap" style="display:none">
-          <div class="section-title">Formule — Longue durée <span class="accent">tarifs</span></div>
-          <label for="f-formula-long">Choisir une durée</label>
-          <select id="f-formula-long">
-            <option value="m1">1 mois — 1 300,00 € HT</option>
-            <option value="m3">3 mois — 3 600,00 € HT</option>
-            <option value="m6">6 mois — 6 600,00 € HT</option>
-            <option value="m12">12 mois — 12 000,00 € HT</option>
-          </select>
-          <div class="prices-hint">Base HT mensuelle (indicative) : 1m=1 300€, 3m=3 600€, 6m=6 600€, 12m=12 000€</div>
+        <div class="section-title">Formules de location <span class="accent">tarifs HT</span></div>
+        <div class="row">
+          <div>
+            <label for="formula-short">Formule courte durée (si choisie, la longue se désactive)</label>
+            <select id="formula-short">
+              <option value="">— Choisir —</option>
+              <option value="hour">1h — 10,00 € HT</option>
+              <option value="halfday">½ journée (4h) — 45,00 € HT</option>
+              <option value="fullday">1 journée (8h) — 70,00 € HT</option>
+              <option value="week">1 semaine (5 jours) — 280,00 € HT</option>
+            </select>
+          </div>
+          <div>
+            <label for="formula-long">Formule longue durée (si choisie, la courte se désactive)</label>
+            <select id="formula-long">
+              <option value="">— Choisir —</option>
+              <option value="m1">1 mois — 1 300,00 € HT</option>
+              <option value="m3">3 mois — 3 600,00 € HT</option>
+              <option value="m6">6 mois — 6 600,00 € HT</option>
+              <option value="m12">12 mois — 12 000,00 € HT</option>
+            </select>
+          </div>
         </div>
 
         <!-- Matériel -->
@@ -194,26 +166,22 @@
               <li><label><input type="checkbox" value="20" data-label="Pack Essentiel"> Pack Essentiel — 20 €</label> <span class="hint">1 tondeuse classique, 1 finition, 2 serviettes, 1 cape</span></li>
               <li><label><input type="checkbox" value="30" data-label="Pack Premium"> Pack Premium — 30 €</label> <span class="hint">1 tondeuse classique, 1 finition, 1 shaver, 4 serviettes, 2 capes</span></li>
             </ul>
-            <div class="hint">Pour la courte durée, les prix “à la pièce” sont comptés **par jour** sélectionné.</div>
+            <div class="hint">En courte durée, “à la pièce” est facturé par jour sélectionné.</div>
           </div>
         </div>
 
         <!-- CGV -->
         <label style="display:flex;align-items:center;gap:8px;margin-top:14px">
           <input type="checkbox" id="f-cgv" required>
-          <span>J’ai lu et j’accepte les <a href="#cgv" style="color:#8ab4f8">CGV</a> (version simple + détaillée).</span>
+          <span>J’ai lu et j’accepte les <a href="#cgv" id="cgvLink" style="color:#8ab4f8">CGV (avec récap contrat)</a>.</span>
         </label>
 
-        <!-- Résumé -->
+        <!-- Résumé simple à l’écran -->
         <div class="summary">
-          <div><small>Type :</small> <span id="sum-type">—</span></div>
-          <div><small>Période :</small> <span id="sum-period">—</span> <span id="sum-autoend" class="hint"></span></div>
-          <div id="shortOnlyA">
-            <small>Jours comptés :</small> <span id="sum-days">0</span> • <small>Heures/jour :</small> <span id="sum-hpd">0</span> • <small>Durée totale :</small> <span id="sum-hours">0 h</span>
-          </div>
-          <div><small>Base HT :</small> <span id="sum-base">0 €</span></div>
+          <div><small>Période :</small> <span id="sum-period">—</span></div>
+          <div><small>Formule :</small> <span id="sum-formula">—</span> <span class="tag" id="sum-mode">—</span></div>
+          <div><small>Heures/jour :</small> <span id="sum-hpd">0</span></div>
           <div><small>Matériel HT :</small> <span id="sum-gear">0 €</span></div>
-          <div><small><b>Redevance 2% (indicative)</b> :</small> <span id="sum-fee">0 €</span> <span class="hint">Facturée mensuellement sur CA déclaré</span></div>
           <div><small>Total HT :</small> <span id="sum-ht">0 €</span></div>
           <div><small>TVA (20%) :</small> <span id="sum-tva">0 €</span></div>
           <div><b>Total TTC :</b> <span id="sum-ttc">0 €</span></div>
@@ -227,7 +195,7 @@
           <a id="emailLink" class="btn btn-grey" href="#" target="_blank" rel="noopener">Envoyer aussi par e-mail</a>
         </div>
 
-        <!-- Fermer le modal (sans JS) -->
+        <!-- Fermer -->
         <a href="#" class="close">Fermer</a>
       </form>
     </div>
@@ -236,13 +204,24 @@
   <!-- ============ MODAL CGV ============ -->
   <div class="modal cgv" id="cgv" aria-hidden="true">
     <div class="box" role="dialog" aria-modal="true" aria-labelledby="cgvTitle">
-      <h3 id="cgvTitle">CGV — PHENO&CO</h3>
+      <h3 id="cgvTitle">CGV — PHENO&CO (récapitulatif contrat)</h3>
+
+      <!-- Récapitulatif dynamique (contrat) -->
+      <div class="cgv-recap">
+        <h5>Récapitulatif de votre sélection</h5>
+        <p><b>Identité :</b> <span id="cv-name">—</span> • <b>Téléphone :</b> <span id="cv-phone">—</span> • <b>Email :</b> <span id="cv-email">—</span></p>
+        <p><b>Période :</b> <span id="cv-period">—</span> • <b>Heures/jour :</b> <span id="cv-hpd">—</span></p>
+        <p><b>Formule :</b> <span id="cv-formula">—</span> <span class="tag" id="cv-mode">—</span></p>
+        <p><b>Matériel sélectionné :</b> <span id="cv-gear-list">—</span></p>
+        <p><b>Total HT :</b> <span id="cv-ht">0 €</span> • <b>TVA 20% :</b> <span id="cv-tva">0 €</span> • <b>Total TTC :</b> <span id="cv-ttc">0 €</span></p>
+        <p><b>Acompte 50% :</b> <span id="cv-deposit">0 €</span></p>
+      </div>
 
       <h4>Version simple</h4>
       <ul>
         <li><b>Objet :</b> location de fauteuils et petits matériels.</li>
-        <li><b>Tarifs :</b> courte et longue durée, redevance 2% mensuelle.</li>
-        <li><b>Paiement :</b> acompte 50% à la confirmation ; le reste à l’arrivée (ou mensuel pour longue durée).</li>
+        <li><b>Tarifs :</b> courte ou longue durée selon grille ci-dessus.</li>
+        <li><b>Paiement :</b> acompte 50% à la confirmation ; solde à l’arrivée (ou mensuel en longue durée).</li>
         <li><b>Obligations locataire :</b> respect, entretien, assurance RC Pro.</li>
         <li><b>Obligations bailleur :</b> mise à disposition, sécurité, maintenance lourde.</li>
         <li><b>Résiliation :</b> préavis 7 jours (ou immédiate en cas de manquement grave).</li>
@@ -250,9 +229,8 @@
 
       <h4>Version détaillée (trame juriste)</h4>
       <p><b>Définitions :</b> Bailleur (PHENO&CO), Locataire, Location courte/longue durée.</p>
-      <p><b>Objet :</b> mise à disposition fauteuils + matériels.</p>
-      <p><b>Tarifs/redevance :</b> HT, 2% mensuels sur CA déclaré (accès espace personnel/planning).</p>
-      <p><b>Paiement :</b> mensuel, pénalités 10% en cas de retard.</p>
+      <p><b>Objet :</b> mise à disposition fauteuils + matériels ; tarifs HT, redevance éventuelle selon contrat long.</p>
+      <p><b>Paiement :</b> mensuel pour long, pénalités 10% en cas de retard.</p>
       <p><b>Obligations locataire :</b> normes, entretien, RC Pro, sincérité déclarations, pas de sous-location sans accord.</p>
       <p><b>Obligations bailleur :</b> hygiène, sécurité, maintenance générale, confidentialité.</p>
       <p><b>Assurance :</b> RC Pro obligatoire pour le locataire.</p>
@@ -272,12 +250,11 @@ const TVA=0.20;
 /* Tarifs courte durée (HT) */
 const SHORT_PRICES = {
   hour:     { label:'1h',          pricePerHour: 10 },   // 10 €/h
-  halfday:  { label:'½ journée',   fixedPerBlock: 45, hoursPerDay: 4 },
-  fullday:  { label:'1 journée',   fixedPerBlock: 70, hoursPerDay: 8 },
-  week:     { label:'1 semaine',   fixedPerBlock: 280, daysPerBlock: 5 }
+  halfday:  { label:'½ journée (4h)', fixedPerBlock: 45, hoursPerDay: 4 },
+  fullday:  { label:'1 journée (8h)', fixedPerBlock: 70, hoursPerDay: 8 },
+  week:     { label:'1 semaine (5 jours)', fixedPerBlock: 280, daysPerBlock: 5 }
 };
-
-/* Tarifs longue durée (HT) — montants totaux pour la durée */
+/* Tarifs longue durée (HT) — montants totaux */
 const LONG_PRICES = {
   m1:  { label:'1 mois',   months:1,  total:1300 },
   m3:  { label:'3 mois',   months:3,  total:3600 },
@@ -288,200 +265,195 @@ const LONG_PRICES = {
 /* ===== HELPERS ===== */
 const €=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
 const id=s=>document.getElementById(s);
-function pad2(v){return String(v).padStart(2,'0');}
-function ymd(d,m,y){return `${y.value}-${m.value}-${d.value}`;}
-function parseDate(str){const [Y,M,D]=str.split('-').map(Number);return new Date(Y,M-1,D);}
-function daysBetweenInclusive(a,b){
-  const A=parseDate(a), B=parseDate(b); A.setHours(0,0,0,0); B.setHours(0,0,0,0);
-  return Math.max(0, Math.floor((B-A)/86400000)+1);
-}
+function parseDateInput(i){return i.value?new Date(i.value+'T00:00:00'):null;}
+function daysBetweenInclusive(a,b){ if(!a||!b) return 0; const A=new Date(a), B=new Date(b); A.setHours(0,0,0,0); B.setHours(0,0,0,0); return Math.max(0, Math.floor((B-A)/86400000)+1); }
+function formatDate(d){if(!d) return '—'; const Y=d.getFullYear(), M=String(d.getMonth()+1).padStart(2,'0'), D=String(d.getDate()).padStart(2,'0'); return `${Y}-${M}-${D}`;}
 
-/* ===== INIT SELECTEURS DATES ===== */
-const sdDay=id('sd-day'), sdMonth=id('sd-month'), sdYear=id('sd-year');
-const edDay=id('ed-day'), edMonth=id('ed-month'), edYear=id('ed-year');
+/* ===== ELEMENTS ===== */
+const fName=id('f-name'), fPhone=id('f-phone'), fEmail=id('f-email'), fNote=id('f-note');
+const sd=id('sd'), ed=id('ed'); const startTime=id('f-start-time'), hpd=id('f-hours-per-day');
+const fs=id('formula-short'), fl=id('formula-long');
 
-function fillDMY(daySel, monthSel, yearSel){
-  daySel.innerHTML=''; monthSel.innerHTML=''; yearSel.innerHTML='';
-  for(let d=1; d<=31; d++) daySel.add(new Option(pad2(d), pad2(d)));
-  ['01','02','03','04','05','06','07','08','09','10','11','12'].forEach(m=>monthSel.add(new Option(m,m)));
-  const y=new Date().getFullYear(); [y,y+1].forEach(Y=>yearSel.add(new Option(String(Y),String(Y))));
-}
-function initDates(){
-  fillDMY(sdDay,sdMonth,sdYear);
-  fillDMY(edDay,edMonth,edYear);
-  const t=new Date();
-  sdDay.value=pad2(t.getDate()); sdMonth.value=pad2(t.getMonth()+1); sdYear.value=String(t.getFullYear());
-  edDay.value=sdDay.value; edMonth.value=sdMonth.value; edYear.value=sdYear.value;
-  id('f-start-time').value='10:00';
-  id('f-hours-per-day').value='4';
-  id('f-type').value='short';
-  toggleType();
-}
-initDates();
-
-/* ===== UI TOGGLE : type courte / longue ===== */
-function toggleType(){
-  const t=id('f-type').value;
-  const short=t==='short';
-  id('shortWrap').style.display= short ? 'block':'none';
-  id('longWrap').style.display = short ? 'none':'block';
-  id('shortOnlyA').style.display = short ? 'block':'none';
-  id('endDateWrap').style.display= short ? 'block':'block';
-  id('autoEndHint').style.display = short ? 'none':'block';
-  id('sum-autoend').textContent='';
-}
-id('f-type').addEventListener('change', ()=>{ toggleType(); updateAll(); });
-
-/* ===== Verrouiller heures/jour selon formule courte durée ===== */
-id('f-formula-short').addEventListener('change', ()=>{
-  const key=id('f-formula-short').value;
-  if(key==='halfday') { id('f-hours-per-day').value='4';  id('f-hours-per-day').disabled=true; }
-  else if(key==='fullday'){ id('f-hours-per-day').value='8'; id('f-hours-per-day').disabled=true; }
-  else { id('f-hours-per-day').disabled = (key==='week'); if(key==='week'){ id('f-hours-per-day').value='8'; } }
+/* ===== EXCLUSIVITE DES FORMULES ===== */
+function lockFormulas(e){
+  if(e.target===fs && fs.value){ fl.value=''; fl.disabled=true; }
+  else if(e.target===fl && fl.value){ fs.value=''; fs.disabled=true; hpd.disabled=false; }
+  if(!fs.value && !fl.value){ fs.disabled=false; fl.disabled=false; }
+  // Si demi-journée/journée : verrouille hpd
+  if(fs.value==='halfday'){ hpd.value='4'; hpd.disabled=true; }
+  else if(fs.value==='fullday'){ hpd.value='8'; hpd.disabled=true; }
+  else if(fs.value==='week'){ hpd.value='8'; hpd.disabled=false; } // semaine = calcul par blocs (5 jours)
+  else if(!fl.value){ hpd.disabled=false; }
   updateAll();
-});
-
-/* ===== CALCUL ===== */
-function gearCostShort(days){
-  // Somme à la pièce (par jour) + packs (forfait)
-  const pieces = [...id('pieces').querySelectorAll('input:checked')].reduce((s,el)=>s+Number(el.value),0) * Math.max(1,days);
-  const packs  = [...id('packs').querySelectorAll('input:checked')].reduce((s,el)=>s+Number(el.value),0);
-  return pieces + packs;
 }
-function gearCostLong(months){
-  // Pour la longue durée, on facture le matériel au forfait mensuel simple : packs x mois + pièces x 20 jours/mois (approx).
-  const packs  = [...id('packs').querySelectorAll('input:checked')].reduce((s,el)=>s+Number(el.value),0) * Math.max(1,months);
-  const piecesPerDay = [...id('pieces').querySelectorAll('input:checked')].reduce((s,el)=>s+Number(el.value),0);
-  const pieces = piecesPerDay * (20*months); // approx 20 jours ouvrés / mois
-  return packs + pieces;
+fs.addEventListener('change',lockFormulas);
+fl.addEventListener('change',lockFormulas);
+
+/* ===== CALCULS ===== */
+function gearListAndCostShort(days){
+  const piecesChecked=[...id('pieces').querySelectorAll('input:checked')];
+  const packsChecked=[...id('packs').querySelectorAll('input:checked')];
+  const piecesCost = piecesChecked.reduce((s,el)=>s+Number(el.value),0) * Math.max(1,days);
+  const packsCost  = packsChecked.reduce((s,el)=>s+Number(el.value),0);
+  const labels=[
+    ...piecesChecked.map(el=>el.dataset.label),
+    ...packsChecked.map(el=>el.dataset.label)
+  ];
+  return {labels, cost:piecesCost+packsCost};
+}
+function gearListAndCostLong(months){
+  const piecesChecked=[...id('pieces').querySelectorAll('input:checked')];
+  const packsChecked=[...id('packs').querySelectorAll('input:checked')];
+  const packsCost  = packsChecked.reduce((s,el)=>s+Number(el.value),0) * Math.max(1,months);
+  const piecesPerDay = piecesChecked.reduce((s,el)=>s+Number(el.value),0);
+  const piecesCost = piecesPerDay * (20*months); // approx 20 jours/mois
+  const labels=[
+    ...piecesChecked.map(el=>el.dataset.label),
+    ...packsChecked.map(el=>el.dataset.label+` x ${months}m`)
+  ];
+  return {labels, cost:piecesCost+packsCost};
 }
 
 function compute(){
-  const type=id('f-type').value;
-  const sd=ymd(sdDay,sdMonth,sdYear), ed=ymd(edDay,edMonth,edYear);
-  const st=id('f-start-time').value;
-  let baseHt=0, gearHt=0, days=0, hoursPerDay=parseFloat(id('f-hours-per-day').value||'0')||0;
-  let longMonths=0, autoEndPreview='';
-
-  if(type==='short'){
-    const key=id('f-formula-short').value;
-    days = daysBetweenInclusive(sd,ed);
-    if(key==='hour'){
-      const hoursTotal = Math.max(0, days) * hoursPerDay;
-      baseHt = hoursTotal * SHORT_PRICES.hour.pricePerHour;
-    }else if(key==='halfday'){
-      const blocks = Math.max(0, days); // 1 demi-journée par jour sélectionné
-      baseHt = blocks * SHORT_PRICES.halfday.fixedPerBlock;
-      hoursPerDay = 4;
-    }else if(key==='fullday'){
-      const blocks = Math.max(0, days); // 1 journée par jour sélectionné
-      baseHt = blocks * SHORT_PRICES.fullday.fixedPerBlock;
-      hoursPerDay = 8;
-    }else if(key==='week'){
-      const weeks = Math.ceil(Math.max(0, days)/5); // 5 jours = 1 semaine
-      baseHt = weeks * SHORT_PRICES.week.fixedPerBlock;
-      hoursPerDay = 8;
-    }
-    gearHt = gearCostShort(days);
-  }else{
-    const key=id('f-formula-long').value;
-    const def=LONG_PRICES[key];
-    longMonths=def.months;
+  const start=parseDateInput(sd), end=parseDateInput(ed);
+  const days=daysBetweenInclusive(start,end);
+  const hoursPerDay=Number(hpd.value||0);
+  let mode='—', formulaLabel='—', baseHt=0, gearHt=0, autoEndText='';
+  // COURTE
+  if(fs.value){
+    mode='Courte durée';
+    const key=fs.value;
+    const def=SHORT_PRICES[key];
+    formulaLabel=def.label;
+    if(key==='hour'){ baseHt = (days*hoursPerDay) * SHORT_PRICES.hour.pricePerHour; }
+    else if(key==='halfday'){ baseHt = days * def.fixedPerBlock; }
+    else if(key==='fullday'){ baseHt = days * def.fixedPerBlock; }
+    else if(key==='week'){ const weeks = Math.ceil(days/def.daysPerBlock||0); baseHt = weeks * def.fixedPerBlock; }
+    gearHt = gearListAndCostShort(days).cost;
+  }
+  // LONGUE
+  else if(fl.value){
+    mode='Longue durée';
+    const def=LONG_PRICES[fl.value];
+    formulaLabel=def.label;
     baseHt = def.total;
-    // Aperçu date de fin auto (simple ajout de mois)
-    const d=parseDate(sd); const end=new Date(d.getFullYear(), d.getMonth()+longMonths, d.getDate());
-    autoEndPreview = ` → fin approx. ${end.getFullYear()}-${pad2(end.getMonth()+1)}-${pad2(end.getDate())}`;
-    gearHt = gearCostLong(longMonths);
+    // Suggestion de fin approx si end non renseignée correctement
+    if(start){
+      const end2=new Date(start.getFullYear(), start.getMonth()+def.months, start.getDate());
+      autoEndText = ` (fin approx. ${formatDate(end2)})`;
+    }
+    const gc=gearListAndCostLong(def.months); gearHt=gc.cost;
   }
 
-  const fee = baseHt * 0.02; // redevance 2% indicative (affichée à part)
   const totalHt = baseHt + gearHt;
   const tva = totalHt * TVA;
   const ttc = totalHt + tva;
   const deposit = ttc * 0.5;
 
-  return {type, sd, ed, st, days, hoursPerDay, longMonths, autoEndPreview, baseHt, gearHt, fee, totalHt, tva, ttc, deposit};
+  return {
+    start, end, days, hoursPerDay,
+    mode, formulaLabel, baseHt, gearHt, totalHt, tva, ttc, deposit,
+    autoEndText
+  };
 }
 
+/* ===== UPDATE UI + CGV ===== */
 function updateAll(){
   const c=compute();
-  id('sum-type').textContent = (c.type==='short'?'Courte durée':'Longue durée');
-  id('sum-period').textContent = `${c.sd} → ${c.ed} (arrivée ${c.st||'—'})`;
-  id('sum-autoend').textContent = (c.type==='long') ? c.autoEndPreview : '';
-  id('sum-days').textContent = c.days;
-  id('sum-hpd').textContent = String(c.hoursPerDay).replace('.',',');
-  id('sum-hours').textContent = `${(c.days * c.hoursPerDay).toLocaleString('fr-FR')} h`;
-  id('sum-base').textContent = €.format(c.baseHt);
+  const period = `${formatDate(c.start)} → ${formatDate(c.end)}${c.autoEndText||''} (arrivée ${startTime.value})`;
+  id('sum-period').textContent = period;
+  id('sum-formula').textContent = c.formulaLabel;
+  id('sum-mode').textContent = c.mode;
+  id('sum-hpd').textContent = c.hoursPerDay;
   id('sum-gear').textContent = €.format(c.gearHt);
-  id('sum-fee').textContent  = €.format(c.fee);
-  id('sum-ht').textContent   = €.format(c.totalHt);
-  id('sum-tva').textContent  = €.format(c.tva);
-  id('sum-ttc').textContent  = €.format(c.ttc);
+  id('sum-ht').textContent = €.format(c.totalHt);
+  id('sum-tva').textContent = €.format(c.tva);
+  id('sum-ttc').textContent = €.format(c.ttc);
   id('sum-deposit').textContent = €.format(c.deposit);
 
-  // email link
-  const subject=encodeURIComponent(`Demande de location de fauteuil — ${id('f-name').value||''}`);
+  // Email link
+  const subject=encodeURIComponent(`Demande de location de fauteuil — ${fName.value||''}`);
   const body=encodeURIComponent(
 `Demande de location — PHENO&CO
-Nom: ${id('f-name').value||'-'}
-Téléphone: ${id('f-phone').value||'-'}
-Email: ${id('f-email').value||'-'}
-Type: ${c.type==='short'?'Courte durée':'Longue durée'}
-Période: du ${c.sd} ${c.st||'-'} au ${c.ed}${c.type==='long'?c.autoEndPreview:''}
-Jours: ${c.days} • Heures/jour: ${c.hoursPerDay}
-Base HT: ${€.format(c.baseHt)}
-Matériel HT: ${€.format(c.gearHt)}
-Redevance 2% (indicative): ${€.format(c.fee)}  (facturée mensuellement)
+Nom: ${fName.value||'-'}
+Téléphone: ${fPhone.value||'-'}
+Email: ${fEmail.value||'-'}
+Période: ${period}
+Formule: ${c.mode} — ${c.formulaLabel}
+Heures/jour: ${c.hoursPerDay}
 Total HT: ${€.format(c.totalHt)}
 TVA 20%: ${€.format(c.tva)}
 Total TTC: ${€.format(c.ttc)}
 Acompte 50%: ${€.format(c.deposit)}
-Message: ${id('f-note').value||'-'}
+Message: ${fNote.value||'-'}
 
-CGV/Contrat: accepté si coché. Merci d’envoyer le lien de paiement (acompte 50%).`);
+CGV/Contrat: accepté si coché.`);
   id('emailLink').href=`mailto:${EMAIL}?subject=${subject}&body=${body}`;
+
+  // ==== CGV recap (contrat) ====
+  id('cv-name').textContent = fName.value||'—';
+  id('cv-phone').textContent = fPhone.value||'—';
+  id('cv-email').textContent = fEmail.value||'—';
+  id('cv-period').textContent = period;
+  id('cv-hpd').textContent = c.hoursPerDay||'—';
+  id('cv-formula').textContent = c.formulaLabel||'—';
+  id('cv-mode').textContent = c.mode||'—';
+  // Matériel : labels lisibles
+  const checked = [...document.querySelectorAll('#pieces input:checked,#packs input:checked')].map(el=>el.dataset.label);
+  id('cv-gear-list').textContent = checked.length? checked.join(', ') : '—';
+  id('cv-ht').textContent = €.format(c.totalHt);
+  id('cv-tva').textContent = €.format(c.tva);
+  id('cv-ttc').textContent = €.format(c.ttc);
+  id('cv-deposit').textContent = €.format(c.deposit);
 }
 
 /* Listeners */
-['change','input'].forEach(evt=>{
-  ['f-type','f-start-time','f-hours-per-day','f-formula-short','f-formula-long','f-name','f-phone','f-email','f-note']
-    .forEach(fid=>id(fid).addEventListener(evt,updateAll));
-  [sdDay,sdMonth,sdYear,edDay,edMonth,edYear].forEach(el=>el.addEventListener(evt,updateAll));
+['input','change'].forEach(evt=>{
+  [fName,fPhone,fEmail,fNote,sd,ed,startTime,hpd,fs,fl].forEach(el=>el.addEventListener(evt,updateAll));
+  [...document.querySelectorAll('#pieces input,#packs input')].forEach(el=>el.addEventListener(evt,updateAll));
 });
-[...document.querySelectorAll('#pieces input,#packs input')].forEach(el=>el.addEventListener('change',updateAll));
 
 /* Reset */
-id('resetBtn').onclick=()=>setTimeout(()=>{initDates(); updateAll();},0);
+id('resetBtn').onclick=()=>setTimeout(()=>{
+  fName.value=''; fPhone.value=''; fEmail.value=''; fNote.value='';
+  const today = new Date(); const t = today.toISOString().slice(0,10);
+  sd.value=t; ed.value=t;
+  startTime.value='10:00'; hpd.value='4';
+  fs.value=''; fl.value=''; fs.disabled=false; fl.disabled=false; hpd.disabled=false;
+  document.querySelectorAll('#pieces input,#packs input').forEach(el=>el.checked=false);
+  updateAll();
+},0);
+
+/* Init defaults */
+(function init(){
+  const t = new Date().toISOString().slice(0,10);
+  sd.value=t; ed.value=t;
+  startTime.value='10:00'; hpd.value='4';
+  updateAll();
+})();
 
 /* Submit => WhatsApp */
 id('rentForm').addEventListener('submit',(e)=>{
   e.preventDefault();
+  if(!(fName.value.trim() && fPhone.value.trim())){ alert('Merci de renseigner nom/prénom et téléphone.'); return; }
+  if(!id('f-cgv').checked){ alert('Merci d’accepter les CGV (clique pour voir le contrat).'); return; }
   const c=compute();
-  if(!(id('f-name').value.trim() && id('f-phone').value.trim())){
-    alert('Merci de renseigner nom/prénom et téléphone.'); return;
-  }
-  if(!id('f-cgv').checked){ alert('Merci d’accepter les CGV.'); return; }
+  if(!fs.value && !fl.value){ alert('Choisis une formule (courte OU longue durée).'); return; }
 
   const msg =
 `Demande de location — PHENO&CO
-• Nom: ${id('f-name').value.trim()}
-• Tel: ${id('f-phone').value.trim()} • Email: ${id('f-email').value||'-'}
-• Type: ${c.type==='short'?'Courte durée':'Longue durée'}
-• Période: ${c.sd} → ${c.ed} ${c.type==='long'?c.autoEndPreview:''} (arrivée ${c.st})
-• Jours: ${c.days} • H/j: ${c.hoursPerDay}
-• Base HT: ${€.format(c.baseHt)}
-• Matériel HT: ${€.format(c.gearHt)}
-• Redevance 2% (indicative): ${€.format(c.fee)}
+• Nom: ${fName.value.trim()}
+• Tel: ${fPhone.value.trim()} • Email: ${fEmail.value||'-'}
+• Période: ${formatDate(c.start)} → ${formatDate(c.end)}${c.autoEndText||''} (arrivée ${startTime.value})
+• Formule: ${c.mode} — ${c.formulaLabel}
+• Heures/jour: ${c.hoursPerDay}
 • Total HT: ${€.format(c.totalHt)} • TVA: ${€.format(c.tva)}
 • Total TTC: ${€.format(c.ttc)} • Acompte 50%: ${€.format(c.deposit)}
-• Message: ${(id('f-note').value||'-').trim()}
+• Matériel: ${[...document.querySelectorAll('#pieces input:checked,#packs input:checked')].map(el=>el.dataset.label).join(', ') || '-'}
 
-CGV: accepté ✅ — Merci d’envoyer le lien de paiement 50%.`;
+CGV: accepté ✅ — merci d’envoyer le lien de paiement (50%).`;
   window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
 });
-
-/* First compute */
-updateAll();
 </script>
 </body>
 </html>
