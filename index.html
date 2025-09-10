@@ -1,3 +1,267 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PHENO&CO — Barbershop depuis 2009</title>
+<meta name="color-scheme" content="dark light">
+<style>
+  :root{
+    --bg:#000;--fg:#fff;--muted:#bdbdbd;--yellow:#ffd400;--grey:#444;--focus:#8ab4f8;
+    --card:#0f0f0f;--line:#1f1f1f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--fg);text-align:center}
+  header{padding:24px}
+  header img{width:180px;margin-bottom:12px}
+  h1{color:var(--yellow);margin:0;font-size:2.2rem}
+  .sub{margin:6px 0 10px;color:#ddd}
+
+  .nav{display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;margin:14px auto 18px}
+  .btn{display:block;width:80%;max-width:520px;padding:18px 22px;border-radius:18px;font-weight:800;text-decoration:none;font-size:1.15rem;line-height:1.2}
+  .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .btn-yellow{background:var(--yellow);color:#000}
+  .btn-grey{background:var(--grey);color:#fff}
+  .btn:hover{opacity:.95}
+
+  footer{padding:22px 18px;color:#aaa;font-size:.9rem;border-top:1px solid #1b1b1b}
+
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:18px;z-index:999}
+  .modal:target{display:flex}
+  .box{max-width:980px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;max-height:88vh;overflow:auto;text-align:left}
+  .box h2{margin:0 0 10px;color:var(--yellow);text-align:center}
+  .close{display:inline-block;margin-top:12px;padding:10px 14px;background:#161616;border:1px solid #2a2a2a;border-radius:10px;color:#fff;text-decoration:none}
+
+  label{display:block;margin:10px 0 6px}
+  input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #2a2a2a;background:#121212;color:#fff;font-size:16px}
+  input[type="number"]{appearance:textfield}
+  textarea{min-height:96px;resize:vertical}
+  .row{display:grid;gap:12px}
+  @media(min-width:680px){.row{grid-template-columns:1fr 1fr}}
+  .section-title{font-weight:900;color:#fff;margin:14px 0 6px}
+  .accent{color:#000;background:var(--yellow);padding:2px 8px;border-radius:8px;margin-left:8px}
+  .hint{font-size:12px;color:#9aa0a6}
+  .summary{border-top:1px dashed #2b2b2b;margin-top:16px;padding-top:12px;color:#e6e6e6}
+  .summary small{color:#bdbdbd}
+  .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+  .btn-submit,.btn-reset{flex:1;min-width:160px;padding:14px 16px;border-radius:14px;border:none;font-weight:800;cursor:pointer}
+  .btn-submit{background:var(--yellow);color:#000}
+  .btn-reset{background:var(--grey);color:#fff}
+
+  .modal.cgv .box{max-width:900px}
+  .modal.cgv h3{color:var(--yellow);margin:0 0 10px}
+  .modal.cgv h4{margin:14px 0 8px}
+  .modal.cgv p,.modal.cgv li{color:#ddd}
+  .modal.cgv ul{margin:0 0 8px 18px}
+  .cgv-recap{border:1px solid #2a2a2a;border-radius:12px;padding:12px;background:#111;margin:8px 0}
+  .cgv-recap h5{margin:0 0 6px;color:#ffd400}
+  .tag{display:inline-block;background:#222;border:1px solid #333;border-radius:999px;padding:2px 8px;margin-right:6px;color:#ddd;font-size:12px}
+
+  /* Petit indicateur de statut (debug simple) */
+  .status{position:fixed;right:8px;bottom:8px;font-size:12px;background:#0f0f0f;border:1px solid #222;color:#9eea9e;padding:6px 8px;border-radius:8px;opacity:.85}
+</style>
+</head>
+<body>
+  <header>
+    <img src="1.png" alt="Logo PHENO&CO" onerror="this.style.display='none'">
+    <h1>PHENO&CO — Barbershop depuis 2009</h1>
+    <p class="sub">18 Rue d'Alger, 34000 Montpellier</p>
+  </header>
+
+  <nav class="nav" aria-label="Actions principales">
+    <a class="btn btn-yellow" href="#louer">Louer un fauteuil</a>
+    <a class="btn btn-grey" href="https://phenoandco.com" target="_blank" rel="noopener">Réserver une coiffure</a>
+  </nav>
+
+  <footer>© 2025 PHENO&CO. Tous droits réservés.</footer>
+
+  <!-- ============ MODAL LOUER UN FAUTEUIL ============ -->
+  <div class="modal" id="louer" aria-hidden="true">
+    <div class="box" role="dialog" aria-modal="true" aria-labelledby="title-fauteuil">
+      <h2 id="title-fauteuil">Louer un fauteuil — Réservation</h2>
+      <p class="hint">Choisis tes dates (calendrier), ta formule (courte OU longue durée), ton matériel. Les totaux et le contrat s’affichent automatiquement.</p>
+
+      <form id="rentForm" autocomplete="on" novalidate>
+        <!-- Identité -->
+        <div class="row">
+          <div><label for="f-name">Nom et prénom</label><input id="f-name" required placeholder="Ex. Jean Dupont"></div>
+          <div><label for="f-phone">Téléphone</label><input id="f-phone" required inputmode="tel" placeholder="Ex. 06 12 34 56 78"></div>
+        </div>
+        <div class="row">
+          <div><label for="f-email">Email (pour le récap)</label><input id="f-email" inputmode="email" placeholder="exemple@mail.com"></div>
+          <div><label for="f-note">Message (optionnel)</label><input id="f-note" placeholder="Ex. Poste miroir 2, shaver…"></div>
+        </div>
+
+        <!-- Période -->
+        <div class="section-title">Période <span class="accent">calendrier</span></div>
+        <div class="row">
+          <div>
+            <label for="f-start-date">Date de début</label>
+            <input type="date" id="f-start-date" />
+          </div>
+          <div>
+            <label for="f-end-date">Date de fin</label>
+            <input type="date" id="f-end-date" />
+          </div>
+        </div>
+
+        <!-- Heures -->
+        <div class="row">
+          <div>
+            <label for="f-start-time">Heure d’arrivée (10:00–18:00)</label>
+            <select id="f-start-time">
+              <option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option>
+              <option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+            </select>
+          </div>
+          <div>
+            <label for="f-hours-per-day">Heures par jour</label>
+            <select id="f-hours-per-day">
+              <option>1</option><option>2</option><option>3</option><option selected>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option>
+              <option>9</option><option>10</option>
+            </select>
+            <div class="hint">Heures entières (1–10)</div>
+          </div>
+        </div>
+
+        <!-- Formules -->
+        <div class="section-title">Formules de location <span class="accent">tarifs HT</span></div>
+        <div class="row">
+          <div>
+            <label for="formula-short">Formule courte durée (si choisie, l’autre se désactive)</label>
+            <select id="formula-short">
+              <option value="">— Choisir —</option>
+              <option value="hour">1h — 10,00 € HT</option>
+              <option value="halfday">½ journée (4h) — 45,00 € HT</option>
+              <option value="fullday">1 journée (8h) — 70,00 € HT</option>
+              <option value="week">1 semaine (5 jours) — 280,00 € HT</option>
+            </select>
+          </div>
+          <div>
+            <label for="formula-long">Formule longue durée (affichage €/jour HT)</label>
+            <select id="formula-long">
+              <option value="">— Choisir —</option>
+              <option value="m1">1 mois — 65 € / jour (HT) + redevance 2%/mois</option>
+              <option value="m3">3 mois — 60 € / jour (HT) + redevance 2%/mois</option>
+              <option value="m6">6 mois — 55 € / jour (HT) + redevance 2%/mois</option>
+              <option value="m12">12 mois — 50 € / jour (HT) + redevance 2%/mois</option>
+            </select>
+            <div class="hint">Le total est calculé automatiquement (base 20 jours ouvrés/mois). Redevance 2%/mois : séparée, affichée dans le récap/CGV.</div>
+          </div>
+        </div>
+
+        <!-- (Optionnel) CA estimé pour redevance 2% -->
+        <div id="caBlock" class="row" style="display:none">
+          <div>
+            <label for="f-ca">CA mensuel estimé (optionnel, HT)</label>
+            <input id="f-ca" type="number" min="0" step="50" placeholder="Ex. 4000" />
+            <div class="hint">Redevance estimée = 2% × CA × nb de mois (affichée à titre indicatif).</div>
+          </div>
+          <div>
+            <label>Redevance 2% estimée</label>
+            <input id="f-fee-est" disabled placeholder="—" />
+          </div>
+        </div>
+
+        <!-- Matériel — 100% menus déroulants (quantités) -->
+        <div class="section-title">Location petits matériels <span class="accent">par jour</span></div>
+        <div class="row">
+          <div>
+            <label for="q-clipper">Tondeuse classique — 10 € / jour</label>
+            <select id="q-clipper"><option value="0" selected>0</option><option>1</option><option>2</option><option>3</option></select>
+          </div>
+          <div>
+            <label for="q-trimmer">Tondeuse finition — 8 € / jour</label>
+            <select id="q-trimmer"><option value="0" selected>0</option><option>1</option><option>2</option><option>3</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="q-shaver">Shaver — 6 € / jour</label>
+            <select id="q-shaver"><option value="0" selected>0</option><option>1</option><option>2</option><option>3</option></select>
+          </div>
+          <div>
+            <label for="q-dryer">Sèche-cheveux — 8 € / jour</label>
+            <select id="q-dryer"><option value="0" selected>0</option><option>1</option><option>2</option><option>3</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="q-cape">Cape — 1 € / jour</label>
+            <select id="q-cape"><option value="0" selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+          </div>
+          <div>
+            <label for="q-towel">Serviettes (lot de 4) — 4 € / jour</label>
+            <select id="q-towel"><option value="0" selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="q-pack-ess">Pack Essentiel — 20 € / jour</label>
+            <select id="q-pack-ess"><option value="0" selected>0</option><option>1</option></select>
+            <div class="hint">1 classique, 1 finition, 2 serviettes, 1 cape</div>
+          </div>
+          <div>
+            <label for="q-pack-prem">Pack Premium — 30 € / jour</label>
+            <select id="q-pack-prem"><option value="0" selected>0</option><option>1</option></select>
+            <div class="hint">1 classique, 1 finition, 1 shaver, 4 serviettes, 2 capes</div>
+          </div>
+        </div>
+
+        <!-- CGV -->
+        <label style="display:flex;align-items:center;gap:8px;margin-top:14px">
+          <input type="checkbox" id="f-cgv" required>
+          <span>J’ai lu et j’accepte les <a href="#cgv" id="cgvLink" style="color:#8ab4f8">CGV (avec récap contrat)</a>.</span>
+        </label>
+
+        <!-- Résumé -->
+        <div class="summary">
+          <div><small>Période :</small> <span id="sum-period">—</span></div>
+          <div><small>Formule :</small> <span id="sum-formula">—</span> <span class="tag" id="sum-mode">—</span></div>
+          <div><small>Heures/jour :</small> <span id="sum-hpd">0</span></div>
+          <div><small>Matériel HT :</small> <span id="sum-gear">0 €</span></div>
+          <div><small>Total loyer HT :</small> <span id="sum-ht">0 €</span></div>
+          <div><small>TVA (20%) :</small> <span id="sum-tva">0 €</span></div>
+          <div><b>Total TTC (loyer) :</b> <span id="sum-ttc">0 €</span></div>
+          <div><small>Acompte 50% :</small> <span id="sum-deposit">0 €</span></div>
+          <div id="sum-fee-wrap" class="hint" style="margin-top:6px;display:none">
+            Redevance 2% estimée (HT, séparée) : <b><span id="sum-fee">—</span></b>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-submit" type="submit">Confirmer & envoyer (WhatsApp)</button>
+          <button class="btn-reset" type="reset" id="resetBtn">Effacer</button>
+          <a id="emailLink" class="btn btn-grey" href="#" target="_blank" rel="noopener">Envoyer aussi par e-mail</a>
+        </div>
+
+        <a href="#" class="close">Fermer</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ MODAL CGV ============ -->
+  <div class="modal cgv" id="cgv" aria-hidden="true">
+    <div class="box" role="dialog" aria-modal="true" aria-labelledby="cgvTitle">
+      <h3 id="cgvTitle">CGV — PHENO&CO (récapitulatif contrat)</h3>
+      <div class="cgv-recap">
+        <h5>Récapitulatif de votre sélection</h5>
+        <p><b>Identité :</b> <span id="cv-name">—</span> • <b>Téléphone :</b> <span id="cv-phone">—</span> • <b>Email :</b> <span id="cv-email">—</span></p>
+        <p><b>Période :</b> <span id="cv-period">—</span> • <b>Heures/jour :</b> <span id="cv-hpd">—</span></p>
+        <p><b>Formule :</b> <span id="cv-formula">—</span> <span class="tag" id="cv-mode">—</span></p>
+        <p><b>Matériel sélectionné :</b> <span id="cv-gear-list">—</span></p>
+        <p><b>Total loyer HT :</b> <span id="cv-ht">0 €</span> • <b>TVA 20% :</b> <span id="cv-tva">0 €</span> • <b>Total TTC (loyer) :</b> <span id="cv-ttc">0 €</span></p>
+        <p><b>Acompte 50% :</b> <span id="cv-deposit">0 €</span></p>
+        <p class="hint"><b>Redevance 2% (HT)</b> : due mensuellement en longue durée (accès espace personnel), facturée séparément. Estimation : <span id="cv-fee">—</span></p>
+      </div>
+      <a href="#" class="close">Fermer</a>
+    </div>
+  </div>
+
+  <!-- Indicateur statut -->
+  <div class="status" id="status">OK</div>
+
 <script>
 /* ===== CONFIG ===== */
 const PHONE='33769432605';
@@ -5,21 +269,19 @@ const EMAIL='location.phenoandco@gmail.com';
 const TVA=0.20;
 const WORK_DAYS_PER_MONTH=20;
 
-/* Courte durée (HT) */
+/* Tarifs (HT) */
 const SHORT_PRICES = {
-  hour:     { label:'1h',            pricePerHour: 10 },
-  halfday:  { label:'½ journée (4h)', fixedPerBlock: 45, hoursPerDay: 4 },
-  fullday:  { label:'1 journée (8h)', fixedPerBlock: 70, hoursPerDay: 8 },
+  hour:     { label:'1h',              pricePerHour: 10 },
+  halfday:  { label:'½ journée (4h)',  fixedPerBlock: 45, hoursPerDay: 4 },
+  fullday:  { label:'1 journée (8h)',  fixedPerBlock: 70, hoursPerDay: 8 },
   week:     { label:'1 semaine (5 jours)', fixedPerBlock: 280, daysPerBlock: 5 }
 };
-/* Longue durée (€/jour HT) */
 const LONG_PRICES = {
   m1:  { label:'1 mois',   months:1,  perDay:65 },
   m3:  { label:'3 mois',   months:3,  perDay:60 },
   m6:  { label:'6 mois',   months:6,  perDay:55 },
   m12: { label:'12 mois',  months:12, perDay:50 }
 };
-/* Matériel (prix/jour HT) */
 const GEAR = [
   { id:'q-clipper',   label:'Tondeuse classique',       price:10 },
   { id:'q-trimmer',   label:'Tondeuse finition',        price:8  },
@@ -31,134 +293,110 @@ const GEAR = [
   { id:'q-pack-prem', label:'Pack Premium',             price:30 },
 ];
 
-/* === Utilitaires === */
+/* Utils */
 const fmt = new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
-const id=s=>document.getElementById(s);
+const $ = (id)=>document.getElementById(id);
 function pad2(v){return String(v).padStart(2,'0');}
+function todayYMD(){ const t=new Date(); return `${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`; }
+function parseDate(value){ return value? new Date(`${value}T00:00:00`) : null; }
+function daysInclusive(a,b){ const A=new Date(a.getFullYear(),a.getMonth(),a.getDate()); const B=new Date(b.getFullYear(),b.getMonth(),b.getDate()); return Math.max(1, Math.floor((B-A)/86400000)+1); }
+function periodText(a,b,arr){ const s=`${a.getFullYear()}-${pad2(a.getMonth()+1)}-${pad2(a.getDate())}`, e=`${b.getFullYear()}-${pad2(b.getMonth()+1)}-${pad2(b.getDate())}`; return `${s} → ${e} (arrivée ${arr})`; }
 
-/* ==== Dates helpers ==== */
-function todayYMD(){
-  const t=new Date(); const y=t.getFullYear(), m=pad2(t.getMonth()+1), d=pad2(t.getDate());
-  return `${y}-${m}-${d}`;
-}
-function parseDateInput(val){
-  if(!val) return null;
-  const d=new Date(`${val}T00:00:00`);
-  return isNaN(d)? null : d;
-}
-function daysInclusive(a,b){
-  const A=new Date(a.getFullYear(),a.getMonth(),a.getDate());
-  const B=new Date(b.getFullYear(),b.getMonth(),b.getDate());
-  return Math.max(1, Math.floor((B-A)/86400000)+1);
-}
-function ymdText(a,b,arrival){
-  const s=`${a.getFullYear()}-${pad2(a.getMonth()+1)}-${pad2(a.getDate())}`;
-  const e=`${b.getFullYear()}-${pad2(b.getMonth()+1)}-${pad2(b.getDate())}`;
-  return `${s} → ${e} (arrivée ${arrival})`;
-}
+/* Elements */
+const fStartDate=$('f-start-date'), fEndDate=$('f-end-date');
+const fName=$('f-name'), fPhone=$('f-phone'), fEmail=$('f-email'), fNote=$('f-note');
+const startTime=$('f-start-time'), hpd=$('f-hours-per-day');
+const fs=$('formula-short'), fl=$('formula-long');
+const caBlock=$('caBlock'), fCA=$('f-ca');
+const statusEl=$('status');
 
-/* ==== Elements ==== */
-const fStartDate=id('f-start-date'), fEndDate=id('f-end-date');
-const fName=id('f-name'), fPhone=id('f-phone'), fEmail=id('f-email'), fNote=id('f-note');
-const startTime=id('f-start-time'), hpd=id('f-hours-per-day');
-const fs=id('formula-short'), fl=id('formula-long');
-const caBlock=id('caBlock'), fCA=id('f-ca');
-
-/* Init calendar defaults (aujourd’hui) */
-(function initDates(){
-  const t=todayYMD();
-  fStartDate.value = t;
-  fEndDate.value   = t;
+/* Init dates */
+(function init(){
+  const t=todayYMD(); fStartDate.value=t; fEndDate.value=t;
+  startTime.value='10:00'; hpd.value='4';
+  updateAll();
 })();
 
-/* Exclusivité des formules */
+/* Exclusivité formules */
 function lockFormulas(e){
   if(e.target===fs && fs.value){ fl.value=''; fl.disabled=true; caBlock.style.display='none'; }
   else if(e.target===fl && fl.value){ fs.value=''; fs.disabled=true; hpd.disabled=false; caBlock.style.display='grid'; }
   if(!fs.value && !fl.value){ fs.disabled=false; fl.disabled=false; caBlock.style.display='none'; }
-  if(fs.value==='halfday'){ hpd.value='4'; hpd.disabled=true; }
-  else if(fs.value==='fullday'){ hpd.value='8'; hpd.disabled=true; }
-  else { if(!fl.value) hpd.disabled=false; }
+  if(fs.value==='halfday'){ hpd.value='4'; hpd.disabled=true; } else if(fs.value==='fullday'){ hpd.value='8'; hpd.disabled=true; } else { if(!fl.value) hpd.disabled=false; }
   updateAll();
 }
 fs.addEventListener('change',lockFormulas);
 fl.addEventListener('change',lockFormulas);
 
-/* Matériel → coût */
-function gearCost(modeMonths, days){
+/* Matériel coût */
+function gearCost(months, days){
   let perDay=0; const labels=[];
-  GEAR.forEach(g=>{
-    const q = Math.max(0, Number(id(g.id).value)||0);
-    if(q>0){ perDay += g.price*q; labels.push(`${g.label} x${q}`); }
-  });
-  const mult = modeMonths>0 ? (WORK_DAYS_PER_MONTH*modeMonths) : Math.max(1, days);
+  GEAR.forEach(g=>{ const q = Number($(g.id).value||0); if(q>0){ perDay+=g.price*q; labels.push(`${g.label} x${q}`); }});
+  const mult = months>0 ? (WORK_DAYS_PER_MONTH*months) : Math.max(1, days);
   return { cost: perDay*mult, labels };
 }
 
 function compute(){
-  // Dates
-  let sd = parseDateInput(fStartDate.value) || new Date();
-  let ed = parseDateInput(fEndDate.value) || sd;
-  if(ed < sd) ed = sd; // sécurité
-  const days = daysInclusive(sd, ed);
-
+  let sd=parseDate(fStartDate.value) || new Date();
+  let ed=parseDate(fEndDate.value) || sd;
+  if(ed<sd) ed=sd;
+  const days = daysInclusive(sd,ed);
   const hoursPerDay = Number(hpd.value||0);
-  let mode='—', months=0, formulaLabel='—', baseHt=0, autoEndText='';
-  // Courte durée
+
+  let mode='—', months=0, formulaLabel='—', baseHt=0, autoEnd='';
   if(fs.value){
     mode='Courte durée';
-    const key=fs.value, def=SHORT_PRICES[key];
+    const k=fs.value, def=SHORT_PRICES[k];
     formulaLabel=def.label;
-    if(key==='hour'){ baseHt = (days*hoursPerDay) * SHORT_PRICES.hour.pricePerHour; }
-    else if(key==='halfday'){ baseHt = days * def.fixedPerBlock; }
-    else if(key==='fullday'){ baseHt = days * def.fixedPerBlock; }
-    else if(key==='week'){ const weeks = Math.ceil((days||0)/def.daysPerBlock); baseHt = weeks * def.fixedPerBlock; }
-  }
-  // Longue durée
-  else if(fl.value){
+    if(k==='hour'){ baseHt=(days*hoursPerDay)*SHORT_PRICES.hour.pricePerHour; }
+    else if(k==='halfday'){ baseHt=days*def.fixedPerBlock; }
+    else if(k==='fullday'){ baseHt=days*def.fixedPerBlock; }
+    else if(k==='week'){ const weeks=Math.ceil((days||0)/def.daysPerBlock); baseHt=weeks*def.fixedPerBlock; }
+  }else if(fl.value){
     mode='Longue durée';
     const def=LONG_PRICES[fl.value];
-    months = def.months;
+    months=def.months;
     formulaLabel=`${def.label} — ${def.perDay} € / jour (HT) + redevance 2%/mois`;
-    baseHt = def.perDay * WORK_DAYS_PER_MONTH * def.months;
+    baseHt=def.perDay*WORK_DAYS_PER_MONTH*def.months;
     const end=new Date(sd.getFullYear(), sd.getMonth()+def.months, sd.getDate());
-    autoEndText = ` (fin approx. ${end.getFullYear()}-${pad2(end.getMonth()+1)}-${pad2(end.getDate())})`;
+    autoEnd=` (fin approx. ${end.getFullYear()}-${pad2(end.getMonth()+1)}-${pad2(end.getDate())})`;
   }
-  // Matériel
-  const gear = gearCost(months, days);
-  const totalHt = baseHt + gear.cost;
-  const tva = totalHt * TVA;
-  const ttc = totalHt + tva;
-  const deposit = ttc * 0.5;
 
-  // Redevance (estimée) si CA fourni & mode long
+  const gear=gearCost(months, days);
+  const totalHt = baseHt + gear.cost;
+  const tva = totalHt*TVA;
+  const ttc = totalHt + tva;
+  const deposit = ttc*0.5;
+
   let feeEst=0;
-  if(mode==='Longue durée' && fCA && fCA.value){
-    const ca = Math.max(0, Number(fCA.value)||0);
-    feeEst = ca * 0.02 * Math.max(1, months);
-  }
-  return { sd, ed, days, hoursPerDay, mode, months, formulaLabel, baseHt, gearList:gear.labels, gearHt:gear.cost, totalHt, tva, ttc, deposit, autoEndText, feeEst };
+  if(mode==='Longue durée' && fCA && fCA.value){ const ca=Math.max(0, Number(fCA.value)||0); feeEst = ca * 0.02 * Math.max(1, months); }
+
+  return { sd, ed, days, hoursPerDay, mode, months, formulaLabel, baseHt, gearList:gear.labels, gearHt:gear.cost, totalHt, tva, ttc, deposit, autoEnd, feeEst };
 }
 
 function updateAll(){
-  const c=compute();
-  const period = ymdText(c.sd,c.ed,startTime.value) + (c.autoEndText||'');
-  id('sum-period').textContent = period;
-  id('sum-formula').textContent = c.formulaLabel;
-  id('sum-mode').textContent    = c.mode;
-  id('sum-hpd').textContent     = c.hoursPerDay;
-  id('sum-gear').textContent    = fmt.format(c.gearHt);
-  id('sum-ht').textContent      = fmt.format(c.totalHt);
-  id('sum-tva').textContent     = fmt.format(c.tva);
-  id('sum-ttc').textContent     = fmt.format(c.ttc);
-  id('sum-deposit').textContent = fmt.format(c.deposit);
+  try{
+    const c=compute();
+    const period = periodText(c.sd,c.ed,startTime.value) + (c.autoEnd||'');
 
-  const showFee = (c.mode==='Longue durée');
-  id('sum-fee-wrap').style.display = showFee ? 'block':'none';
-  id('sum-fee').textContent = (showFee && c.feeEst>0) ? fmt.format(c.feeEst) : '—';
+    // Résumé
+    $('sum-period').textContent = period;
+    $('sum-formula').textContent = c.formulaLabel;
+    $('sum-mode').textContent    = c.mode;
+    $('sum-hpd').textContent     = c.hoursPerDay;
+    $('sum-gear').textContent    = fmt.format(c.gearHt);
+    $('sum-ht').textContent      = fmt.format(c.totalHt);
+    $('sum-tva').textContent     = fmt.format(c.tva);
+    $('sum-ttc').textContent     = fmt.format(c.ttc);
+    $('sum-deposit').textContent = fmt.format(c.deposit);
 
-  const subject=encodeURIComponent(`Demande de location de fauteuil — ${fName.value||''}`);
-  const body=encodeURIComponent(
+    const showFee = (c.mode==='Longue durée');
+    $('sum-fee-wrap').style.display = showFee ? 'block':'none';
+    $('sum-fee').textContent = (showFee && c.feeEst>0) ? fmt.format(c.feeEst) : '—';
+
+    // Email
+    const subject=encodeURIComponent(`Demande de location de fauteuil — ${fName.value||''}`);
+    const body=encodeURIComponent(
 `Demande de location — PHENO&CO
 Nom: ${fName.value||'-'}
 Téléphone: ${fPhone.value||'-'}
@@ -173,59 +411,53 @@ Acompte 50%: ${fmt.format(c.deposit)}
 Redevance 2% (HT, séparée): ${(c.mode==='Longue durée' && c.feeEst>0)?fmt.format(c.feeEst):'—'}
 Matériel: ${c.gearList.join(', ') || '-'}
 CGV/Contrat: accepté si coché.`);
-  id('emailLink').href=`mailto:${EMAIL}?subject=${subject}&body=${body}`;
+    $('emailLink').href=`mailto:${EMAIL}?subject=${subject}&body=${body}`;
 
-  // CGV récap
-  id('cv-name').textContent   = fName.value||'—';
-  id('cv-phone').textContent  = fPhone.value||'—';
-  id('cv-email').textContent  = fEmail.value||'—';
-  id('cv-period').textContent = period;
-  id('cv-hpd').textContent    = c.hoursPerDay||'—';
-  id('cv-formula').textContent= c.formulaLabel||'—';
-  id('cv-mode').textContent   = c.mode||'—';
-  id('cv-gear-list').textContent = c.gearList.length? c.gearList.join(', ') : '—';
-  id('cv-ht').textContent     = fmt.format(c.totalHt);
-  id('cv-tva').textContent    = fmt.format(c.tva);
-  id('cv-ttc').textContent    = fmt.format(c.ttc);
-  id('cv-deposit').textContent= fmt.format(c.deposit);
-  id('cv-fee').textContent    = (c.mode==='Longue durée' && c.feeEst>0)? fmt.format(c.feeEst) : '—';
+    // CGV récap
+    $('cv-name').textContent   = fName.value||'—';
+    $('cv-phone').textContent  = fPhone.value||'—';
+    $('cv-email').textContent  = fEmail.value||'—';
+    $('cv-period').textContent = period;
+    $('cv-hpd').textContent    = c.hoursPerDay||'—';
+    $('cv-formula').textContent= c.formulaLabel||'—';
+    $('cv-mode').textContent   = c.mode||'—';
+    $('cv-gear-list').textContent = c.gearList.length? c.gearList.join(', ') : '—';
+    $('cv-ht').textContent     = fmt.format(c.totalHt);
+    $('cv-tva').textContent    = fmt.format(c.tva);
+    $('cv-ttc').textContent    = fmt.format(c.ttc);
+    $('cv-deposit').textContent= fmt.format(c.deposit);
+    $('cv-fee').textContent    = (c.mode==='Longue durée' && c.feeEst>0)? fmt.format(c.feeEst) : '—';
+
+    statusEl.textContent='OK'; statusEl.style.color='#9eea9e';
+  }catch(err){
+    statusEl.textContent='ERREUR: '+(err.message||err); statusEl.style.color='#ff7b7b';
+    console.error(err);
+  }
 }
 
-/* Listeners (inclut les champs date) */
+/* Listeners (dates, inputs, selects) */
 ['input','change'].forEach(evt=>{
   [fStartDate,fEndDate,fName,fPhone,fEmail,fNote,startTime,hpd,fs,fl,fCA]
     .forEach(el=>el.addEventListener(evt,updateAll));
-  GEAR.forEach(g=>id(g.id).addEventListener('change',updateAll));
+  GEAR.forEach(g=>$(`${g.id}`).addEventListener('change',updateAll));
 });
 
 /* Reset */
-id('resetBtn').onclick=()=>setTimeout(()=>{
+$('resetBtn').onclick=()=>setTimeout(()=>{
   const t=todayYMD(); fStartDate.value=t; fEndDate.value=t;
   fName.value=''; fPhone.value=''; fEmail.value=''; fNote.value='';
   startTime.value='10:00'; hpd.value='4';
   fs.value=''; fl.value=''; fs.disabled=false; fl.disabled=false; hpd.disabled=false;
-  GEAR.forEach(g=>{ id(g.id).value='0'; });
-  id('q-clipper').value='1'; id('q-trimmer').value='1'; id('q-shaver').value='1'; id('q-dryer').value='1'; id('q-cape').value='1'; id('q-towel').value='1';
-  id('q-pack-ess').value='0'; id('q-pack-prem').value='0';
+  GEAR.forEach(g=>{ $(`${g.id}`).value='0'; });
   caBlock.style.display='none'; if(fCA) fCA.value='';
   updateAll();
 },0);
 
-/* Init defaults */
-(function init(){
-  const t=todayYMD(); fStartDate.value=t; fEndDate.value=t;
-  startTime.value='10:00'; hpd.value='4';
-  id('q-clipper').value='1'; id('q-trimmer').value='1'; id('q-shaver').value='1'; id('q-dryer').value='1';
-  id('q-cape').value='1'; id('q-towel').value='1';
-  id('q-pack-ess').value='0'; id('q-pack-prem').value='0';
-  updateAll();
-})();
-
 /* Submit => WhatsApp */
-id('rentForm').addEventListener('submit',(e)=>{
+$('rentForm').addEventListener('submit',(e)=>{
   e.preventDefault();
   if(!(fName.value.trim() && fPhone.value.trim())){ alert('Merci de renseigner nom/prénom et téléphone.'); return; }
-  if(!id('f-cgv').checked){ alert('Merci d’accepter les CGV (clique pour voir le contrat).'); return; }
+  if(!$('f-cgv').checked){ alert('Merci d’accepter les CGV (clique pour voir le contrat).'); return; }
   if(!fs.value && !fl.value){ alert('Choisis une formule (courte OU longue durée).'); return; }
 
   const c=compute();
@@ -233,7 +465,7 @@ id('rentForm').addEventListener('submit',(e)=>{
 `Demande de location — PHENO&CO
 • Nom: ${fName.value.trim()}
 • Tel: ${fPhone.value.trim()} • Email: ${fEmail.value||'-'}
-• Période: ${ymdText(c.sd,c.ed,id('f-start-time').value)}${c.autoEndText||''}
+• Période: ${periodText(c.sd,c.ed,$('f-start-time').value)}${c.autoEnd||''}
 • Formule: ${c.mode} — ${c.formulaLabel}
 • Heures/jour: ${c.hoursPerDay}
 • Total loyer HT: ${fmt.format(c.totalHt)} • TVA: ${fmt.format(c.tva)}
@@ -244,4 +476,9 @@ id('rentForm').addEventListener('submit',(e)=>{
 CGV: accepté ✅ — merci d’envoyer le lien de paiement (50%).`;
   window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
 });
+
+/* Premier calcul */
+updateAll();
 </script>
+</body>
+</html>
