@@ -1,166 +1,493 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHENO&CO — Réservation de fauteuil</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0f1115;
-      color: #fff;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PHENO&CO — Réservation</title>
 
-    header {
-      background: #000;
-      color: #FFD700;
-      padding: 16px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
+<!-- EmailJS SDK (for auto-emails owner + client).
+     If you don't use EmailJS, you can keep it; the code will just skip emails. -->
+<script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js"></script>
 
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
-      background: #1a1d23;
-      border-radius: 10px;
-      padding: 20px;
-    }
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a21; --ink:#eaecef; --muted:#9aa3ad;
+    --brand:#ffd500; --brand-ink:#111; --stroke:#2a2f3a; --ok:#19c37d; --warn:#ffb020;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background:var(--bg); color:var(--ink);
+  }
 
-    h2 {
-      color: #FFD700;
-      margin-bottom: 10px;
-    }
+  /* Top app bar */
+  .appbar{
+    position:sticky; top:0; z-index:50; background:#000; color:var(--brand);
+    display:flex; align-items:center; justify-content:center; height:60px;
+    box-shadow:0 1px 0 rgba(255,213,0,.15);
+  }
+  .appbar .back{position:absolute; left:12px; color:var(--ink); opacity:.8; text-decoration:none}
 
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-    }
+  /* Screens */
+  .screen{display:none; padding:20px; max-width:860px; margin:0 auto;}
+  .screen.active{display:block}
 
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background: #0f1115;
-      color: #fff;
-      font-size: 14px;
-    }
+  /* Home */
+  .home-logo{
+    width:120px; height:120px; border-radius:24px; background:#000;
+    display:grid; place-items:center; margin:40px auto 16px; box-shadow:0 8px 30px rgba(0,0,0,.35);
+  }
+  .home-logo img{width:92%; height:92%; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(255,255,255,.15))}
+  .home-actions{display:grid; gap:14px; margin-top:22px}
+  .cta{
+    border:none; cursor:pointer; border-radius:14px; padding:16px 18px; font-weight:700; font-size:16px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow:inset 0 0 0 2px rgba(255,213,0,.08);
+    transition:transform .06s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .cta.primary{background:var(--brand); color:var(--brand-ink)}
+  .cta.secondary{background:var(--panel); color:var(--ink)}
+  .cta:active{transform:translateY(1px)}
+  .cta:hover{box-shadow:inset 0 0 0 2px rgba(255,213,0,.25)}
 
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border: 1px solid #FFD700;
-      box-shadow: 0 0 5px #FFD700;
-    }
+  /* Sections / cards */
+  .card{
+    background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius);
+    padding:18px; margin:14px 0; box-shadow:0 6px 24px rgba(0,0,0,.22);
+  }
+  .card h3{margin:0 0 12px; color:var(--brand); font-size:22px; display:flex; align-items:center; gap:10px}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:700px){ .row{grid-template-columns:1fr} }
 
-    .checkbox {
-      display: flex;
-      align-items: center;
-      margin-top: 12px;
-    }
+  label{display:block; font-weight:700; margin:10px 0 6px}
+  input, select, textarea{
+    width:100%; padding:12px 12px; border-radius:12px; border:1px solid var(--stroke);
+    background:#0f1115; color:var(--ink); font-size:15px;
+    transition:box-shadow .2s ease, border-color .2s ease;
+  }
+  input::placeholder, textarea::placeholder{color:var(--muted)}
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--brand);
+    box-shadow:0 0 0 3px rgba(255,213,0,.25);
+  }
 
-    .checkbox input {
-      margin-right: 10px;
-    }
+  /* Accordion (to “alléger” the form like your screenshots) */
+  details{border-radius:var(--radius); border:1px solid var(--stroke); background:var(--panel); margin:14px 0}
+  summary{
+    list-style:none; padding:18px; cursor:pointer; user-select:none; color:var(--brand);
+    font-weight:800; display:flex; align-items:center; gap:12px;
+  }
+  summary::marker{display:none}
+  details[open] summary{border-bottom:1px solid var(--stroke)}
+  .acc-content{padding:16px 18px}
 
-    .btn {
-      margin-top: 20px;
-      width: 100%;
-      background: #FFD700;
-      color: #000;
-      font-weight: bold;
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
+  /* Totals panel */
+  .totals{background:#111; border:1px solid #2a2f3a; border-radius:14px; padding:14px; color:var(--brand)}
+  .totals p{margin:6px 0; display:flex; justify-content:space-between}
 
-    .btn:hover {
-      background: #e6c200;
-    }
+  /* CGV + actions */
+  .cgv{display:flex; gap:10px; align-items:flex-start; margin-top:10px; color:var(--ink)}
+  .cgv a{color:var(--brand)}
+  .danger{color:#ff6b6b}
 
-    .summary {
-      margin-top: 20px;
-      background: #111;
-      padding: 12px;
-      border-radius: 6px;
-      color: #FFD700;
-    }
-  </style>
+  .sendbar{position:sticky; bottom:0; background:linear-gradient(180deg, rgba(15,17,21,0), rgba(15,17,21,.95) 20%); padding:16px 0 12px}
+  .sendbar .cta{width:100%}
+
+  .note{font-size:13px; color:var(--muted); margin-top:8px}
+  .success{color:var(--ok); font-weight:700}
+
+  /* Modal (CGV) */
+  dialog{border:none; border-radius:14px; padding:0; max-width:860px; width:96%; background:var(--panel); color:var(--ink)}
+  dialog::backdrop{background:rgba(0,0,0,.6)}
+  .modal-head{padding:16px 18px; background:#000; color:var(--brand); font-weight:800; position:sticky; top:0}
+  .modal-body{padding:18px; max-height:68vh; overflow:auto}
+  .modal-body h4{margin:16px 0 6px; color:var(--brand)}
+  .modal-actions{display:flex; gap:10px; justify-content:flex-end; padding:12px 18px; border-top:1px solid var(--stroke)}
+  .chip{display:inline-block; padding:2px 8px; border-radius:999px; background:#0c0; color:#000; font-weight:800; font-size:12px}
+
+  /* Little accent ring around active inputs (like your screenshot) */
+  .ring{position:relative}
+  .ring:focus-within{filter:drop-shadow(0 0 0.2rem rgba(255,213,0,.45))}
+</style>
 </head>
 <body>
-  <header>Réservation — PHENO&CO</header>
 
-  <div class="container">
-    <h2>Vos informations</h2>
-    <form id="reservationForm">
-      <label>Nom complet *</label>
-      <input type="text" name="fullname" placeholder="Votre nom et prénom" required>
+<!-- HOME (two buttons) -->
+<section id="home" class="screen active">
+  <div class="home-logo">
+    <!-- Your logo here -->
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='black' stroke='white' stroke-width='4'/%3E%3C/svg%3E" alt="PHENO&CO" />
+  </div>
+  <h1 style="text-align:center; margin:0; font-size:22px; color:var(--ink)">PHENO&CO</h1>
+  <p style="text-align:center; color:var(--muted); margin:6px 0 26px">Réservation de fauteuil</p>
 
-      <label>Email *</label>
-      <input type="email" name="email" placeholder="votre.email@exemple.fr" required>
-
-      <label>Téléphone *</label>
-      <input type="tel" name="phone" placeholder="06 12 34 56 78" required>
-
-      <label>Commentaire (optionnel)</label>
-      <textarea name="notes" placeholder="Informations complémentaires..."></textarea>
-
-      <label>Date de début *</label>
-      <input type="date" name="startDate" required>
-
-      <label>Heure de début *</label>
-      <input type="time" name="startTime" required>
-
-      <label>Type de location *</label>
-      <select name="formula" required>
-        <option value="Heure">À l'heure — 10€ HT</option>
-        <option value="Demi-journée">Demi-journée — 45€ HT</option>
-        <option value="Journée">Journée — 70€ HT</option>
-        <option value="Semaine">Semaine — 250€ HT</option>
-        <option value="Mensuel">Mensuel — 60€/jour HT</option>
-      </select>
-
-      <label>Pack matériel</label>
-      <select name="pack">
-        <option value="aucun">Aucun</option>
-        <option value="essentiel">Pack Essentiel — 20€ HT</option>
-        <option value="premium">Pack Premium — 35€ HT</option>
-      </select>
-
-      <div class="checkbox">
-        <input type="checkbox" required>
-        <span>J'accepte les <a href="#" style="color:#FFD700;">conditions générales de vente</a></span>
-      </div>
-
-      <button type="submit" class="btn">Envoyer la demande</button>
-    </form>
-
-    <div class="summary" id="summary" style="display:none;">
-      <h3>Récapitulatif</h3>
-      <p id="recap"></p>
-    </div>
+  <div class="home-actions">
+    <button class="cta primary" id="goReserve">📅 Réserver un fauteuil</button>
+    <button class="cta secondary" id="goWhatsApp">💬 Contacter sur WhatsApp</button>
   </div>
 
-  <script>
-    const form = document.getElementById('reservationForm');
-    const summary = document.getElementById('summary');
-    const recap = document.getElementById('recap');
+  <p class="note" style="text-align:center">En 2 minutes, obtien(s) un récap + envoi auto WhatsApp et email.</p>
+</section>
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = new FormData(form);
-      let text = "";
-      data.forEach((value, key) => {
-        text += `<b>${key}:</b> ${value}<br>`;
-      });
-      recap.innerHTML = text;
-      summary.style.display = 'block';
-    });
-  </script>
+<!-- RESERVATION -->
+<header id="barReserve" class="appbar" style="display:none">
+  <a href="#" class="back" id="backHome">← Retour</a>
+  <div>Réservation</div>
+</header>
+
+<section id="reserve" class="screen">
+  <!-- Dates -->
+  <details open>
+    <summary>📆 Dates de location</summary>
+    <div class="acc-content">
+      <div class="row">
+        <div class="ring">
+          <label for="startDate">Date de début *</label>
+          <input id="startDate" type="date" required/>
+        </div>
+        <div class="ring">
+          <label for="endDate">Date de fin <span class="note">(optionnel pour courte durée)</span></label>
+          <input id="endDate" type="date" />
+        </div>
+      </div>
+      <div class="ring" style="margin-top:12px">
+        <label for="startTime">Heure d’arrivée *</label>
+        <input id="startTime" type="time" required/>
+      </div>
+    </div>
+  </details>
+
+  <!-- Formule -->
+  <details>
+    <summary>⏱️ Formule</summary>
+    <div class="acc-content">
+      <div class="ring">
+        <label for="formula">Type de location *</label>
+        <select id="formula" required>
+          <option value="">Choisir…</option>
+          <option value="heure">Courte durée — à l’heure (10 € HT)</option>
+          <option value="demi">Courte durée — demi-journée (45 € HT)</option>
+          <option value="jour">Courte durée — journée (70 € HT)</option>
+          <option value="semaine">Courte durée — semaine (250 € HT)</option>
+          <option value="mois">Longue durée — 1 mois (65 € HT / jour + redevance 2%)</option>
+        </select>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <div class="ring">
+          <label for="hoursPerDay">Heures / jour</label>
+          <select id="hoursPerDay">
+            <option>1</option><option>2</option><option>3</option><option selected>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option>
+          </select>
+        </div>
+        <div class="ring">
+          <label for="pack">Pack matériel</label>
+          <select id="pack">
+            <option value="aucun">Aucun</option>
+            <option value="essentiel">Pack Essentiel — 20 € HT</option>
+            <option value="premium">Pack Premium — 35 € HT</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- Coordonnées -->
+  <details>
+    <summary>🧾 Vos informations</summary>
+    <div class="acc-content">
+      <div class="ring">
+        <label for="fullName">Nom complet *</label>
+        <input id="fullName" placeholder="Votre nom et prénom" required />
+      </div>
+      <div class="row" style="margin-top:12px">
+        <div class="ring">
+          <label for="email">Email *</label>
+          <input id="email" type="email" placeholder="votre.email@exemple.fr" required />
+        </div>
+        <div class="ring">
+          <label for="phone">Téléphone *</label>
+          <input id="phone" type="tel" placeholder="07 69 43 26 05" required />
+        </div>
+      </div>
+      <div class="ring" style="margin-top:12px">
+        <label for="notes">Commentaire (optionnel)</label>
+        <textarea id="notes" rows="3" placeholder="Informations complémentaires…"></textarea>
+      </div>
+    </div>
+  </details>
+
+  <!-- Totaux -->
+  <div class="card">
+    <h3>💶 Récapitulatif</h3>
+    <div class="totals" id="totalsBox">
+      <p><span>Total HT</span> <strong id="total_ht">0,00 €</strong></p>
+      <p><span>TVA (20%)</span> <strong id="tva">0,00 €</strong></p>
+      <p><span>Total TTC</span> <strong id="total_ttc">0,00 €</strong></p>
+      <hr style="border:none;border-top:1px solid #333;margin:10px 0">
+      <p><span>Acompte TTC <span id="acompte_rate" class="chip">50%</span></span> <strong id="acompte">0,00 €</strong></p>
+      <p><span>Solde TTC</span> <strong id="solde">0,00 €</strong></p>
+      <p id="redeRow" style="display:none"><span>Redevance 2% (longue durée)</span> <strong id="redevance">0,00 €</strong></p>
+      <p id="ttcJourRow" style="display:none"><span>TTC / jour (loyer + redevance)</span> <strong id="ttc_jour">0,00 €</strong></p>
+    </div>
+
+    <div class="cgv">
+      <input id="agree" type="checkbox" />
+      <label for="agree">J’accepte les <a href="#" id="openCGV">conditions générales de vente</a> *</label>
+    </div>
+    <p class="note">L’acompte est déductible du solde. Les montants s’actualisent automatiquement.</p>
+  </div>
+
+  <!-- Send bar -->
+  <div class="sendbar">
+    <button class="cta primary" id="sendBtn">✅ Confirmer & envoyer (WhatsApp + email)</button>
+    <p id="sendNote" class="note"></p>
+  </div>
+</section>
+
+<!-- CGV Modal -->
+<dialog id="cgvModal">
+  <div class="modal-head">Conditions générales de vente — PHENO&CO</div>
+  <div class="modal-body">
+    <h4>1) Objet</h4>
+    Location de poste de travail coiffure (“fauteuil”) et mise à disposition d’un espace équipé.
+    <h4>2) Formules</h4>
+    Courte durée (heure, demi-journée, journée, semaine) et longue durée (mensuelle).
+    <h4>3) Paiement</h4>
+    Acompte à la réservation (courte durée 50% TTC ; longue durée 25% TTC). Solde à l’arrivée ou selon échéancier.
+    <h4>4) Redevance longue durée</h4>
+    2% appliqués au <em>solde TTC restant</em> après acompte ; due chaque mois.
+    <h4>5) Utilisation & Sécurité</h4>
+    Respect des règles d’hygiène, du voisinage, et du matériel. Souscription d’assurance RC pro recommandée.
+    <h4>6) Annulation</h4>
+    Plus de 72h : acompte transformé en avoir (3 mois). Moins de 72h : acompte conservé.
+    <h4>7) Responsabilités</h4>
+    Le locataire répond des dommages causés aux biens et aux tiers pendant l’occupation.
+    <h4>8) Données</h4>
+    Les données sont utilisées pour gérer la réservation (conformément au RGPD).
+  </div>
+  <div class="modal-actions">
+    <button class="cta secondary" id="closeCGV">Fermer</button>
+  </div>
+</dialog>
+
+<script>
+/* ====== 1) ONE-TIME CONFIG ======
+   Replace the 3 values below with your EmailJS values.
+   If you leave them empty, emails are skipped but WhatsApp still works. */
+const EMAILJS_CFG = {
+  serviceId:   'YOUR_SERVICE_ID',          // e.g. 'service_ab12cd3'
+  templateOwner: 'YOUR_OWNER_TEMPLATE_ID', // e.g. 'template_owner_xxx'
+  templateClient:'YOUR_CLIENT_TEMPLATE_ID',// e.g. 'template_client_xxx'
+  publicKey:   'YOUR_PUBLIC_KEY'           // e.g. 'ufHEQuZ93VPkUtFld'
+};
+// WhatsApp number (international format, no spaces)
+const WHATSAPP_NUMBER = '33769432605'; // 07 69 43 26 05
+
+// Init EmailJS only if configured
+(function(){
+  try{
+    if(EMAILJS_CFG.publicKey && EMAILJS_CFG.publicKey !== 'YOUR_PUBLIC_KEY'){
+      emailjs.init({publicKey: EMAILJS_CFG.publicKey});
+    }
+  }catch(e){ console.warn('EmailJS init skipped:', e); }
+})();
+
+/* ====== 2) NAVIGATION ====== */
+const $ = sel => document.querySelector(sel);
+const home = $('#home');
+const reserve = $('#reserve');
+const barReserve = $('#barReserve');
+$('#goReserve').onclick = () => { home.classList.remove('active'); home.style.display='none'; barReserve.style.display='flex'; reserve.classList.add('active'); };
+$('#backHome').onclick = (e) => { e.preventDefault(); reserve.classList.remove('active'); barReserve.style.display='none'; home.style.display='block'; home.classList.add('active'); };
+$('#goWhatsApp').onclick = () => {
+  const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent('Bonjour 👋 Je souhaite des informations sur la location de fauteuil.')}`;
+  window.open(url, '_blank');
+};
+
+/* ====== 3) CALCULS ====== */
+const els = {
+  startDate: $('#startDate'), endDate: $('#endDate'), startTime: $('#startTime'),
+  formula: $('#formula'), hours: $('#hoursPerDay'), pack: $('#pack'),
+  fullName: $('#fullName'), email: $('#email'), phone: $('#phone'), notes: $('#notes'),
+  totals: {
+    ht: $('#total_ht'), tva: $('#tva'), ttc: $('#total_ttc'),
+    acompte: $('#acompte'), solde: $('#solde'),
+    redeRow: $('#redeRow'), redevance: $('#redevance'),
+    ttcJourRow: $('#ttcJourRow'), ttcJour: $('#ttc_jour'),
+    acompteRate: $('#acompte_rate')
+  },
+  agree: $('#agree'), sendBtn: $('#sendBtn'), sendNote: $('#sendNote'),
+};
+
+const PRICES = {
+  heure: 10, demi: 45, jour: 70, semaine: 250,
+  moisJour: 65, // long duration per day (HT)
+  pack: { aucun: 0, essentiel: 20, premium: 35 },
+  tva: 0.20
+};
+
+function daysBetween(d1, d2){
+  const a = new Date(d1), b = new Date(d2);
+  return Math.max(1, Math.round((b - a)/(1000*60*60*24)) + 1); // inclusive
+}
+
+function compute(){
+  const f = els.formula.value;
+  const pack = els.pack.value;
+  let totalHT = 0;
+  let jours = 1;
+
+  if(f === 'mois'){
+    // If end date is provided, compute days; else 30
+    jours = els.endDate.value ? daysBetween(els.startDate.value, els.endDate.value) : 30;
+    totalHT = (PRICES.moisJour * jours) + PRICES.pack[pack];
+  }else if(f){
+    const base = (f==='heure') ? PRICES.heure
+               : (f==='demi')  ? PRICES.demi
+               : (f==='jour')  ? PRICES.jour
+               : PRICES.semaine;
+    totalHT = base + PRICES.pack[pack];
+  }
+
+  const tva = totalHT * PRICES.tva;
+  const ttc = totalHT + tva;
+
+  // Acompte: 50% for short term, 25% for long term
+  const isLong = (f==='mois');
+  const acompteRate = isLong ? 0.25 : 0.50;
+  const acompte = ttc * acompteRate;
+  const solde = ttc - acompte;
+
+  // Long duration extras
+  let redevance = 0, ttcParJour = 0;
+  if(isLong){
+    redevance = solde * 0.02;
+    ttcParJour = (ttc + redevance) / Math.max(1, jours);
+    els.totals.redeRow.style.display = '';
+    els.totals.ttcJourRow.style.display = '';
+  }else{
+    els.totals.redeRow.style.display = 'none';
+    els.totals.ttcJourRow.style.display = 'none';
+  }
+
+  // Render
+  const € = n => n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+  els.totals.ht.textContent = €(totalHT);
+  els.totals.tva.textContent = €(tva);
+  els.totals.ttc.textContent = €(ttc);
+  els.totals.acompte.textContent = €(acompte);
+  els.totals.solde.textContent = €(solde);
+  els.totals.redevance.textContent = €(redevance);
+  els.totals.ttcJour.textContent = €(ttcParJour);
+  els.totals.acompteRate.textContent = (isLong? '25%' : '50%');
+}
+['change','input'].forEach(ev=>{
+  ['startDate','endDate','startTime','formula','hours','pack'].forEach(id=>els[id].addEventListener(ev, compute));
+});
+compute();
+
+/* ====== 4) CGV MODAL ====== */
+const cgvModal = $('#cgvModal');
+$('#openCGV').onclick = (e)=>{ e.preventDefault(); cgvModal.showModal(); };
+$('#closeCGV').onclick = ()=> cgvModal.close();
+
+/* ====== 5) BUILD MESSAGES ====== */
+function formatRecap(vars){
+  const lines = [
+    `Demande de location — PHENO&CO`,
+    `• Nom: ${vars.nom}`,
+    `• Tel: ${vars.telephone} · Email: ${vars.email}`,
+    `• Période: ${vars.date_debut} → ${vars.date_fin || '—'} (arrivée ${vars.heure_debut})`,
+    `• Formule: ${vars.formule}`,
+    `• Heures/jour: ${vars.heures_par_jour}`,
+    `• Pack matériel: ${vars.pack}`,
+    ``,
+    `Loyer:`,
+    `• Total HT: ${vars.total_ht} · TVA: ${vars.tva} · Total TTC: ${vars.total_ttc}`,
+    ``,
+    `Acompte (${vars.acompte_pct}):`,
+    `• Acompte TTC: ${vars.acompte}`,
+    `• Solde TTC: ${vars.solde}`,
+  ];
+  if(vars.redevance && vars.redevance !== '0,00 €'){
+    lines.push(`• Redevance 2%: ${vars.redevance}`);
+    lines.push(`• TTC/jour final: ${vars.ttc_jour}`);
+  }
+  lines.push('Matériel: ' + (vars.pack==='Aucun' ? '-' : vars.pack));
+  lines.push(vars.cgv_ok ? 'CGV: accepté ✅' : 'CGV: non accepté');
+  return lines.join('\n');
+}
+
+function collect(){
+  const € = n => n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+  const text = s => (s??'').toString();
+
+  const vars = {
+    nom: text(els.fullName.value).trim(),
+    telephone: text(els.phone.value).trim(),
+    email: text(els.email.value).trim(),
+    date_debut: els.startDate.value || '',
+    date_fin: els.endDate.value || '',
+    heure_debut: els.startTime.value || '',
+    formule: ({heure:'Courte durée — 1h', demi:'Courte durée — 1/2 journée', jour:'Courte durée — 1 jour', semaine:'Courte durée — 1 semaine', mois:'Longue durée — 1 mois'})[els.formula.value] || '',
+    heures_par_jour: els.hours.value,
+    pack: ({aucun:'Aucun', essentiel:'Pack Essentiel', premium:'Pack Premium'})[els.pack.value],
+    total_ht: els.totals.ht.textContent,
+    tva: els.totals.tva.textContent,
+    total_ttc: els.totals.ttc.textContent,
+    acompte_pct: els.totals.acompteRate.textContent,
+    acompte: els.totals.acompte.textContent,
+    solde: els.totals.solde.textContent,
+    redevance: els.totals.redevance.textContent,
+    ttc_jour: els.totals.ttcJour.textContent,
+    cgv_ok: els.agree.checked ? 'oui' : 'non',
+    message: (els.notes.value||'').trim()
+  };
+  return vars;
+}
+
+/* ====== 6) SEND (WhatsApp + EmailJS in one click) ====== */
+async function sendAll(){
+  els.sendNote.textContent = '';
+  if(!els.agree.checked){
+    els.sendNote.innerHTML = '<span class="danger">Veuillez accepter les CGV pour continuer.</span>';
+    return;
+  }
+  // simple required check
+  const req = ['startDate','startTime','formula','fullName','email','phone'];
+  for(const id of req){ if(!els[id].value){ els.sendNote.innerHTML = '<span class="danger">Merci de compléter les champs obligatoires.</span>'; return; } }
+
+  const vars = collect();
+  const whatsappText = formatRecap(vars);
+  // WhatsApp first (always)
+  const wUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(whatsappText)}`;
+  window.open(wUrl, '_blank');
+
+  // EmailJS (owner + client) — do only if configured
+  const configured = EMAILJS_CFG.serviceId && EMAILJS_CFG.templateOwner && EMAILJS_CFG.templateClient && EMAILJS_CFG.publicKey
+                     && EMAILJS_CFG.publicKey!=='YOUR_PUBLIC_KEY';
+  if(!configured){
+    console.info('EmailJS not configured — only WhatsApp was sent.');
+    els.sendNote.innerHTML = '<span class="success">WhatsApp envoyé ✅ (EmailJS non configuré)</span>';
+    return;
+  }
+
+  try{
+    await Promise.all([
+      emailjs.send(EMAILJS_CFG.serviceId, EMAILJS_CFG.templateOwner, vars),
+      emailjs.send(EMAILJS_CFG.serviceId, EMAILJS_CFG.templateClient, vars)
+    ]);
+    els.sendNote.innerHTML = '<span class="success">WhatsApp + emails envoyés ✅</span>';
+  }catch(err){
+    console.error(err);
+    els.sendNote.innerHTML = '<span class="danger">Envoi email impossible pour le moment (WhatsApp OK).</span>';
+  }
+}
+els.sendBtn.addEventListener('click', sendAll);
+</script>
 </body>
 </html>
