@@ -1,207 +1,108 @@
-// src/BookingForm.tsx
-import { useState } from "react";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réservation Fauteuil – PHENO&CO</title>
 
-const formulas = [
-  { value: "heure", label: "À l'heure" },
-  { value: "demi", label: "Demi-journée" },
-  { value: "jour", label: "Journée" },
-  { value: "semaine", label: "Semaine" },
-  { value: "3_mois", label: "3 mois" },
-  { value: "6_mois", label: "6 mois" },
-  { value: "12_mois", label: "12 mois" },
-];
-
-const packs = [
-  { value: "aucun", label: "Aucun pack" },
-  { value: "essentiel", label: "Pack Essentiel" },
-  { value: "premium", label: "Pack Premium" },
-];
-
-export function BookingForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    startDate: "",
-    startTime: "",
-    formula: "",
-    pack: "aucun",
-    comment: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<null | { totalTTC: number }>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSuccessMsg(null);
-    setLoading(true);
-
-    try {
-      const res = await fetch("http://localhost:5000/api/reservations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Erreur lors de l'envoi");
-      } else {
-        setResult({ totalTTC: data.reservation.totalTTC });
-        setSuccessMsg(
-          "Demande envoyée ! Tu recevras un e-mail de confirmation, et Pheno te transmettra un lien de paiement."
-        );
-        // Optionnel : reset du formulaire
-        // setForm({ ... });
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Erreur de connexion au serveur");
-    } finally {
-      setLoading(false);
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
-  }
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 18px;
+      border-radius: 5px;
+      border: solid 1px #444;
+      background: #111;
+      color: white;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ffd700;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffea55;
+    }
+  </style>
+</head>
 
-  return (
-    <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-4 p-4">
-      <h1 className="text-2xl font-bold text-yellow-400">Réservation de fauteuil PHENO&CO</h1>
+<body>
+  <div class="container">
+    <h1>Réserver un fauteuil – PHENO&CO</h1>
+    <p>Remplissez le formulaire, vous recevrez un e-mail + Pheno vous enverra un lien de paiement.</p>
 
-      {/* Infos client */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Nom complet *</label>
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-          placeholder="Votre nom"
-          required
-        />
-      </div>
+    <form id="bookingForm">
+      <label>Nom complet *</label>
+      <input type="text" name="name" required>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Email *</label>
-        <input
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-          placeholder="vous@email.com"
-          required
-        />
-      </div>
+      <label>Email *</label>
+      <input type="email" name="email" required>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Téléphone *</label>
-        <input
-          name="phone"
-          value={form.phone}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-          placeholder="+33..."
-          required
-        />
-      </div>
+      <label>Téléphone *</label>
+      <input type="text" name="phone" required>
 
-      {/* Détails réservation */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Date *</label>
-          <input
-            type="date"
-            name="startDate"
-            value={form.startDate}
-            onChange={handleChange}
-            className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Heure de début *</label>
-          <input
-            type="time"
-            name="startTime"
-            value={form.startTime}
-            onChange={handleChange}
-            className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-            required
-          />
-        </div>
-      </div>
+      <label>Date *</label>
+      <input type="date" name="startDate" required>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Formule *</label>
-        <select
-          name="formula"
-          value={form.formula}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-          required
-        >
-          <option value="">Choisir une formule</option>
-          {formulas.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <label>Heure de début *</label>
+      <input type="time" name="startTime" required>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Pack équipement</label>
-        <select
-          name="pack"
-          value={form.pack}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-        >
-          {packs.map((p) => (
-            <option key={p.value} value={p.value}>
-              {p.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <label>Formule *</label>
+      <select name="formula" required>
+        <option value="">Choisir...</option>
+        <option value="heure">À l'heure – 10€</option>
+        <option value="demi">Demi-journée – 40€</option>
+        <option value="jour">Journée – 80€</option>
+        <option value="semaine">Semaine – 400€</option>
+        <option value="3_mois">3 mois</option>
+        <option value="6_mois">6 mois</option>
+        <option value="12_mois">12 mois</option>
+      </select>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Commentaire</label>
-        <textarea
-          name="comment"
-          value={form.comment}
-          onChange={handleChange}
-          className="w-full p-2 rounded bg-black border border-gray-700 text-white"
-          rows={3}
-          placeholder="Précisions, horaires, besoins spécifiques..."
-        />
-      </div>
+      <label>Pack</label>
+      <select name="pack">
+        <option value="aucun">Aucun</option>
+        <option value="essentiel">Essentiel (+20€)</option>
+        <option value="premium">Premium (+50€)</option>
+      </select>
 
-      {result && (
-        <div className="p-3 rounded border border-yellow-500 text-yellow-300 text-sm">
-          Estimation du montant : <b>{result.totalTTC.toFixed(2)} € TTC</b>  
-          (le montant final pourra être ajusté selon les conditions réelles).
-        </div>
-      )}
+      <label>Commentaire</label>
+      <textarea name="comment" rows="3"></textarea>
 
-      {error && <div className="text-red-400 text-sm">{error}</div>}
-      {successMsg && <div className="text-green-400 text-sm">{successMsg}</div>}
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-2 rounded bg-yellow-400 text-black font-semibold hover:bg-yellow-500 disabled:opacity-60"
-      >
-        {loading ? "Envoi en cours..." : "Envoyer ma demande"}
-      </button>
+      <button type="submit">Envoyer ma demande</button>
     </form>
-  );
-}
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    document.getElementById("bookingForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      // --- Ici ton futur backend Express ---
+      // Pour l'instant on affiche un message de succès
+      document.getElementById("message").innerHTML =
+        "<br><b>Merci !</b><br>Votre demande a été envoyée.<br>" +
+        "Pheno vous contactera pour valider et envoyer le lien de paiement.";
+
+      // Plus tard on branchera ici l’appel API vers ton backend :
+      // fetch("https://TON-SERVEUR/api/reservations", {...})
+    });
+  </script>
+</body>
+</html>
