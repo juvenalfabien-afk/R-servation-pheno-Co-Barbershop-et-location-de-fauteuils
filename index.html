@@ -3,48 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Réservation Fauteuil – PHENO&CO</title>
+  <title>Réserver un fauteuil – PHENO&CO</title>
 
   <style>
+    /* =============== IDENTITÉ PHENO&CO =============== */
+    :root {
+      --bg: #000000;               /* Noir profond */
+      --panel: #0e0e0e;            /* Noir adouci */
+      --text: #ffffff;             /* Blanc pur */
+      --muted: #bdbdbd;            /* Gris doux */
+      --gold: #ffd700;             /* Or PHENO&CO */
+      --gold-hover: #ffea77;
+    }
+
     body {
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
     }
+
     .container {
-      max-width: 500px;
-      margin: auto;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 40px;
+      background: var(--panel);
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
     }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
     input, select, textarea {
       width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 18px;
-      border-radius: 5px;
-      border: solid 1px #444;
+      margin-top: 6px;
+      margin-bottom: 22px;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid #333;
       background: #111;
-      color: white;
+      color: var(--text);
+      font-size: 1rem;
+      transition: border 0.2s ease;
     }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      outline: none;
+    }
+
     button {
       width: 100%;
-      padding: 12px;
-      background: #ffd700;
+      padding: 15px;
+      background: var(--gold);
+      color: black;
+      font-weight: 700;
+      font-size: 1.05rem;
       border: none;
-      border-radius: 6px;
-      font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 10px;
     }
+
     button:hover {
-      background: #ffea55;
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+
+    #message {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold);
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Réserver un fauteuil – PHENO&CO</h1>
-    <p>Remplissez le formulaire, vous recevrez un e-mail + Pheno vous enverra un lien de paiement.</p>
+    <h1>PHENO&CO</h1>
+    <p class="subtitle">
+      Réservation de fauteuil — version simplifiée.<br>
+      Après validation, vous recevrez un lien de paiement.
+    </p>
 
     <form id="bookingForm">
       <label>Nom complet *</label>
@@ -84,24 +148,18 @@
       <label>Commentaire</label>
       <textarea name="comment" rows="3"></textarea>
 
-      <button type="submit">Envoyer ma demande</button>
+      <button type="submit">Envoyer la demande</button>
     </form>
 
     <p id="message"></p>
   </div>
 
   <script>
-    document.getElementById("bookingForm").addEventListener("submit", async function(e) {
+    document.getElementById("bookingForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      // --- Ici ton futur backend Express ---
-      // Pour l'instant on affiche un message de succès
       document.getElementById("message").innerHTML =
-        "<br><b>Merci !</b><br>Votre demande a été envoyée.<br>" +
-        "Pheno vous contactera pour valider et envoyer le lien de paiement.";
-
-      // Plus tard on branchera ici l’appel API vers ton backend :
-      // fetch("https://TON-SERVEUR/api/reservations", {...})
+        "<br>✔️ Demande envoyée !<br>Pheno vous enverra un lien de paiement sous peu.";
     });
   </script>
 </body>
