@@ -1,166 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Réserver un fauteuil – PHENO&CO</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHENO&CO — Location de Fauteuils</title>
 
-  <style>
-    /* =============== IDENTITÉ PHENO&CO =============== */
-    :root {
-      --bg: #000000;               /* Noir profond */
-      --panel: #0e0e0e;            /* Noir adouci */
-      --text: #ffffff;             /* Blanc pur */
-      --muted: #bdbdbd;            /* Gris doux */
-      --gold: #ffd700;             /* Or PHENO&CO */
-      --gold-hover: #ffea77;
-    }
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: white;
+            text-align: center;
+        }
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Inter", Arial, sans-serif;
-    }
+        .container {
+            max-width: 420px;
+            margin: auto;
+            padding: 40px 20px;
+        }
 
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 40px;
-      background: var(--panel);
-      border: 1px solid #1a1a1a;
-      border-radius: 12px;
-      box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
-    }
+        .logo {
+            width: 120px;
+            margin-bottom: 20px;
+        }
 
-    h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 10px;
-    }
+        h1 {
+            color: #FFD42A;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
 
-    p.subtitle {
-      text-align: center;
-      color: var(--muted);
-      font-size: 1rem;
-      margin-bottom: 30px;
-    }
+        .subtitle {
+            font-size: 15px;
+            margin-bottom: 40px;
+            opacity: 0.85;
+        }
 
-    label {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--gold);
-    }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
-    input, select, textarea {
-      width: 100%;
-      margin-top: 6px;
-      margin-bottom: 22px;
-      padding: 14px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background: #111;
-      color: var(--text);
-      font-size: 1rem;
-      transition: border 0.2s ease;
-    }
+        .btn-yellow {
+            background: #FFD42A;
+            color: #000;
+        }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--gold);
-      outline: none;
-    }
+        .btn-grey {
+            background: #2E3238;
+            color: #fff;
+            border: 1px solid #555;
+        }
 
-    button {
-      width: 100%;
-      padding: 15px;
-      background: var(--gold);
-      color: black;
-      font-weight: 700;
-      font-size: 1.05rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 10px;
-    }
+        .btn-green {
+            background: #2ECC71;
+            color: #fff;
+        }
 
-    button:hover {
-      background: var(--gold-hover);
-      transform: translateY(-1px);
-    }
-
-    #message {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--gold);
-    }
-  </style>
+        footer {
+            margin-top: 40px;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>PHENO&CO</h1>
-    <p class="subtitle">
-      Réservation de fauteuil — version simplifiée.<br>
-      Après validation, vous recevrez un lien de paiement.
-    </p>
 
-    <form id="bookingForm">
-      <label>Nom complet *</label>
-      <input type="text" name="name" required>
+    <div class="container">
 
-      <label>Email *</label>
-      <input type="email" name="email" required>
+        <!-- Logo PHENO&CO -->
+        <img src="https://phenoandco.com/wp-content/uploads/2024/11/LOGO-PHENOCO-BLANC.png"
+             alt="Logo PHENO&CO" class="logo">
 
-      <label>Téléphone *</label>
-      <input type="text" name="phone" required>
+        <h1>PHENO&CO</h1>
 
-      <label>Date *</label>
-      <input type="date" name="startDate" required>
+        <div class="subtitle">
+            Location de fauteuils • Depuis 2009 • Montpellier
+        </div>
 
-      <label>Heure de début *</label>
-      <input type="time" name="startTime" required>
+        <!-- Boutons -->
+        <a href="reservation.html" class="btn btn-yellow">Louer un Fauteuil</a>
+        <a href="https://phenoandco.com" class="btn btn-grey">Prendre RDV Coiffure</a>
+        <a href="https://wa.me/33769432605" class="btn btn-green">Contact WhatsApp</a>
 
-      <label>Formule *</label>
-      <select name="formula" required>
-        <option value="">Choisir...</option>
-        <option value="heure">À l'heure – 10€</option>
-        <option value="demi">Demi-journée – 40€</option>
-        <option value="jour">Journée – 80€</option>
-        <option value="semaine">Semaine – 400€</option>
-        <option value="3_mois">3 mois</option>
-        <option value="6_mois">6 mois</option>
-        <option value="12_mois">12 mois</option>
-      </select>
+        <footer>
+            PHENO&CO — Barbershop & Coworking • Montpellier
+        </footer>
+    </div>
 
-      <label>Pack</label>
-      <select name="pack">
-        <option value="aucun">Aucun</option>
-        <option value="essentiel">Essentiel (+20€)</option>
-        <option value="premium">Premium (+50€)</option>
-      </select>
-
-      <label>Commentaire</label>
-      <textarea name="comment" rows="3"></textarea>
-
-      <button type="submit">Envoyer la demande</button>
-    </form>
-
-    <p id="message"></p>
-  </div>
-
-  <script>
-    document.getElementById("bookingForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      document.getElementById("message").innerHTML =
-        "<br>✔️ Demande envoyée !<br>Pheno vous enverra un lien de paiement sous peu.";
-    });
-  </script>
 </body>
 </html>
