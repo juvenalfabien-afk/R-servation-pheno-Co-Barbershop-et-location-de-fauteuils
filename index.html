@@ -2,21 +2,149 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Réservation de fauteuil – PHENO&CO</title>
+  
+  <!-- EmailJS SDK -->
+  <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+   (function(){
+      // ⚠️ IMPORTANT : Remplacez "YOUR_PUBLIC_KEY" par votre clé publique EmailJS
+      emailjs.init({
+        publicKey: "YOUR_PUBLIC_KEY",
+      });
+   })();
+  </script>
+
   <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: #050608;
       color: #f9fafb;
+      line-height: 1.5;
     }
 
+    /* --- HERO SECTION --- */
+    .hero {
+      background: #000000;
+      padding: 40px 20px 50px;
+      text-align: center;
+      border-bottom: 1px solid #1f2937;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .hero-logo {
+        margin-bottom: -10px;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Assurez-vous que le logo est dans le même dossier ou mettez une URL complète */
+    .hero-logo img {
+      width: 200px;
+      height: auto;
+      max-width: 100%;
+      display: block;
+    }
+
+    .hero-titles {
+      padding-top: 0;
+      z-index: 0;
+      position: relative;
+      width: 100%;
+    }
+
+    .hero h1 {
+      color: #F9C800;
+      font-size: 3rem;
+      margin: 0;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .hero p.subtitle {
+      color: #ffffff;
+      font-size: 1.1rem;
+      margin: 8px 0 0 0;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 800px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-btn {
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    .hero-btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-yellow {
+      background: #F9C800;
+      color: #000000;
+    }
+
+    .btn-dark {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #374151;
+    }
+
+    .btn-green {
+      background: #25D366;
+      color: #ffffff;
+    }
+
+    /* --- PAGE CONTENT --- */
     .page {
-      max-width: 900px;
+      max-width: 1000px;
       margin: auto;
-      padding: 24px 16px 40px;
+      padding: 24px 16px 60px;
+      width: 100%;
     }
 
     h1, h2, h3 {
@@ -24,42 +152,43 @@
       margin-top: 0;
     }
 
-    h1 {
+    .page h1 {
       text-align: center;
       margin-bottom: 16px;
+      font-size: 2rem;
+      line-height: 1.2;
     }
 
     p.intro {
       text-align: center;
       margin-bottom: 32px;
       opacity: 0.8;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    @media (min-width: 820px) {
-      .grid {
-        grid-template-columns: 1.2fr 1fr;
-      }
+      gap: 24px;
     }
 
     .card {
       background: #0b1220;
       border-radius: 16px;
-      padding: 20px 18px;
+      padding: 24px;
       border: 1px solid #1f2937;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
+    /* --- FORM ELEMENTS --- */
     label {
       display: block;
       font-size: 14px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       opacity: 0.9;
+      font-weight: 500;
     }
 
     input[type="text"],
@@ -70,119 +199,203 @@
     select,
     textarea {
       width: 100%;
-      padding: 10px 12px;
+      padding: 12px 16px;
       border-radius: 10px;
       border: 1px solid #374151;
       background: #020617;
       color: #f9fafb;
-      font-size: 14px;
-      box-sizing: border-box;
-      margin-bottom: 12px;
+      font-size: 16px; 
+      margin-bottom: 16px;
+      font-family: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    
+    select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+    }
+
+    input[type="date"] {
+      min-height: 46px;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: none;
+        background-color: #F9C800;
+        padding: 8px;
+        cursor: pointer;
+        border-radius: 6px;
+        color: black;
     }
 
     textarea {
-      min-height: 70px;
+      min-height: 80px;
       resize: vertical;
     }
 
     .radio-row {
       display: flex;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .radio-pill {
       flex: 1;
-      border-radius: 999px;
+      border-radius: 12px;
       border: 1px solid #4b5563;
-      padding: 10px 12px;
+      padding: 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       cursor: pointer;
       font-size: 14px;
       background: #020617;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .radio-pill:hover {
+      border-color: #F9C800;
+    }
+    
+    .radio-pill.active {
+      background: #1f2937;
+      border-color: #F9C800;
+      box-shadow: 0 0 0 1px #F9C800;
     }
 
     .radio-pill input {
       margin: 0;
+      accent-color: #F9C800;
+      width: 18px;
+      height: 18px;
     }
 
     .radio-pill span {
       font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
     }
 
     .muted {
       font-size: 12px;
       opacity: 0.7;
+      line-height: 1.3;
+      display: block;
     }
 
     .btn {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border-radius: 999px;
       border: none;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 6px;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #374151 !important;
+      color: #9ca3af !important;
     }
 
     .btn-primary {
       background: #ffd42a;
       color: #000;
+      box-shadow: 0 4px 12px rgba(255, 212, 42, 0.3);
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: #eec025;
+      transform: translateY(-1px);
     }
 
-    .btn-secondary {
-      background: #111827;
-      color: #f9fafb;
-      border: 1px solid #4b5563;
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     .summary-box {
       background: #020617;
       border-radius: 14px;
       border: 1px solid #4b5563;
-      padding: 14px 14px 10px;
-      margin-top: 10px;
+      padding: 16px;
+      margin-top: 16px;
       font-size: 14px;
     }
 
     .summary-box h3 {
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 8px;
+      color: #ffd42a;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    
+    .summary-row.total-ht {
+      border-top: 1px solid #1f2937;
+      padding-top: 8px;
+      margin-top: 8px;
+      font-weight: bold;
       font-size: 15px;
     }
-
-    .summary-box ul {
-      margin: 4px 0 8px;
-      padding-left: 18px;
+    
+    .summary-row.total-ttc {
+      color: #ffd42a;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 12px;
     }
-
-    .summary-box li {
-      margin-bottom: 2px;
-    }
-
-    .highlight {
+    
+    .summary-row.acompte {
       color: #22c55e;
       font-weight: bold;
+      margin-top: 4px;
     }
 
     .warning {
-      font-size: 12px;
+      font-size: 13px;
       color: #facc15;
-      margin-top: 6px;
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(250, 204, 21, 0.1);
+      border-radius: 8px;
+      line-height: 1.4;
     }
 
     .checkbox-row {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
-      margin-top: 8px;
-      font-size: 13px;
+      gap: 12px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     .checkbox-row input {
       margin-top: 3px;
+      accent-color: #F9C800;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
     }
 
     a.cgv-link {
@@ -192,28 +405,131 @@
     }
 
     .section-title {
-      font-size: 16px;
-      margin-bottom: 12px;
+      font-size: 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .section-title span.icon {
+      font-size: 20px;
+    }
+    
+    /* Confirmation Box */
+    .confirmation-box {
+      display: none;
+      margin-top: 24px;
+      padding: 20px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    .confirmation-box h4 {
+      color: #22c55e;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 0 0 12px 0;
       display: flex;
       align-items: center;
       gap: 8px;
     }
+    
+    .confirmation-box p {
+      margin: 6px 0;
+      font-size: 14px;
+      color: #d1d5db;
+      line-height: 1.5;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 13px;
+      color: #6b7280;
+      padding-bottom: 20px;
+    }
 
-    .section-title span.icon {
-      font-size: 18px;
+    /* --- MEDIA QUERIES --- */
+    @media (min-width: 820px) {
+      .grid {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-buttons {
+        flex-direction: column;
+      }
+      .hero-btn {
+        width: 100%;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      .hero-logo img {
+        width: 160px;
+      }
+      .page {
+        padding: 20px 12px 40px;
+      }
+      .card {
+        padding: 20px 16px;
+      }
+      .radio-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+    
+    html {
+      scroll-behavior: smooth;
     }
   </style>
 </head>
 <body>
+
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <div class="hero-logo">
+      <!-- Remplacez par le chemin vers votre logo si nécessaire -->
+      <img src="Copie de LOGO PHENO&CO  (Vidéo mobile)_1763667486157.png" alt="Logo PHENO&CO" onerror="this.style.display='none';"/>
+    </div>
+    <div class="hero-titles">
+      <h1>PHENO&CO</h1>
+      <p class="subtitle">Barbershop depuis 2009</p>
+    </div>
+    
+    <div class="hero-buttons">
+      <button class="hero-btn btn-yellow" onclick="document.getElementById('reservation').scrollIntoView({behavior: 'smooth'})">
+        Louer un Fauteuil
+      </button>
+      <a href="https://phenoandco.com/" target="_blank" class="hero-btn btn-dark">
+        Prendre RDV Coiffure
+      </a>
+      <a href="https://wa.me/message/MZYDVEN32I55L1" target="_blank" class="hero-btn btn-green">
+        Contact WhatsApp
+      </a>
+    </div>
+  </div>
+
   <div class="page">
-    <h1>Réserver un fauteuil</h1>
+    <h1 style="margin-top: 20px;">Réserver un fauteuil</h1>
     <p class="intro">
       Choisissez vos dates, votre formule et vos options.<br />
       Vous recevrez un récapitulatif et la réservation sera confirmée après paiement de l’acompte.
     </p>
 
     <form id="reservation-form">
-      <div class="grid">
+      <div class="grid" id="reservation">
         <!-- Colonne gauche : formulaire -->
         <div class="card">
           <div class="section-title">
@@ -227,10 +543,22 @@
           <label for="date-fin">Date de fin (optionnel)</label>
           <input type="date" id="date-fin" name="date_fin" />
 
-          <label for="heure-debut">Heure de début *</label>
-          <input type="time" id="heure-debut" name="heure_debut" required />
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label for="heure-debut">Heure de début *</label>
+              <select id="heure-debut" name="heure_debut" required>
+                <!-- Options générées par JS -->
+              </select>
+            </div>
+            <div>
+              <label for="heure-fin">Heure de fin *</label>
+              <select id="heure-fin" name="heure_fin" required>
+                <!-- Options générées par JS -->
+              </select>
+            </div>
+          </div>
 
-          <hr style="border: 0; border-top: 1px solid #1f2937; margin: 18px 0;" />
+          <hr style="border: 0; border-top: 1px solid #1f2937; margin: 20px 0;" />
 
           <div class="section-title">
             <span class="icon">⏱️</span>
@@ -239,18 +567,18 @@
 
           <label>Durée de location *</label>
           <div class="radio-row">
-            <label class="radio-pill">
+            <label class="radio-pill active" id="pill-courte">
               <input type="radio" name="duree" value="courte" checked />
               <div>
-                <span>Courte durée</span><br />
-                <span class="muted">Heure, journée, semaine • acompte 50&nbsp;%</span>
+                <span>Courte durée</span>
+                <span class="muted">Heure, journée, semaine<br>Acompte 50%</span>
               </div>
             </label>
-            <label class="radio-pill">
+            <label class="radio-pill" id="pill-longue">
               <input type="radio" name="duree" value="longue" />
               <div>
-                <span>Longue durée</span><br />
-                <span class="muted">1 à 12 mois • acompte 25&nbsp;%</span>
+                <span>Longue durée</span>
+                <span class="muted">1 à 12 mois<br>Acompte 25%</span>
               </div>
             </label>
           </div>
@@ -273,14 +601,17 @@
 
           <label for="pack-materiel">Pack matériel</label>
           <select id="pack-materiel" name="pack_materiel">
-            <option value="aucun">Aucun</option>
+            <option value="aucun">Aucun — 0 €</option>
             <option value="essentiel">Pack Essentiel — 20 € HT</option>
             <option value="premium">Pack Premium — 30 € HT</option>
           </select>
+          <p class="muted" style="margin-top: -12px; margin-bottom: 16px;">
+            Essentiel : tondeuse, finition, 2 serviettes, cape.<br>
+            Premium : + shaver, sèche-cheveux, 4 serviettes.
+          </p>
 
           <div class="warning">
-            Les montants calculés sont indicatifs pour une journée de location.
-            Pour plusieurs jours ou une saison, le calcul se fait au prorata selon la grille tarifaire.
+            Les montants calculés sont indicatifs. Le calcul final se fera au prorata selon la grille tarifaire lors de la confirmation.
           </div>
         </div>
 
@@ -292,13 +623,13 @@
           </div>
 
           <label for="nom">Nom complet *</label>
-          <input type="text" id="nom" name="nom" required />
+          <input type="text" id="nom" name="nom" required placeholder="Votre nom" />
 
           <label for="email">Email *</label>
-          <input type="email" id="email" name="email" required />
+          <input type="email" id="email" name="email" required placeholder="votre@email.com" />
 
           <label for="telephone">Téléphone *</label>
-          <input type="tel" id="telephone" name="telephone" required />
+          <input type="tel" id="telephone" name="telephone" required placeholder="06 00 00 00 00" />
 
           <label for="commentaire">Commentaire (optionnel)</label>
           <textarea id="commentaire" name="commentaire" placeholder="Précisez par exemple votre expérience, vos besoins, vos jours de présence souhaités…"></textarea>
@@ -307,7 +638,7 @@
             <input type="checkbox" id="cgv" required />
             <label for="cgv">
               J’accepte les
-              <a href="#cgv-details" class="cgv-link">conditions générales de vente</a>
+              <a href="#cgv-details" class="cgv-link">conditions générales de location</a>
               et je comprends que la réservation est confirmée après paiement de l’acompte.
             </label>
           </div>
@@ -315,25 +646,39 @@
           <div id="summary" class="summary-box">
             <h3>Récapitulatif (indicatif)</h3>
             <div id="summary-content">
-              Remplissez le formulaire pour voir le détail de votre réservation.
+              <!-- Rempli par JS -->
             </div>
           </div>
 
-          <button type="button" class="btn btn-secondary" id="btn-update">
-            Mettre à jour le récapitulatif
-          </button>
-
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary" id="btn-submit" disabled>
             Envoyer ma demande via WhatsApp
           </button>
+
+          <!-- Message de confirmation -->
+          <div id="confirmation-message" class="confirmation-box">
+            <h4>✅ Demande envoyée !</h4>
+            <p><span class="check">✅</span>Vous allez recevoir un email récapitulatif avec le détail de votre demande.</p>
+            <p><span class="check">✅</span>Vous retrouvez aussi votre message dans notre conversation WhatsApp.</p>
+            <div style="border-top: 1px solid rgba(34, 197, 94, 0.2); margin-top: 12px; padding-top: 10px;">
+              <p>
+                PHENO&CO vous enverra ensuite un lien de paiement pour régler l’acompte
+                (50 % pour les locations courtes, 25 % pour les locations longues).
+                <strong>La réservation sera confirmée uniquement après paiement de cet acompte.</strong>
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
     </form>
 
     <!-- CGV très simplifiées -->
     <div id="cgv-details" class="card" style="margin-top: 24px;">
-      <h2>Conditions générales de location (résumé)</h2>
-      <ul>
+      <div class="section-title">
+        <span class="icon">ℹ️</span>
+        <span>Conditions générales de location (résumé)</span>
+      </div>
+      <ul style="padding-left: 20px; line-height: 1.6; opacity: 0.9;">
         <li>La réservation est confirmée uniquement après paiement de l’acompte (50&nbsp;% pour les locations courtes, 25&nbsp;% pour les locations longues).</li>
         <li>Les tarifs indiqués sont hors taxes. La TVA applicable sera ajoutée lors de la facturation.</li>
         <li>Le locataire est responsable de son activité, de sa clientèle, de son assurance professionnelle et du respect des règles d’hygiène.</li>
@@ -341,79 +686,133 @@
         <li>En cas d’annulation moins de 72h avant la date de début, l’acompte peut être conservé à titre de dédommagement.</li>
         <li>PHENO&CO se réserve le droit de refuser ou d’interrompre une location en cas de non-respect des valeurs du salon ou des règles de fonctionnement.</li>
       </ul>
-      <p class="muted">
+      <p class="muted" style="margin-top: 16px;">
         La version complète des conditions pourra être envoyée par mail avec le contrat de location.
       </p>
     </div>
+    
+    <footer>
+      PHENO&CO — Barbershop & Coworking • Montpellier
+    </footer>
   </div>
 
   <script>
+    // --- INITIALISATION DES HEURES ---
+    const heureDebutSelect = document.getElementById('heure-debut');
+    const heureFinSelect = document.getElementById('heure-fin');
+    
+    function populateTimes() {
+      const times = [];
+      for (let h = 10; h <= 18; h++) {
+        times.push(`${h.toString().padStart(2, '0')}:00`);
+        if (h < 18) times.push(`${h.toString().padStart(2, '0')}:30`);
+      }
+      
+      times.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.text = t;
+        heureDebutSelect.appendChild(opt.cloneNode(true));
+        heureFinSelect.appendChild(opt.cloneNode(true));
+      });
+      
+      // Valeurs par défaut
+      heureDebutSelect.value = "10:00";
+      heureFinSelect.value = "11:00";
+    }
+    populateTimes();
+
+    // --- INITIALISATION DES DATES ---
+    const dateDebutInput = document.getElementById('date-debut');
+    const dateFinInput = document.getElementById('date-fin');
+    const today = new Date().toISOString().split('T')[0];
+    dateDebutInput.value = today;
+    dateDebutInput.min = today;
+    
+    dateDebutInput.addEventListener('change', () => {
+      dateFinInput.min = dateDebutInput.value;
+      if (dateFinInput.value && dateFinInput.value < dateDebutInput.value) {
+        dateFinInput.value = dateDebutInput.value;
+      }
+      updateSummary();
+    });
+
+    // --- LOGIQUE ---
     const dureeRadios = document.querySelectorAll('input[name="duree"]');
     const selectCourte = document.getElementById('formule-courte');
     const selectLongue = document.getElementById('formule-longue');
     const summaryContent = document.getElementById('summary-content');
-    const btnUpdate = document.getElementById('btn-update');
     const form = document.getElementById('reservation-form');
+    const cgvCheckbox = document.getElementById('cgv');
+    const submitBtn = document.getElementById('btn-submit');
+    const pillCourte = document.getElementById('pill-courte');
+    const pillLongue = document.getElementById('pill-longue');
+    const confirmationMessage = document.getElementById('confirmation-message');
 
-    function getPrixHT() {
+    // Gestion checkbox CGV
+    cgvCheckbox.addEventListener('change', () => {
+      submitBtn.disabled = !cgvCheckbox.checked;
+    });
+
+    function getPrix() {
       const duree = document.querySelector('input[name="duree"]:checked').value;
       const pack = document.getElementById('pack-materiel').value;
+      const start = new Date(dateDebutInput.value || today);
+      const end = dateFinInput.value ? new Date(dateFinInput.value) : start;
+      
+      // Calcul différence jours (min 1 jour)
+      const diffTime = Math.abs(end - start);
+      const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
 
       let baseHT = 0;
       let formuleLabel = '';
       let acompteTaux = duree === 'courte' ? 0.5 : 0.25;
 
       if (duree === 'courte') {
-        switch (selectCourte.value) {
-          case 'heure':
-            baseHT = 10;
-            formuleLabel = "À l'heure — 10 € HT";
-            break;
-          case 'demi':
-            baseHT = 35;
-            formuleLabel = "Demi-journée (4h) — 35 € HT";
-            break;
-          case 'journee':
-            baseHT = 65;
-            formuleLabel = "Journée — 65 € HT";
-            break;
-          case 'semaine':
-            baseHT = 260;
-            formuleLabel = "Semaine — 260 € HT";
-            break;
+        const val = selectCourte.value;
+        if (val === 'heure') {
+          const hStart = parseInt(heureDebutSelect.value.split(':')[0]) + (parseInt(heureDebutSelect.value.split(':')[1])/60);
+          const hEnd = parseInt(heureFinSelect.value.split(':')[0]) + (parseInt(heureFinSelect.value.split(':')[1])/60);
+          let hours = Math.max(0, hEnd - hStart);
+          baseHT = hours * 10;
+          formuleLabel = `À l'heure (${hours.toFixed(1)}h) — 10 € HT/h`;
+        } else if (val === 'demi') {
+          baseHT = 35;
+          formuleLabel = "Demi-journée (4h) — 35 € HT";
+        } else if (val === 'journee') {
+          baseHT = 65 * diffDays;
+          formuleLabel = `Journée (${diffDays}j) — 65 € HT/j`;
+        } else if (val === 'semaine') {
+          const weeks = Math.ceil(diffDays / 7);
+          baseHT = 260 * weeks;
+          formuleLabel = `Semaine (${weeks} sem.) — 260 € HT/sem`;
         }
       } else {
-        switch (selectLongue.value) {
-          case '1mois':
-            baseHT = 65;
-            formuleLabel = "1 mois — 65 € HT/jour";
-            break;
-          case '3mois':
-            baseHT = 60;
-            formuleLabel = "3 mois — 60 € HT/jour";
-            break;
-          case '6mois':
-            baseHT = 55;
-            formuleLabel = "6 mois — 55 € HT/jour";
-            break;
-          case '12mois':
-            baseHT = 50;
-            formuleLabel = "12 mois — 50 € HT/jour";
-            break;
-        }
+        // Longue durée
+        const val = selectLongue.value;
+        let dailyRate = 65;
+        if (val === '1mois') dailyRate = 65;
+        else if (val === '3mois') dailyRate = 60;
+        else if (val === '6mois') dailyRate = 55;
+        else if (val === '12mois') dailyRate = 50;
+        
+        // Si date fin précisée, calcul exact, sinon indicatif 1 jour
+        const days = dateFinInput.value ? diffDays : 1;
+        baseHT = dailyRate * days;
+        formuleLabel = `${val} (${days}j) — ${dailyRate} € HT/j`;
       }
 
       let packHT = 0;
-      let packLabel = "Aucun pack matériel";
+      let packLabel = "Aucun";
       if (pack === 'essentiel') {
         packHT = 20;
-        packLabel = "Pack Essentiel — 20 € HT";
+        packLabel = "Pack Essentiel (20 € HT)";
       } else if (pack === 'premium') {
         packHT = 30;
-        packLabel = "Pack Premium — 30 € HT";
+        packLabel = "Pack Premium (30 € HT)";
       }
 
-      const totalHT = baseHT + packHT; // pour une journée
+      const totalHT = baseHT + packHT;
       const tva = totalHT * 0.2;
       const totalTTC = totalHT + tva;
       const acompteTTC = totalTTC * acompteTaux;
@@ -435,39 +834,48 @@
     }
 
     function updateSummary() {
-      const dateDebut = document.getElementById('date-debut').value || '-';
-      const dateFin = document.getElementById('date-fin').value || 'Non précisé';
-      const heureDebut = document.getElementById('heure-debut').value || '-';
-
-      const infoPrix = getPrixHT();
+      const info = getPrix();
 
       summaryContent.innerHTML = `
-        <ul>
-          <li><strong>Du :</strong> ${dateDebut} <strong>au</strong> ${dateFin}</li>
-          <li><strong>Heure de début :</strong> ${heureDebut}</li>
-          <li><strong>Formule :</strong> ${infoPrix.formuleLabel}</li>
-          <li><strong>Pack :</strong> ${infoPrix.packLabel}</li>
-        </ul>
-        <p>
-          <strong>Tarif indicatif pour 1 journée :</strong><br/>
-          • Base : ${infoPrix.baseHT.toFixed(2)} € HT<br/>
-          • Pack : ${infoPrix.packHT.toFixed(2)} € HT<br/>
-          • Total : ${infoPrix.totalHT.toFixed(2)} € HT
-          (TVA 20 % : ${infoPrix.tva.toFixed(2)} €)<br/>
-          <span class="highlight">
-            • Total TTC : ${infoPrix.totalTTC.toFixed(2)} € TTC<br/>
-            • Acompte (${(infoPrix.acompteTaux * 100).toFixed(0)} %) : ${infoPrix.acompteTTC.toFixed(2)} € TTC<br/>
-            • Solde restant : ${infoPrix.soldeTTC.toFixed(2)} € TTC
-          </span>
-        </p>
-        <p class="muted">
-          Pour plusieurs jours, semaines ou mois, le montant total sera ajusté
-          selon la durée réelle de location et la grille tarifaire.
-        </p>
+        <div class="summary-row">
+          <span class="muted">Base HT (${info.formuleLabel})</span>
+          <span>${info.baseHT.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row">
+          <span class="muted">Pack Matériel</span>
+          <span>${info.packHT.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row total-ht">
+          <span>Total HT</span>
+          <span>${info.totalHT.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row">
+          <span class="muted">TVA (20 %)</span>
+          <span>${info.tva.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row total-ttc">
+          <span>Total TTC</span>
+          <span>${info.totalTTC.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row acompte">
+          <span>Acompte à régler (${(info.acompteTaux * 100).toFixed(0)} %)</span>
+          <span>${info.acompteTTC.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row">
+          <span class="muted">Solde restant</span>
+          <span>${info.soldeTTC.toFixed(2)} €</span>
+        </div>
       `;
     }
 
-    // Gestion courte / longue durée
+    // Gestion visuelle pill
+    function updatePills() {
+        document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('active'));
+        if(document.querySelector('input[value="courte"]').checked) pillCourte.classList.add('active');
+        else pillLongue.classList.add('active');
+    }
+
+    // Events
     dureeRadios.forEach(r => {
       r.addEventListener('change', () => {
         if (r.value === 'courte' && r.checked) {
@@ -477,77 +885,106 @@
           selectCourte.disabled = true;
           selectLongue.disabled = false;
         }
+        updatePills();
         updateSummary();
       });
     });
 
-    // Mise à jour du récap
-    btnUpdate.addEventListener('click', updateSummary);
-    selectCourte.addEventListener('change', updateSummary);
-    selectLongue.addEventListener('change', updateSummary);
-    document.getElementById('pack-materiel').addEventListener('change', updateSummary);
-    document.getElementById('date-debut').addEventListener('change', updateSummary);
-    document.getElementById('date-fin').addEventListener('change', updateSummary);
-    document.getElementById('heure-debut').addEventListener('change', updateSummary);
+    [selectCourte, selectLongue, document.getElementById('pack-materiel'), 
+     heureDebutSelect, heureFinSelect].forEach(el => {
+      el.addEventListener('change', updateSummary);
+    });
 
-    // Soumission → WhatsApp
+    // Soumission
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Envoi en cours...";
 
-      if (!document.getElementById('cgv').checked) {
-        alert("Merci de lire et d’accepter les CGV avant de valider votre demande.");
-        return;
-      }
-
-      updateSummary();
-      const prix = getPrixHT();
-
+      const info = getPrix();
       const nom = document.getElementById('nom').value;
       const email = document.getElementById('email').value;
       const tel = document.getElementById('telephone').value;
       const commentaire = document.getElementById('commentaire').value || '—';
+      const dateDebut = dateDebutInput.value;
+      const dateFin = dateFinInput.value || 'Non précisé';
+      const heureDebut = heureDebutSelect.value;
+      const heureFin = heureFinSelect.value;
 
-      const duree = document.querySelector('input[name="duree"]:checked').value;
-      const dateDebut = document.getElementById('date-debut').value || '-';
-      const dateFin = document.getElementById('date-fin').value || 'Non précisé';
-      const heureDebut = document.getElementById('heure-debut').value || '-';
+      // --- EMAIL SENDING LOGIC ---
+      const templateParams = {
+        to_name: nom,
+        to_email: email,
+        manager_email: "location.phenoandco@gmail.com",
+        date_debut: dateDebut,
+        date_fin: dateFin,
+        heure_debut: heureDebut,
+        heure_fin: heureFin,
+        duree_details: info.formuleLabel,
+        type_location: info.duree === 'courte' ? 'Courte durée' : 'Longue durée',
+        formule_label: info.formuleLabel,
+        pack_label: info.packLabel,
+        base_ht: info.baseHT.toFixed(2),
+        pack_ht: info.packHT.toFixed(2),
+        total_ht: info.totalHT.toFixed(2),
+        tva: info.tva.toFixed(2),
+        total_ttc: info.totalTTC.toFixed(2),
+        acompte_taux: (info.acompteTaux * 100).toFixed(0),
+        acompte_ttc: info.acompteTTC.toFixed(2),
+        solde_ttc: info.soldeTTC.toFixed(2),
+        telephone: tel,
+        commentaire: commentaire
+      };
 
-      const message = `
+      // ⚠️ IMPORTANT: Remplacez les IDs ci-dessous par vos vrais IDs EmailJS
+      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+        .then(function(response) {
+           console.log('SUCCESS!', response.status, response.text);
+           confirmationMessage.style.display = 'block';
+        }, function(error) {
+           console.log('FAILED...', error);
+           // Optionnel: Afficher une alerte ou continuer quand même
+        })
+        .finally(function() {
+            submitBtn.textContent = "Envoyer ma demande via WhatsApp";
+            submitBtn.disabled = false;
+            
+            // --- WHATSAPP REDIRECTION ---
+            const message = `
 Nouvelle demande de location de fauteuil – PHENO&CO
 
-Identité :
-- Nom : ${nom}
-- Email : ${email}
-- Téléphone : ${tel}
+📋 IDENTITÉ
+Nom : ${nom}
+Email : ${email}
+Tél : ${tel}
 
-Période souhaitée :
-- Du ${dateDebut} au ${dateFin}
-- Heure de début : ${heureDebut}
-- Type de durée : ${duree === 'courte' ? 'Courte durée' : 'Longue durée'}
+📅 PÉRIODE
+Du : ${dateDebut}
+Au : ${dateFin}
+Horaires : ${heureDebut} à ${heureFin}
+Type : ${info.duree === 'courte' ? 'Courte durée' : 'Longue durée'}
 
-Formule :
-- ${prix.formuleLabel}
-- ${prix.packLabel}
+⚙️ FORMULE & OPTIONS
+Formule : ${info.formuleLabel}
+Pack Matériel : ${info.packLabel}
 
-Estimation pour 1 journée :
-- Total HT : ${prix.totalHT.toFixed(2)} € HT
-- Total TTC : ${prix.totalTTC.toFixed(2)} € TTC
-- Acompte (${(prix.acompteTaux * 100).toFixed(0)} %) : ${prix.acompteTTC.toFixed(2)} € TTC
+💰 ESTIMATION
+Base HT : ${info.baseHT.toFixed(2)} €
+Pack : ${info.packHT.toFixed(2)} €
+Total HT : ${info.totalHT.toFixed(2)} €
+TVA (20%) : ${info.tva.toFixed(2)} €
+TOTAL TTC : ${info.totalTTC.toFixed(2)} €
 
-Commentaire :
+💳 ACOMPTE À RÉGLER
+Montant (${(info.acompteTaux * 100).toFixed(0)} %) : ${info.acompteTTC.toFixed(2)} € TTC
+Solde restant : ${info.soldeTTC.toFixed(2)} € TTC
+
+💬 COMMENTAIRE
 ${commentaire}
+            `.trim();
 
-À valider ensemble selon la durée exacte et le contrat de location.
-      `.trim();
-
-      const encoded = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/33769432605?text=${encoded}`;
-
-      window.open(whatsappUrl, '_blank');
-    });
-
-    // Initialisation
-    updateSummary();
-  </script>
-</body>
-</html>
+            const encoded = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/33769432605?text=${encoded}`;
+            window.open(whatsappUrl, '_blank
