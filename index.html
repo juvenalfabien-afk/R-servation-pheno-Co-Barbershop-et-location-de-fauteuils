@@ -1,103 +1,553 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHENO&CO — Location de Fauteuils</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réservation de fauteuil – PHENO&CO</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #050608;
+      color: #f9fafb;
+    }
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background: #000;
-            color: white;
-            text-align: center;
-        }
+    .page {
+      max-width: 900px;
+      margin: auto;
+      padding: 24px 16px 40px;
+    }
 
-        .container {
-            max-width: 420px;
-            margin: auto;
-            padding: 40px 20px;
-        }
+    h1, h2, h3 {
+      color: #ffd42a;
+      margin-top: 0;
+    }
 
-        .logo {
-            width: 120px;
-            margin-bottom: 20px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 16px;
+    }
 
-        h1 {
-            color: #FFD42A;
-            font-size: 32px;
-            margin-bottom: 5px;
-        }
+    p.intro {
+      text-align: center;
+      margin-bottom: 32px;
+      opacity: 0.8;
+    }
 
-        .subtitle {
-            font-size: 15px;
-            margin-bottom: 40px;
-            opacity: 0.85;
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
 
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            margin-bottom: 20px;
-            border-radius: 14px;
-            border: none;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-        }
+    @media (min-width: 820px) {
+      .grid {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
 
-        .btn-yellow {
-            background: #FFD42A;
-            color: #000;
-        }
+    .card {
+      background: #0b1220;
+      border-radius: 16px;
+      padding: 20px 18px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
 
-        .btn-grey {
-            background: #2E3238;
-            color: #fff;
-            border: 1px solid #555;
-        }
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      opacity: 0.9;
+    }
 
-        .btn-green {
-            background: #2ECC71;
-            color: #fff;
-        }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #f9fafb;
+      font-size: 14px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
 
-        footer {
-            margin-top: 40px;
-            font-size: 13px;
-            opacity: 0.6;
-        }
-    </style>
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .radio-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .radio-pill {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      background: #020617;
+    }
+
+    .radio-pill input {
+      margin: 0;
+    }
+
+    .radio-pill span {
+      font-weight: 600;
+    }
+
+    .muted {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 999px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .btn-primary {
+      background: #ffd42a;
+      color: #000;
+    }
+
+    .btn-secondary {
+      background: #111827;
+      color: #f9fafb;
+      border: 1px solid #4b5563;
+    }
+
+    .summary-box {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #4b5563;
+      padding: 14px 14px 10px;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .summary-box h3 {
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .summary-box ul {
+      margin: 4px 0 8px;
+      padding-left: 18px;
+    }
+
+    .summary-box li {
+      margin-bottom: 2px;
+    }
+
+    .highlight {
+      color: #22c55e;
+      font-weight: bold;
+    }
+
+    .warning {
+      font-size: 12px;
+      color: #facc15;
+      margin-top: 6px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .checkbox-row input {
+      margin-top: 3px;
+    }
+
+    a.cgv-link {
+      color: #ffd42a;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .section-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span.icon {
+      font-size: 18px;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="page">
+    <h1>Réserver un fauteuil</h1>
+    <p class="intro">
+      Choisissez vos dates, votre formule et vos options.<br />
+      Vous recevrez un récapitulatif et la réservation sera confirmée après paiement de l’acompte.
+    </p>
 
-    <div class="container">
+    <form id="reservation-form">
+      <div class="grid">
+        <!-- Colonne gauche : formulaire -->
+        <div class="card">
+          <div class="section-title">
+            <span class="icon">📅</span>
+            <span>Dates de location</span>
+          </div>
 
-        <!-- Logo PHENO&CO -->
-        <img src="https://phenoandco.com/wp-content/uploads/2024/11/LOGO-PHENOCO-BLANC.png"
-             alt="Logo PHENO&CO" class="logo">
+          <label for="date-debut">Date de début *</label>
+          <input type="date" id="date-debut" name="date_debut" required />
 
-        <h1>PHENO&CO</h1>
+          <label for="date-fin">Date de fin (optionnel)</label>
+          <input type="date" id="date-fin" name="date_fin" />
 
-        <div class="subtitle">
-            Location de fauteuils • Depuis 2009 • Montpellier
+          <label for="heure-debut">Heure de début *</label>
+          <input type="time" id="heure-debut" name="heure_debut" required />
+
+          <hr style="border: 0; border-top: 1px solid #1f2937; margin: 18px 0;" />
+
+          <div class="section-title">
+            <span class="icon">⏱️</span>
+            <span>Type de location</span>
+          </div>
+
+          <label>Durée de location *</label>
+          <div class="radio-row">
+            <label class="radio-pill">
+              <input type="radio" name="duree" value="courte" checked />
+              <div>
+                <span>Courte durée</span><br />
+                <span class="muted">Heure, journée, semaine • acompte 50&nbsp;%</span>
+              </div>
+            </label>
+            <label class="radio-pill">
+              <input type="radio" name="duree" value="longue" />
+              <div>
+                <span>Longue durée</span><br />
+                <span class="muted">1 à 12 mois • acompte 25&nbsp;%</span>
+              </div>
+            </label>
+          </div>
+
+          <label for="formule-courte">Formule courte durée *</label>
+          <select id="formule-courte" name="formule_courte">
+            <option value="heure">À l'heure — 10 € HT</option>
+            <option value="demi">Demi-journée (4h) — 35 € HT</option>
+            <option value="journee">Journée — 65 € HT</option>
+            <option value="semaine">Semaine — 260 € HT</option>
+          </select>
+
+          <label for="formule-longue">Formule longue durée *</label>
+          <select id="formule-longue" name="formule_longue" disabled>
+            <option value="1mois">1 mois — 65 € HT/jour</option>
+            <option value="3mois">3 mois — 60 € HT/jour</option>
+            <option value="6mois">6 mois — 55 € HT/jour</option>
+            <option value="12mois">12 mois — 50 € HT/jour</option>
+          </select>
+
+          <label for="pack-materiel">Pack matériel</label>
+          <select id="pack-materiel" name="pack_materiel">
+            <option value="aucun">Aucun</option>
+            <option value="essentiel">Pack Essentiel — 20 € HT</option>
+            <option value="premium">Pack Premium — 30 € HT</option>
+          </select>
+
+          <div class="warning">
+            Les montants calculés sont indicatifs pour une journée de location.
+            Pour plusieurs jours ou une saison, le calcul se fait au prorata selon la grille tarifaire.
+          </div>
         </div>
 
-        <!-- Boutons -->
-        <a href="reservation.html" class="btn btn-yellow">Louer un Fauteuil</a>
-        <a href="https://phenoandco.com" class="btn btn-grey">Prendre RDV Coiffure</a>
-        <a href="https://wa.me/33769432605" class="btn btn-green">Contact WhatsApp</a>
+        <!-- Colonne droite : infos + récap -->
+        <div class="card">
+          <div class="section-title">
+            <span class="icon">👤</span>
+            <span>Vos informations</span>
+          </div>
 
-        <footer>
-            PHENO&CO — Barbershop & Coworking • Montpellier
-        </footer>
+          <label for="nom">Nom complet *</label>
+          <input type="text" id="nom" name="nom" required />
+
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="telephone">Téléphone *</label>
+          <input type="tel" id="telephone" name="telephone" required />
+
+          <label for="commentaire">Commentaire (optionnel)</label>
+          <textarea id="commentaire" name="commentaire" placeholder="Précisez par exemple votre expérience, vos besoins, vos jours de présence souhaités…"></textarea>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="cgv" required />
+            <label for="cgv">
+              J’accepte les
+              <a href="#cgv-details" class="cgv-link">conditions générales de vente</a>
+              et je comprends que la réservation est confirmée après paiement de l’acompte.
+            </label>
+          </div>
+
+          <div id="summary" class="summary-box">
+            <h3>Récapitulatif (indicatif)</h3>
+            <div id="summary-content">
+              Remplissez le formulaire pour voir le détail de votre réservation.
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-secondary" id="btn-update">
+            Mettre à jour le récapitulatif
+          </button>
+
+          <button type="submit" class="btn btn-primary">
+            Envoyer ma demande via WhatsApp
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- CGV très simplifiées -->
+    <div id="cgv-details" class="card" style="margin-top: 24px;">
+      <h2>Conditions générales de location (résumé)</h2>
+      <ul>
+        <li>La réservation est confirmée uniquement après paiement de l’acompte (50&nbsp;% pour les locations courtes, 25&nbsp;% pour les locations longues).</li>
+        <li>Les tarifs indiqués sont hors taxes. La TVA applicable sera ajoutée lors de la facturation.</li>
+        <li>Le locataire est responsable de son activité, de sa clientèle, de son assurance professionnelle et du respect des règles d’hygiène.</li>
+        <li>Tout matériel mis à disposition doit être utilisé et entretenu avec soin. En cas de casse manifeste par négligence, un remplacement pourra être facturé.</li>
+        <li>En cas d’annulation moins de 72h avant la date de début, l’acompte peut être conservé à titre de dédommagement.</li>
+        <li>PHENO&CO se réserve le droit de refuser ou d’interrompre une location en cas de non-respect des valeurs du salon ou des règles de fonctionnement.</li>
+      </ul>
+      <p class="muted">
+        La version complète des conditions pourra être envoyée par mail avec le contrat de location.
+      </p>
     </div>
+  </div>
 
+  <script>
+    const dureeRadios = document.querySelectorAll('input[name="duree"]');
+    const selectCourte = document.getElementById('formule-courte');
+    const selectLongue = document.getElementById('formule-longue');
+    const summaryContent = document.getElementById('summary-content');
+    const btnUpdate = document.getElementById('btn-update');
+    const form = document.getElementById('reservation-form');
+
+    function getPrixHT() {
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const pack = document.getElementById('pack-materiel').value;
+
+      let baseHT = 0;
+      let formuleLabel = '';
+      let acompteTaux = duree === 'courte' ? 0.5 : 0.25;
+
+      if (duree === 'courte') {
+        switch (selectCourte.value) {
+          case 'heure':
+            baseHT = 10;
+            formuleLabel = "À l'heure — 10 € HT";
+            break;
+          case 'demi':
+            baseHT = 35;
+            formuleLabel = "Demi-journée (4h) — 35 € HT";
+            break;
+          case 'journee':
+            baseHT = 65;
+            formuleLabel = "Journée — 65 € HT";
+            break;
+          case 'semaine':
+            baseHT = 260;
+            formuleLabel = "Semaine — 260 € HT";
+            break;
+        }
+      } else {
+        switch (selectLongue.value) {
+          case '1mois':
+            baseHT = 65;
+            formuleLabel = "1 mois — 65 € HT/jour";
+            break;
+          case '3mois':
+            baseHT = 60;
+            formuleLabel = "3 mois — 60 € HT/jour";
+            break;
+          case '6mois':
+            baseHT = 55;
+            formuleLabel = "6 mois — 55 € HT/jour";
+            break;
+          case '12mois':
+            baseHT = 50;
+            formuleLabel = "12 mois — 50 € HT/jour";
+            break;
+        }
+      }
+
+      let packHT = 0;
+      let packLabel = "Aucun pack matériel";
+      if (pack === 'essentiel') {
+        packHT = 20;
+        packLabel = "Pack Essentiel — 20 € HT";
+      } else if (pack === 'premium') {
+        packHT = 30;
+        packLabel = "Pack Premium — 30 € HT";
+      }
+
+      const totalHT = baseHT + packHT; // pour une journée
+      const tva = totalHT * 0.2;
+      const totalTTC = totalHT + tva;
+      const acompteTTC = totalTTC * acompteTaux;
+      const soldeTTC = totalTTC - acompteTTC;
+
+      return {
+        duree,
+        formuleLabel,
+        packLabel,
+        baseHT,
+        packHT,
+        totalHT,
+        tva,
+        totalTTC,
+        acompteTTC,
+        soldeTTC,
+        acompteTaux
+      };
+    }
+
+    function updateSummary() {
+      const dateDebut = document.getElementById('date-debut').value || '-';
+      const dateFin = document.getElementById('date-fin').value || 'Non précisé';
+      const heureDebut = document.getElementById('heure-debut').value || '-';
+
+      const infoPrix = getPrixHT();
+
+      summaryContent.innerHTML = `
+        <ul>
+          <li><strong>Du :</strong> ${dateDebut} <strong>au</strong> ${dateFin}</li>
+          <li><strong>Heure de début :</strong> ${heureDebut}</li>
+          <li><strong>Formule :</strong> ${infoPrix.formuleLabel}</li>
+          <li><strong>Pack :</strong> ${infoPrix.packLabel}</li>
+        </ul>
+        <p>
+          <strong>Tarif indicatif pour 1 journée :</strong><br/>
+          • Base : ${infoPrix.baseHT.toFixed(2)} € HT<br/>
+          • Pack : ${infoPrix.packHT.toFixed(2)} € HT<br/>
+          • Total : ${infoPrix.totalHT.toFixed(2)} € HT
+          (TVA 20 % : ${infoPrix.tva.toFixed(2)} €)<br/>
+          <span class="highlight">
+            • Total TTC : ${infoPrix.totalTTC.toFixed(2)} € TTC<br/>
+            • Acompte (${(infoPrix.acompteTaux * 100).toFixed(0)} %) : ${infoPrix.acompteTTC.toFixed(2)} € TTC<br/>
+            • Solde restant : ${infoPrix.soldeTTC.toFixed(2)} € TTC
+          </span>
+        </p>
+        <p class="muted">
+          Pour plusieurs jours, semaines ou mois, le montant total sera ajusté
+          selon la durée réelle de location et la grille tarifaire.
+        </p>
+      `;
+    }
+
+    // Gestion courte / longue durée
+    dureeRadios.forEach(r => {
+      r.addEventListener('change', () => {
+        if (r.value === 'courte' && r.checked) {
+          selectCourte.disabled = false;
+          selectLongue.disabled = true;
+        } else if (r.value === 'longue' && r.checked) {
+          selectCourte.disabled = true;
+          selectLongue.disabled = false;
+        }
+        updateSummary();
+      });
+    });
+
+    // Mise à jour du récap
+    btnUpdate.addEventListener('click', updateSummary);
+    selectCourte.addEventListener('change', updateSummary);
+    selectLongue.addEventListener('change', updateSummary);
+    document.getElementById('pack-materiel').addEventListener('change', updateSummary);
+    document.getElementById('date-debut').addEventListener('change', updateSummary);
+    document.getElementById('date-fin').addEventListener('change', updateSummary);
+    document.getElementById('heure-debut').addEventListener('change', updateSummary);
+
+    // Soumission → WhatsApp
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (!document.getElementById('cgv').checked) {
+        alert("Merci de lire et d’accepter les CGV avant de valider votre demande.");
+        return;
+      }
+
+      updateSummary();
+      const prix = getPrixHT();
+
+      const nom = document.getElementById('nom').value;
+      const email = document.getElementById('email').value;
+      const tel = document.getElementById('telephone').value;
+      const commentaire = document.getElementById('commentaire').value || '—';
+
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const dateDebut = document.getElementById('date-debut').value || '-';
+      const dateFin = document.getElementById('date-fin').value || 'Non précisé';
+      const heureDebut = document.getElementById('heure-debut').value || '-';
+
+      const message = `
+Nouvelle demande de location de fauteuil – PHENO&CO
+
+Identité :
+- Nom : ${nom}
+- Email : ${email}
+- Téléphone : ${tel}
+
+Période souhaitée :
+- Du ${dateDebut} au ${dateFin}
+- Heure de début : ${heureDebut}
+- Type de durée : ${duree === 'courte' ? 'Courte durée' : 'Longue durée'}
+
+Formule :
+- ${prix.formuleLabel}
+- ${prix.packLabel}
+
+Estimation pour 1 journée :
+- Total HT : ${prix.totalHT.toFixed(2)} € HT
+- Total TTC : ${prix.totalTTC.toFixed(2)} € TTC
+- Acompte (${(prix.acompteTaux * 100).toFixed(0)} %) : ${prix.acompteTTC.toFixed(2)} € TTC
+
+Commentaire :
+${commentaire}
+
+À valider ensemble selon la durée exacte et le contrat de location.
+      `.trim();
+
+      const encoded = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/33769432605?text=${encoded}`;
+
+      window.open(whatsappUrl, '_blank');
+    });
+
+    // Initialisation
+    updateSummary();
+  </script>
 </body>
 </html>
