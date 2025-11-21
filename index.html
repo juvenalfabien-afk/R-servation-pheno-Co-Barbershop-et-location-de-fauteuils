@@ -518,11 +518,11 @@
   <div class="hero">
     <div class="hero-logo">
       <!-- 
-        IMPORTANT: Pour le logo, 3 options :
-        1. Mettez votre fichier logo (Copie de LOGO...) dans le même dossier que ce fichier HTML
-        2. OU Modifiez le src ci-dessous avec l'URL complète (https://phenoandco.com/logo.png)
+        IMPORTANT: Pour le logo, 2 options :
+        1. Laisser 1.png si le fichier s'appelle comme ça dans GitHub (racine du repo)
+        2. OU utiliser une URL complète (https://phenoandco.com/tonlogo.png)
       -->
-      <img src="Copie de LOGO PHENO&CO  (Vidéo mobile)_1763667486157.png" alt="Logo PHENO&CO" onerror="this.style.display='none';"/>
+      <img src="1.png" alt="Logo PHENO&CO" onerror="this.style.display='none';"/>
     </div>
     <div class="hero-titles">
       <h1>PHENO&CO</h1>
@@ -942,7 +942,7 @@
 
       // Generate Calendar Link
       const calTitle = "Location Fauteuil - PHENO&CO";
-      const calDetails = `Réservation de fauteuil.\\nFormule: ${info.formuleLabel}\\nPack: ${info.packLabel}\\nTotal TTC: ${info.totalTTC.toFixed(2)}€`;
+      const calDetails = `Réservation de fauteuil.\nFormule: ${info.formuleLabel}\nPack: ${info.packLabel}\nTotal TTC: ${info.totalTTC.toFixed(2)}€`;
       const calLink = getGoogleCalendarLink(calTitle, calDetails, dateDebut, dateFin === 'Non précisé' ? '' : dateFin, heureDebut, heureFin);
       
       // Insert Calendar Button
@@ -1064,8 +1064,6 @@ Lien Google Calendar : ${calLink}
       };
 
       // Send to Manager AND Client (Sequential calls to ensure both)
-      // 1. Send to Manager
-      // We modify the 'to_email' param dynamically
       const paramsManager = Object.assign({}, templateParams);
       paramsManager.to_email = "location.phenoandco@gmail.com";
       paramsManager.to_name = "Manager PHENO&CO";
