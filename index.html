@@ -34,7 +34,7 @@
     /* --- HERO SECTION STYLES --- */
     .hero {
       background: #000000;
-      padding: 40px 20px 50px;
+      padding: 40px 20px 50px; /* Reduced top padding for mobile */
       text-align: center;
       border-bottom: 1px solid #1f2937;
       display: flex;
@@ -106,6 +106,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 10px;
       transition: transform 0.2s, opacity 0.2s;
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       text-align: center;
@@ -196,18 +197,19 @@
     select,
     textarea {
       width: 100%;
-      padding: 12px 16px;
+      padding: 12px 16px; /* Larger touch target */
       border-radius: 10px;
       border: 1px solid #374151;
       background: #020617;
       color: #f9fafb;
-      font-size: 16px;
+      font-size: 16px; /* Prevents iOS zoom */
       margin-bottom: 16px;
       font-family: inherit;
-      appearance: none;
+      appearance: none; /* Remove default styling */
       -webkit-appearance: none;
     }
     
+    /* Custom select arrow */
     select {
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
       background-position: right 0.5rem center;
@@ -220,6 +222,7 @@
       min-height: 46px;
     }
 
+    /* --- DATE PICKER CUSTOMIZATION --- */
     input[type="date"]::-webkit-calendar-picker-indicator {
         filter: none;
         background-color: #F9C800;
@@ -476,6 +479,7 @@
       padding-bottom: 20px;
     }
 
+    /* --- MEDIA QUERIES --- */
     @media (min-width: 820px) {
       .grid {
         grid-template-columns: 1.2fr 1fr;
@@ -517,11 +521,7 @@
   <!-- HERO SECTION -->
   <div class="hero">
     <div class="hero-logo">
-      <!-- 
-        IMPORTANT: Pour le logo, 2 options :
-        1. Laisser 1.png si le fichier s'appelle comme ça dans GitHub (racine du repo)
-        2. OU utiliser une URL complète (https://phenoandco.com/tonlogo.png)
-      -->
+      <!-- Logo : Assurez-vous que le fichier 1.png est dans le même dossier que ce fichier index.html -->
       <img src="1.png" alt="Logo PHENO&CO" onerror="this.style.display='none';"/>
     </div>
     <div class="hero-titles">
@@ -554,6 +554,59 @@
         <!-- Colonne gauche : formulaire -->
         <div class="card">
           <div class="section-title">
+            <span class="icon">⏱️</span>
+            <span>Type de location</span>
+          </div>
+
+          <label>Durée de location *</label>
+          <div class="radio-row">
+            <label class="radio-pill active" id="pill-courte">
+              <input type="radio" name="duree" value="courte" checked />
+              <div>
+                <span>Courte durée</span>
+                <span class="muted">Heure, journée<br>Acompte 50%</span>
+              </div>
+            </label>
+            <label class="radio-pill" id="pill-longue">
+              <input type="radio" name="duree" value="longue" />
+              <div>
+                <span>Semaine & Mensuel</span>
+                <span class="muted">Semaine ou Mois<br>Acompte 25%</span>
+              </div>
+            </label>
+          </div>
+
+          <label for="formule-courte">Formule courte durée *</label>
+          <select id="formule-courte" name="formule_courte">
+            <option value="heure">À l'heure — 10 € HT</option>
+            <option value="demi">Demi-journée (4h) — 35 € HT</option>
+            <option value="journee">Journée — 65 € HT</option>
+          </select>
+
+          <label for="formule-longue">Formule longue durée *</label>
+          <select id="formule-longue" name="formule_longue" disabled>
+            <option value="semaine">Semaine — 60 € HT / jour</option>
+            <option value="mensuel">Mensuel — 55 € HT / jour</option>
+          </select>
+
+          <label for="pack-materiel">Pack matériel</label>
+          <select id="pack-materiel" name="pack_materiel">
+            <option value="aucun">Aucun — 0 €</option>
+            <option value="essentiel">Pack Essentiel — 20 € HT / jour</option>
+            <option value="premium">Pack Premium — 30 € HT / jour</option>
+          </select>
+          <p class="muted" style="margin-top: -12px; margin-bottom: 16px;">
+            <strong>Pack Essentiel :</strong> 20 € HT/jour (tondeuse, finition, serviettes, cape, poste équipé).<br>
+            <strong>Pack Premium :</strong> 30 € HT/jour (Essentiel + shaver + serviettes en plus).
+          </p>
+
+          <div class="warning">
+            Les montants calculés sont indicatifs. Le calcul final se fera au prorata selon la grille tarifaire lors de la confirmation.
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid #1f2937; margin: 20px 0;" />
+
+          <div class="section-title">
             <span class="icon">📅</span>
             <span>Dates de location</span>
           </div>
@@ -577,62 +630,6 @@
                 <!-- Options générées par JS -->
               </select>
             </div>
-          </div>
-
-          <hr style="border: 0; border-top: 1px solid #1f2937; margin: 20px 0;" />
-
-          <div class="section-title">
-            <span class="icon">⏱️</span>
-            <span>Type de location</span>
-          </div>
-
-          <label>Durée de location *</label>
-          <div class="radio-row">
-            <label class="radio-pill active" id="pill-courte">
-              <input type="radio" name="duree" value="courte" checked />
-              <div>
-                <span>Courte durée</span>
-                <span class="muted">Heure, journée, semaine<br>Acompte 50%</span>
-              </div>
-            </label>
-            <label class="radio-pill" id="pill-longue">
-              <input type="radio" name="duree" value="longue" />
-              <div>
-                <span>Longue durée</span>
-                <span class="muted">1 à 12 mois<br>Acompte 25%</span>
-              </div>
-            </label>
-          </div>
-
-          <label for="formule-courte">Formule courte durée *</label>
-          <select id="formule-courte" name="formule_courte">
-            <option value="heure">À l'heure — 10 € HT</option>
-            <option value="demi">Demi-journée (4h) — 35 € HT</option>
-            <option value="journee">Journée — 65 € HT</option>
-            <option value="semaine">Semaine — 260 € HT</option>
-          </select>
-
-          <label for="formule-longue">Formule longue durée *</label>
-          <select id="formule-longue" name="formule_longue" disabled>
-            <option value="1mois">1 mois — 65 € HT/jour</option>
-            <option value="3mois">3 mois — 60 € HT/jour</option>
-            <option value="6mois">6 mois — 55 € HT/jour</option>
-            <option value="12mois">12 mois — 50 € HT/jour</option>
-          </select>
-
-          <label for="pack-materiel">Pack matériel</label>
-          <select id="pack-materiel" name="pack_materiel">
-            <option value="aucun">Aucun — 0 €</option>
-            <option value="essentiel">Pack Essentiel — 20 € HT</option>
-            <option value="premium">Pack Premium — 30 € HT</option>
-          </select>
-          <p class="muted" style="margin-top: -12px; margin-bottom: 16px;">
-            Essentiel : tondeuse, finition, 2 serviettes, cape.<br>
-            Premium : + shaver, sèche-cheveux, 4 serviettes.
-          </p>
-
-          <div class="warning">
-            Les montants calculés sont indicatifs. Le calcul final se fera au prorata selon la grille tarifaire lors de la confirmation.
           </div>
         </div>
 
@@ -658,9 +655,7 @@
           <div class="checkbox-row">
             <input type="checkbox" id="cgv" required />
             <label for="cgv">
-              J’accepte les
-              <a href="#cgv-details" class="cgv-link">conditions générales de location</a>
-              et je comprends que la réservation est confirmée après paiement de l’acompte.
+              En cochant cette case, j'accepte les <a href="#cgv-details" class="cgv-link">CGV et la Charte du Salon</a> (valant contrat de location). Je recevrai le dossier complet après validation. La réservation sera confirmée après le paiement de l'acompte.
             </label>
           </div>
 
@@ -672,22 +667,22 @@
           </div>
 
           <button type="submit" class="btn btn-primary" id="btn-submit" disabled>
-            Envoyer ma demande via WhatsApp
+            Envoyer ma demande
           </button>
 
           <!-- Message de confirmation -->
           <div id="confirmation-message" class="confirmation-box">
-            <h4>✅ Demande envoyée !</h4>
-            <p><span class="check">✅</span>Vous allez recevoir un email récapitulatif avec le détail de votre demande.</p>
+            <h4>✅ Demande bien reçue !</h4>
             <p><span class="check">✅</span>Vous retrouvez aussi votre message dans notre conversation WhatsApp.</p>
+            <p id="email-success-msg"><span class="check">✅</span>Vous allez recevoir un email récapitulatif avec le détail de votre demande.</p>
+            <p id="email-error-msg" style="display:none; color: #facc15; font-weight: bold;">⚠️ L'envoi de l'email a été bloqué par votre navigateur (AdBlock), mais la réservation WhatsApp est bien confirmée.</p>
             
             <!-- Calendar Button will be inserted here by JS -->
             <div id="calendar-container"></div>
 
             <div style="border-top: 1px solid rgba(34, 197, 94, 0.2); margin-top: 12px; padding-top: 10px;">
               <p>
-                PHENO&CO vous enverra ensuite un lien de paiement pour régler l’acompte
-                (50 % pour les locations courtes, 25 % pour les locations longues).
+                PHENO&CO vous enverra ensuite un lien de paiement pour régler l’acompte.
                 <strong>La réservation sera confirmée uniquement après paiement de cet acompte.</strong>
               </p>
             </div>
@@ -754,187 +749,335 @@
     dateDebutInput.value = today;
     dateDebutInput.min = today;
     
-    dateDebutInput.addEventListener('change', () => {
-      dateFinInput.min = dateDebutInput.value;
-      if (dateFinInput.value && dateFinInput.value < dateDebutInput.value) {
-        dateFinInput.value = dateDebutInput.value;
+    // --- GESTION JOURS INTERDITS (Dimanche=0, Lundi=1) ---
+    function validateDate(input) {
+      const d = new Date(input.value);
+      const day = d.getDay();
+      if (day === 0 || day === 1) {
+        alert("Le salon est fermé le dimanche et le lundi. Veuillez choisir une autre date.");
+        input.value = ""; // Reset
+        updateSummary();
       }
+    }
+
+    dateDebutInput.addEventListener('change', () => {
+      validateDate(dateDebutInput);
+      dateFinInput.min = dateDebutInput.value;
+      updateSummary();
+    });
+    
+    dateFinInput.addEventListener('change', () => {
+      if (dateFinInput.value) validateDate(dateFinInput);
       updateSummary();
     });
 
-    // --- LOGIQUE ---
-    const dureeRadios = document.querySelectorAll('input[name="duree"]');
-    const selectCourte = document.getElementById('formule-courte');
-    const selectLongue = document.getElementById('formule-longue');
-    const pillCourte = document.getElementById('pill-courte');
-    const pillLongue = document.getElementById('pill-longue');
-    
+    // --- CALCUL PRIX ---
     const PRICING = {
       courte: {
         heure: { price: 10, label: "À l'heure — 10 € HT" },
         demi: { price: 35, label: "Demi-journée (4h) — 35 € HT" },
         journee: { price: 65, label: "Journée — 65 € HT" },
-        semaine: { price: 260, label: "Semaine — 260 € HT" },
       },
       longue: {
-        "1mois": { price: 65, label: "1 mois — 65 € HT/jour" },
-        "3mois": { price: 60, label: "3 mois — 60 € HT/jour" },
-        "6mois": { price: 55, label: "6 mois — 55 € HT/jour" },
-        "12mois": { price: 50, label: "12 mois — 50 € HT/jour" },
+        semaine: { price: 60, label: "Semaine — 60 € HT / jour" },
+        mensuel: { price: 55, label: "Mensuel — 55 € HT / jour" },
       },
       pack: {
         aucun: { price: 0, label: "Aucun — 0 €" },
-        essentiel: { price: 20, label: "Pack Essentiel — 20 € HT" },
-        premium: { price: 30, label: "Pack Premium — 30 € HT" },
-      }
+        essentiel: { price: 20, label: "Pack Essentiel — 20 € HT / jour" },
+        premium: { price: 30, label: "Pack Premium — 30 € HT / jour" },
+      },
     };
 
-    function updateDureeUI(type) {
-      if (type === 'courte') {
-        selectCourte.disabled = false;
-        selectLongue.disabled = true;
-        pillCourte.classList.add('active');
-        pillLongue.classList.remove('active');
-      } else {
-        selectCourte.disabled = true;
-        selectLongue.disabled = false;
-        pillCourte.classList.remove('active');
-        pillLongue.classList.add('active');
+    function countBusinessDays(startDate, endDate) {
+      let count = 0;
+      let current = new Date(startDate);
+      current.setHours(0, 0, 0, 0);
+      const endD = new Date(endDate);
+      endD.setHours(0, 0, 0, 0);
+
+      while (current <= endD) {
+        const day = current.getDay();
+        // 0 = Sunday, 1 = Monday
+        if (day !== 0 && day !== 1) {
+          count++;
+        }
+        current.setDate(current.getDate() + 1);
       }
-      updateSummary();
+      return Math.max(1, count);
     }
 
-    dureeRadios.forEach(radio => {
-      radio.addEventListener('change', (e) => updateDureeUI(e.target.value));
-    });
-
-    // Ecouteurs d'événements
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-      input.addEventListener('input', updateSummary);
-      input.addEventListener('change', updateSummary);
-    });
-
-    // --- CALCUL & RÉCAPITULATIF ---
-    function getInfo() {
-      const dureeType = document.querySelector('input[name="duree"]:checked').value;
-      const packType = document.getElementById('pack-materiel').value;
+    function getPrix() {
+      // Get values
+      const dureeVal = document.querySelector('input[name="duree"]:checked').value;
+      const packVal = document.getElementById('pack-materiel').value;
+      const dDebut = dateDebutInput.value;
+      const dFin = dateFinInput.value || dDebut;
+      
+      // Calc days
+      const days = dDebut ? countBusinessDays(dDebut, dFin) : 0;
       
       let baseHT = 0;
       let formuleLabel = "";
+      let durationDetails = "";
       
-      const start = new Date(dateDebutInput.value);
-      const end = dateFinInput.value ? new Date(dateFinInput.value) : start;
-      // Différence en jours (min 1)
-      const diffTime = Math.abs(end - start);
-      const daysDiff = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
-
-      if (dureeType === "courte") {
-        const formule = selectCourte.value;
-        const data = PRICING.courte[formule];
-        formuleLabel = data.label;
-
-        if (formule === "heure") {
-          const hStart = parseInt(heureDebutSelect.value.split(':')[0]) + (heureDebutSelect.value.includes('30') ? 0.5 : 0);
-          const hEnd = parseInt(heureFinSelect.value.split(':')[0]) + (heureFinSelect.value.includes('30') ? 0.5 : 0);
-          let hours = Math.max(0, hEnd - hStart);
-          baseHT = hours * 10;
-        } else if (formule === "demi") {
-          baseHT = 35;
-        } else if (formule === "journee") {
-          baseHT = 65 * daysDiff;
-        } else if (formule === "semaine") {
-          const weeks = Math.ceil(daysDiff / 7);
-          baseHT = 260 * weeks;
+      if (dureeVal === 'courte') {
+        const fCourte = document.getElementById('formule-courte').value;
+        
+        if (fCourte === 'heure') {
+          // Calc hours
+          const hDeb = parseInt(heureDebutSelect.value.split(':')[0]) + (heureDebutSelect.value.includes('30') ? 0.5 : 0);
+          const hFin = parseInt(heureFinSelect.value.split(':')[0]) + (heureFinSelect.value.includes('30') ? 0.5 : 0);
+          let hours = Math.max(0, hFin - hDeb);
+          
+          baseHT = hours * 10 * days;
+          formuleLabel = "À l'heure — 10 € HT";
+          durationDetails = `${hours}h / jour sur ${days} jours ouvrés`;
+        } else if (fCourte === 'demi') {
+          baseHT = 35 * days;
+          formuleLabel = "Demi-journée (4h) — 35 € HT";
+          durationDetails = `Demi-journée (4h) x ${days} jours ouvrés`;
+        } else { // journee
+          baseHT = 65 * days;
+          formuleLabel = "Journée — 65 € HT";
+          durationDetails = `${days} jours ouvrés`;
         }
       } else {
-        const formule = selectLongue.value;
-        const data = PRICING.longue[formule];
-        const dailyRate = data.price;
-        formuleLabel = data.label;
-        
-        // Si pas de date de fin, on simule 1 jour pour le tarif indicatif
-        const days = dateFinInput.value ? daysDiff : 1;
-        baseHT = dailyRate * days;
+        const fLongue = document.getElementById('formule-longue').value;
+        if (fLongue === 'semaine') {
+           baseHT = 60 * days;
+           formuleLabel = "Semaine — 60 € HT / jour";
+           durationDetails = `${days} jours ouvrés (Tarif Semaine)`;
+        } else {
+           baseHT = 55 * days;
+           formuleLabel = "Mensuel — 55 € HT / jour";
+           durationDetails = `${days} jours ouvrés (Tarif Mensuel)`;
+        }
       }
-
-      const packData = PRICING.pack[packType];
-      const packHT = packData.price;
-      const packLabel = packData.label;
-
+      
+      // Pack
+      const packPrice = PRICING.pack[packVal].price;
+      const packHT = packPrice * days;
+      const packLabel = PRICING.pack[packVal].label;
+      
+      // Totals
       const totalHT = baseHT + packHT;
-      const tva = totalHT * 0.2;
+      const tva = totalHT * 0.20;
       const totalTTC = totalHT + tva;
-      const acompteTaux = dureeType === "courte" ? 0.5 : 0.25;
+      
+      const acompteTaux = (dureeVal === 'courte') ? 0.50 : 0.25;
       const acompteTTC = totalTTC * acompteTaux;
       const soldeTTC = totalTTC - acompteTTC;
-
+      
       return {
-        duree: dureeType,
-        baseHT, packHT, totalHT, tva, totalTTC,
-        acompteTaux, acompteTTC, soldeTTC,
-        formuleLabel, packLabel
+        baseHT, packHT, totalHT, tva, totalTTC, acompteTTC, soldeTTC,
+        formuleLabel, packLabel, durationDetails, duree: dureeVal, acompteTaux
       };
     }
 
-    function updateSummary() {
-      const info = getInfo();
-      const summaryDiv = document.getElementById('summary-content');
-      const btnSubmit = document.getElementById('btn-submit');
-      const cgvChecked = document.getElementById('cgv').checked;
-      const isFormValid = document.getElementById('reservation-form').checkValidity();
-
-      btnSubmit.disabled = !isFormValid || !cgvChecked;
-
-      summaryDiv.innerHTML = `
-        <div class="summary-row"><span>Formule :</span> <span>${info.formuleLabel}</span></div>
-        <div class="summary-row"><span>Pack matériel :</span> <span>${info.packLabel}</span></div>
-        <div class="summary-row total-ht"><span>Total HT :</span> <span>${info.totalHT.toFixed(2)} €</span></div>
-        <div class="summary-row"><span>TVA (20%) :</span> <span>${info.tva.toFixed(2)} €</span></div>
-        <div class="summary-row total-ttc"><span>Total TTC :</span> <span>${info.totalTTC.toFixed(2)} €</span></div>
-        <div class="summary-row acompte"><span>Acompte à régler (${(info.acompteTaux * 100).toFixed(0)}%) :</span> <span>${info.acompteTTC.toFixed(2)} € TTC</span></div>
-      `;
-    }
-
-    // --- GOOGLE CALENDAR HELPER ---
-    const getGoogleCalendarLink = (title, details, startDate, endDate, startTime, endTime) => {
-      const start = new Date(`${startDate}T${startTime}:00`);
-      // If endDate is not provided (short term single day), use startDate
-      const end = endDate ? new Date(`${endDate}T${endTime}:00`) : new Date(`${startDate}T${endTime}:00`);
-
-      const formatTime = (date) => {
-        return date.toISOString().replace(/-|:|\.\d\d\d/g, "").substring(0, 15) + "Z"; 
-      };
-
-      const s = formatTime(start);
-      const e = formatTime(end);
-
+    // --- HELPER: GOOGLE CALENDAR LINK ---
+    function getGoogleCalendarLink(title, details, startDate, endDate, startTime, endTime) {
+      // Simple ISO format YYYYMMDDTHHmmss
+      const s = (startDate + 'T' + startTime).replace(/[-:]/g, '') + '00';
+      // End date: if empty use start date
+      const eDate = endDate || startDate;
+      const e = (eDate + 'T' + endTime).replace(/[-:]/g, '') + '00';
+      
       const url = new URL("https://www.google.com/calendar/render");
       url.searchParams.append("action", "TEMPLATE");
       url.searchParams.append("text", title);
       url.searchParams.append("details", details);
       url.searchParams.append("dates", `${s}/${e}`);
       url.searchParams.append("location", "PHENO&CO, Montpellier");
-
       return url.toString();
-    };
+    }
 
-    // --- SUBMISSION ---
-    const form = document.getElementById('reservation-form');
-    const confirmationMessage = document.getElementById('confirmation-message');
+    // --- UPDATE UI ---
+    const summaryDiv = document.getElementById('summary-content');
     const submitBtn = document.getElementById('btn-submit');
+    const cgvCheckbox = document.getElementById('cgv');
+    const confirmationMessage = document.getElementById('confirmation-message');
     const calendarContainer = document.getElementById('calendar-container');
+    
+    // Toggle Submit Button
+    function updateSubmitButton() {
+      const isValid = document.getElementById('reservation-form').checkValidity();
+      submitBtn.disabled = !isValid;
+    }
+    
+    document.getElementById('reservation-form').addEventListener('input', updateSubmitButton);
+    
+    // Update Summary Display
+    function updateSummary() {
+      const info = getPrix();
+      
+      // Check if we have valid dates/times to show meaningful price
+      // (basic check: start date exists)
+      if (!dateDebutInput.value) {
+         summaryDiv.innerHTML = '<p class="muted" style="text-align:center;">Veuillez sélectionner vos dates pour voir l\'estimation.</p>';
+         return;
+      }
 
-    form.addEventListener('submit', function(e) {
+      summaryDiv.innerHTML = `
+        <div class="summary-row">
+          <span>Durée</span>
+          <span>${info.durationDetails}</span>
+        </div>
+        <div class="summary-row">
+          <span>Formule</span>
+          <span>${info.formuleLabel}</span>
+        </div>
+        <div class="summary-row">
+          <span>Pack Matériel</span>
+          <span>${info.packLabel}</span>
+        </div>
+        
+        <div class="summary-row total-ht">
+          <span>Total HT</span>
+          <span>${info.totalHT.toFixed(2)} €</span>
+        </div>
+        <div class="summary-row muted">
+          <span>Dont TVA (20%)</span>
+          <span>${info.tva.toFixed(2)} €</span>
+        </div>
+        
+        <div class="summary-row total-ttc">
+          <span>TOTAL TTC</span>
+          <span>${info.totalTTC.toFixed(2)} €</span>
+        </div>
+        
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #374151;">
+          <div class="summary-row acompte">
+            <span>Acompte à régler (${(info.acompteTaux * 100).toFixed(0)}%)</span>
+            <span>${info.acompteTTC.toFixed(2)} €</span>
+          </div>
+          <div class="summary-row muted">
+            <span>Solde restant</span>
+            <span>${info.soldeTTC.toFixed(2)} €</span>
+          </div>
+        </div>
+      `;
+    }
+    
+    // --- TOGGLE SECTIONS ---
+    const dureeRadios = document.querySelectorAll('input[name="duree"]');
+    const selectCourte = document.getElementById('formule-courte');
+    const selectLongue = document.getElementById('formule-longue');
+    
+    const pillCourte = document.getElementById('pill-courte');
+    const pillLongue = document.getElementById('pill-longue');
+    
+    function updatePills() {
+        document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('active'));
+        if(document.querySelector('input[value="courte"]').checked) pillCourte.classList.add('active');
+        else pillLongue.classList.add('active');
+    }
+
+    // Events
+    dureeRadios.forEach(r => {
+      r.addEventListener('change', () => {
+        if (r.value === 'courte' && r.checked) {
+          selectCourte.disabled = false;
+          selectLongue.disabled = true;
+        } else if (r.value === 'longue' && r.checked) {
+          selectCourte.disabled = true;
+          selectLongue.disabled = false;
+        }
+        updatePills();
+        updateConstraints();
+        updateSummary();
+      });
+    });
+
+    [selectCourte, selectLongue, document.getElementById('pack-materiel')].forEach(el => {
+      el.addEventListener('change', () => {
+        updateConstraints();
+        updateSummary();
+      });
+    });
+    
+    [heureDebutSelect, heureFinSelect].forEach(el => {
+      el.addEventListener('change', () => {
+        if (el === heureDebutSelect) updateConstraints(); // Only start time triggers constraint update (for demi)
+        updateSummary();
+      });
+    });
+
+    // --- CONSTRAINTS LOGIC ---
+    function updateConstraints() {
+      const dureeVal = document.querySelector('input[name="duree"]:checked').value;
+      const fCourte = selectCourte.value;
+      
+      if (dureeVal === 'longue') {
+        // Force 10:00 - 18:00
+        heureDebutSelect.value = "10:00";
+        heureFinSelect.value = "18:00";
+        heureDebutSelect.disabled = true;
+        heureFinSelect.disabled = true;
+      } else { // courte
+        if (fCourte === 'journee') {
+           // Force 10:00 - 18:00
+           heureDebutSelect.value = "10:00";
+           heureFinSelect.value = "18:00";
+           heureDebutSelect.disabled = true;
+           heureFinSelect.disabled = true;
+        } else if (fCourte === 'demi') {
+           // Demi: Enable start, Force end = start + 4h
+           heureDebutSelect.disabled = false;
+           heureFinSelect.disabled = false; // Let it be disabled? No, user sees it change
+           
+           // Calculate end time
+           const startParts = heureDebutSelect.value.split(':');
+           let h = parseInt(startParts[0]);
+           let m = parseInt(startParts[1]);
+           
+           let endH = h + 4;
+           
+           // Max 18:00
+           if (endH > 18 || (endH === 18 && m > 0)) {
+             // If start is too late, clamp to 18:00 (user should pick earlier)
+             endH = 18;
+             m = 0;
+           }
+           
+           const endStr = `${endH.toString().padStart(2, '0')}:${m === 30 ? '30' : '00'}`;
+           heureFinSelect.value = endStr;
+           heureFinSelect.disabled = true; // Disable end time selection for demi
+        } else {
+           // Heure: Free choice
+           heureDebutSelect.disabled = false;
+           heureFinSelect.disabled = false;
+        }
+      }
+    }
+
+    // --- ROBUST EMAIL RETRY LOGIC ---
+    async function sendEmailWithRetry(serviceId, templateId, params, publicKey, retries = 3) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                return await emailjs.send(serviceId, templateId, params, publicKey);
+            } catch (error) {
+                console.warn(`Email attempt ${i + 1} failed:`, error);
+                if (i === retries - 1) throw error;
+                // Wait 1s
+                await new Promise(r => setTimeout(r, 1000));
+            }
+        }
+    }
+
+    // Soumission
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
+      
+      // Disable button
       submitBtn.disabled = true;
       submitBtn.textContent = "Envoi en cours...";
 
-      const info = getInfo();
+      const info = getPrix();
       const nom = document.getElementById('nom').value;
       const email = document.getElementById('email').value;
       const tel = document.getElementById('telephone').value;
-      const commentaire = document.getElementById('commentaire').value || 'Aucun';
+      const commentaire = document.getElementById('commentaire').value || '—';
       const dateDebut = dateDebutInput.value;
       const dateFin = dateFinInput.value || 'Non précisé';
       const heureDebut = heureDebutSelect.value;
@@ -981,6 +1124,10 @@ TOTAL TTC : ${info.totalTTC.toFixed(2)} €
 💳 ACOMPTE À RÉGLER
 Montant (${(info.acompteTaux * 100).toFixed(0)} %) : ${info.acompteTTC.toFixed(2)} € TTC
 Solde restant : ${info.soldeTTC.toFixed(2)} € TTC
+
+🔔 Votre demande a bien été enregistrée.
+Après vérification, vous recevrez un lien de paiement sécurisé pour régler l’acompte. La réservation ne sera confirmée qu’après validation de ce paiement.
+Merci pour votre confiance.
 
 💬 COMMENTAIRE
 ${commentaire}
@@ -1064,6 +1211,8 @@ Lien Google Calendar : ${calLink}
       };
 
       // Send to Manager AND Client (Sequential calls to ensure both)
+      // 1. Send to Manager
+      // We modify the 'to_email' param dynamically
       const paramsManager = Object.assign({}, templateParams);
       paramsManager.to_email = "location.phenoandco@gmail.com";
       paramsManager.to_name = "Manager PHENO&CO";
@@ -1072,30 +1221,44 @@ Lien Google Calendar : ${calLink}
       paramsClient.to_email = email; // Client email
       paramsClient.to_name = nom;
 
-      // Parallel execution for speed
-      Promise.all([
-        emailjs.send('service_llizndy', 'template_m6uvyuq', paramsManager),
-        emailjs.send('service_llizndy', 'template_m6uvyuq', paramsClient)
-      ])
-      .then(function(responses) {
-           console.log('SUCCESS!', responses);
+      // Parallel execution for speed with individual error handling
+      // We pass Public Key explicitly (4th arg) to guarantee authentication
+      const publicKey = "uBxESnC6CTyqiNyS6";
+      
+      const pManager = sendEmailWithRetry('service_llizndy', 'template_m6uvyuq', paramsManager, publicKey)
+         .then(res => ({ status: 'fulfilled', value: res }))
+         .catch(err => {
+             const msg = err.text || err.message || JSON.stringify(err);
+             console.error("Manager Email Error:", msg);
+             return { status: 'rejected', reason: msg };
+         });
+
+      const pClient = sendEmailWithRetry('service_llizndy', 'template_m6uvyuq', paramsClient, publicKey)
+         .then(res => ({ status: 'fulfilled', value: res }))
+         .catch(err => {
+             const msg = err.text || err.message || JSON.stringify(err);
+             console.error("Client Email Error:", msg);
+             return { status: 'rejected', reason: msg };
+         });
+
+      Promise.all([pManager, pClient])
+      .then(function(results) {
+           console.log('Email results:', results);
+           
+           const failures = results.filter(r => r.status === 'rejected');
+           if (failures.length > 0) {
+             console.warn('Some emails failed:', failures);
+             // Show warning in UI instead of alert
+             document.getElementById('email-success-msg').style.display = 'none';
+             document.getElementById('email-error-msg').style.display = 'block';
+           } else {
+             // Success
+             document.getElementById('email-success-msg').style.display = 'block';
+             document.getElementById('email-error-msg').style.display = 'none';
+           }
+
            confirmationMessage.style.display = 'block';
-        }, function(error) {
-           console.log('FAILED...', error);
-           const errorText = error.text || JSON.stringify(error);
-           // Show message even if email fails, because WhatsApp opened
-           confirmationMessage.style.display = 'block';
-           confirmationMessage.querySelector('h4').innerText = "⚠️ Demande envoyée (Erreur Email)";
-           confirmationMessage.querySelector('p').innerText = `WhatsApp s'est ouvert, mais l'email a échoué : ${errorText}. Vérifiez Service ID et Template ID.`;
         })
         .finally(function() {
-            submitBtn.textContent = "Envoyer ma demande via WhatsApp";
-            submitBtn.disabled = false;
-        });
-    });
-
-    // Init
-    updateSummary();
-  </script>
-</body>
-</html>
+            submitBtn.textContent = "Envoyer ma demande";
+            submitBtn.disabled = true; // Keep disabled to
