@@ -1,1264 +1,1717 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Réservation de fauteuil – PHENO&CO</title>
-  <!-- EmailJS SDK -->
-  <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-  </script>
-  <script type="text/javascript">
-   (function(){
-      // Initialize EmailJS with your public key
-      emailjs.init({
-        publicKey: "uBxESnC6CTyqiNyS6",
-      });
-   })();
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHENO&CO - Location de Fauteuil | Barbershop Montpellier</title>
+  <meta name="description" content="Réservez votre fauteuil chez PHENO&CO, barbershop à Montpellier depuis 2009. Location courte ou longue durée pour coiffeurs et barbiers indépendants.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="PHENO&CO - Location de Fauteuil">
+  <meta property="og:description" content="Réservez votre fauteuil chez PHENO&CO, barbershop à Montpellier depuis 2009.">
+  <meta property="og:type" content="website">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+    :root {
+      --primary: #F9C800;
+      --primary-hover: #e0b400;
+      --background: #0a0a0a;
+      --card: #111111;
+      --card-border: #222222;
+      --foreground: #ffffff;
+      --muted: #888888;
+      --input-bg: #1a1a1a;
+      --border: #333333;
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
     }
-
-    body {
+    
+    * {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #050608;
-      color: #f9fafb;
-      line-height: 1.5;
+      box-sizing: border-box;
     }
-
-    /* --- HERO SECTION STYLES --- */
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+    }
+    
+    .font-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    /* Hero Section */
     .hero {
-      background: #000000;
-      padding: 40px 20px 50px; /* Reduced top padding for mobile */
-      text-align: center;
-      border-bottom: 1px solid #1f2937;
+      background-color: #000;
+      color: #fff;
+      padding: 3rem 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
-    }
-
-    .hero-logo {
-        margin-bottom: -10px;
-        z-index: 10;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .hero-logo img {
-      width: 200px;
-      height: auto;
-      max-width: 100%;
-      display: block;
-    }
-
-    .hero-titles {
-      padding-top: 0;
-      z-index: 0;
-      position: relative;
-      width: 100%;
-    }
-
-    .hero h1 {
-      color: #F9C800;
-      font-size: 3rem;
-      margin: 0;
-      letter-spacing: -1px;
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
-
-    .hero p.subtitle {
-      color: #ffffff;
-      font-size: 1.1rem;
-      margin: 8px 0 0 0;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      margin-top: 30px;
-      width: 100%;
-      max-width: 800px;
-      flex-wrap: wrap;
       justify-content: center;
-    }
-
-    .hero-btn {
-      padding: 16px 24px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: transform 0.2s, opacity 0.2s;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-
-    .hero-btn:hover {
-      transform: translateY(-2px);
-      opacity: 0.95;
-    }
-
-    .hero-btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-yellow {
-      background: #F9C800;
-      color: #000000;
-    }
-
-    .btn-dark {
-      background: #111827;
-      color: #ffffff;
-      border: 1px solid #374151;
-    }
-
-    .btn-green {
-      background: #25D366;
-      color: #ffffff;
-    }
-
-    /* --- PAGE CONTENT --- */
-    .page {
-      max-width: 1000px;
-      margin: auto;
-      padding: 24px 16px 60px;
+    
+    .hero-content {
+      max-width: 56rem;
       width: 100%;
     }
-
-    h1, h2, h3 {
-      color: #ffd42a;
+    
+    .logo {
+      width: 13rem;
+      height: auto;
+      margin-bottom: 0;
+      opacity: 0.9;
+      transition: opacity 0.3s;
+    }
+    
+    .logo:hover {
+      opacity: 1;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
       margin-top: 0;
     }
-
-    .page h1 {
-      text-align: center;
-      margin-bottom: 16px;
-      font-size: 2rem;
-      line-height: 1.2;
+    
+    .hero .subtitle {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+      margin-top: 0.25rem;
     }
-
-    p.intro {
-      text-align: center;
-      margin-bottom: 32px;
-      opacity: 0.8;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .grid {
+    
+    .hero-buttons {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 24px;
-    }
-
-    .card {
-      background: #0b1220;
-      border-radius: 16px;
-      padding: 24px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    /* --- FORM ELEMENTS --- */
-    label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 8px;
-      opacity: 0.9;
-      font-weight: 500;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="date"],
-    input[type="time"],
-    select,
-    textarea {
+      gap: 1rem;
       width: 100%;
-      padding: 12px 16px; /* Larger touch target */
-      border-radius: 10px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #f9fafb;
-      font-size: 16px; /* Prevents iOS zoom */
-      margin-bottom: 16px;
-      font-family: inherit;
-      appearance: none; /* Remove default styling */
-      -webkit-appearance: none;
+      max-width: 48rem;
+      margin: 2rem auto 0;
     }
     
-    /* Custom select arrow */
-    select {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-      background-position: right 0.5rem center;
-      background-repeat: no-repeat;
-      background-size: 1.5em 1.5em;
-      padding-right: 2.5rem;
-    }
-
-    input[type="date"] {
-      min-height: 46px;
-    }
-
-    /* --- DATE PICKER CUSTOMIZATION --- */
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        filter: none;
-        background-color: #F9C800;
-        padding: 8px;
-        cursor: pointer;
-        border-radius: 6px;
-        color: black;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    .radio-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .radio-pill {
-      flex: 1;
-      border-radius: 12px;
-      border: 1px solid #4b5563;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-size: 14px;
-      background: #020617;
-      transition: all 0.2s;
-      position: relative;
+    @media (min-width: 768px) {
+      .hero-buttons {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .hero h1 {
+        font-size: 3rem;
+      }
     }
     
-    .radio-pill:hover {
-      border-color: #F9C800;
-    }
-    
-    .radio-pill.active {
-      background: #1f2937;
-      border-color: #F9C800;
-      box-shadow: 0 0 0 1px #F9C800;
-    }
-
-    .radio-pill input {
-      margin: 0;
-      accent-color: #F9C800;
-      width: 18px;
-      height: 18px;
-    }
-
-    .radio-pill span {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .muted {
-      font-size: 12px;
-      opacity: 0.7;
-      line-height: 1.3;
-      display: block;
-    }
-
     .btn {
       width: 100%;
-      padding: 16px;
-      border-radius: 999px;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
+      padding: 1rem 1.5rem;
+      font-weight: 700;
+      border-radius: 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 0.5rem;
+      text-decoration: none;
       transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
     }
     
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: #374151 !important;
-      color: #9ca3af !important;
-    }
-
-    .btn-primary {
-      background: #ffd42a;
-      color: #000;
-      box-shadow: 0 4px 12px rgba(255, 212, 42, 0.3);
+    .btn:hover {
+      transform: translateY(-2px);
     }
     
-    .btn-primary:hover:not(:disabled) {
-      background: #eec025;
-      transform: translateY(-1px);
-    }
-
-    .btn-primary:active:not(:disabled) {
+    .btn:active {
       transform: translateY(0);
     }
-
-    .btn-calendar {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #60a5fa;
-      font-size: 14px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      display: inline-flex;
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: #000;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-secondary {
+      background-color: #111827;
+      color: #fff;
+      border: 1px solid #374151;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #1f2937;
+    }
+    
+    .btn-whatsapp {
+      background-color: #25D366;
+      color: #fff;
+    }
+    
+    .btn-whatsapp:hover {
+      background-color: #20bd5a;
+    }
+    
+    /* Reservation Section */
+    .reservation-section {
+      padding: 3rem 1rem;
+    }
+    
+    .container {
+      max-width: 72rem;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    
+    .section-header h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    
+    .section-header p {
+      color: var(--muted);
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    @media (min-width: 1024px) {
+      .form-grid {
+        grid-template-columns: 7fr 5fr;
+      }
+    }
+    
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    
+    @media (min-width: 768px) {
+      .card {
+        padding: 2rem;
+      }
+    }
+    
+    .card-header {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      margin-top: 12px;
-      margin-bottom: 8px;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .card-header svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .card-header h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: var(--foreground);
+      font-size: 1rem;
+      font-family: inherit;
       transition: all 0.2s;
     }
     
-    .btn-calendar:hover {
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(249, 200, 0, 0.2);
     }
-
-    .summary-box {
-      background: #020617;
-      border-radius: 14px;
-      border: 1px solid #4b5563;
-      padding: 16px;
-      margin-top: 16px;
-      font-size: 14px;
+    
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+      padding-right: 2.5rem;
     }
-
-    .summary-box h3 {
-      margin-bottom: 12px;
-      font-size: 16px;
-      border-bottom: 1px solid #1f2937;
-      padding-bottom: 8px;
-      color: #ffd42a;
+    
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
     }
-
+    
+    .form-input:disabled,
+    .form-select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    @media (min-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    /* Radio Cards */
+    .radio-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .radio-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .radio-card {
+      position: relative;
+      cursor: pointer;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      transition: all 0.2s;
+      background-color: var(--input-bg);
+    }
+    
+    .radio-card:hover {
+      border-color: rgba(249, 200, 0, 0.3);
+    }
+    
+    .radio-card.selected {
+      background-color: rgba(249, 200, 0, 0.1);
+      border-color: rgba(249, 200, 0, 0.5);
+      box-shadow: 0 0 0 1px rgba(249, 200, 0, 0.2);
+    }
+    
+    .radio-card input[type="radio"] {
+      margin-top: 0.25rem;
+      accent-color: var(--primary);
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    .radio-card-content span {
+      display: block;
+    }
+    
+    .radio-card-content .title {
+      font-weight: 600;
+    }
+    
+    .radio-card-content .desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+    
+    /* Info Box */
+    .info-box {
+      background-color: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    
+    .info-box p {
+      margin-bottom: 0.5rem;
+    }
+    
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .info-box strong {
+      color: var(--foreground);
+    }
+    
+    .warning-box {
+      background-color: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: #eab308;
+      font-size: 0.875rem;
+    }
+    
+    .warning-box svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+    
+    .divider {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin: 2rem 0;
+    }
+    
+    /* Radio Buttons Inline */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    
+    .radio-item input[type="radio"] {
+      accent-color: var(--primary);
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    .radio-item span {
+      font-size: 0.875rem;
+    }
+    
+    /* Checkboxes */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: background-color 0.2s;
+    }
+    
+    .checkbox-item:hover {
+      background-color: rgba(255,255,255,0.05);
+    }
+    
+    .checkbox-item input[type="checkbox"] {
+      accent-color: var(--primary);
+      width: 1rem;
+      height: 1rem;
+      margin-top: 0.125rem;
+    }
+    
+    .checkbox-item span {
+      font-size: 0.875rem;
+    }
+    
+    /* Engagement Box */
+    .engagement-box {
+      background-color: rgba(249, 200, 0, 0.05);
+      border: 1px solid rgba(249, 200, 0, 0.1);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+    
+    .engagement-box h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .engagement-box h4 svg {
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    .engagement-box .checkbox-item {
+      padding: 0.25rem 0;
+    }
+    
+    .engagement-box a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+    
+    .engagement-box a:hover {
+      opacity: 0.8;
+    }
+    
+    /* Summary */
+    .summary {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .summary h4 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .summary h4 svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--primary);
+    }
+    
     .summary-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 6px;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
     }
     
-    .summary-row.total-ht {
-      border-top: 1px solid #1f2937;
-      padding-top: 8px;
-      margin-top: 8px;
-      font-weight: bold;
-      font-size: 15px;
+    .summary-row .label {
+      color: var(--muted);
     }
     
-    .summary-row.total-ttc {
-      color: #ffd42a;
-      font-weight: bold;
-      font-size: 1.2em;
-      margin-top: 12px;
+    .summary-row .value {
+      font-weight: 500;
+      text-align: right;
     }
     
-    .summary-row.acompte {
-      color: #22c55e;
-      font-weight: bold;
-      margin-top: 4px;
+    .summary-divider {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin: 0.75rem 0;
     }
-
-    .warning {
-      font-size: 13px;
-      color: #facc15;
-      margin-top: 12px;
-      padding: 12px;
-      background: rgba(250, 204, 21, 0.1);
-      border-radius: 8px;
-      line-height: 1.4;
-    }
-
-    .checkbox-row {
+    
+    .summary-total {
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-top: 16px;
-      margin-bottom: 8px;
-      font-size: 14px;
-      line-height: 1.4;
+      justify-content: space-between;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--primary);
+      padding-top: 0.5rem;
     }
-
-    .checkbox-row input {
-      margin-top: 3px;
-      accent-color: #F9C800;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
+    
+    .summary-deposit {
+      background-color: rgba(249, 200, 0, 0.1);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      margin-top: 1rem;
     }
-
-    a.cgv-link {
-      color: #ffd42a;
-      text-decoration: underline;
+    
+    .summary-deposit .row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+    }
+    
+    .summary-deposit .deposit {
+      font-weight: 500;
+      color: #22c55e;
+    }
+    
+    .summary-deposit .remaining {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      background-color: var(--primary);
+      color: #000;
+    }
+    
+    .submit-btn:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    .submit-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    
+    .submit-btn:disabled {
+      background-color: #333;
+      color: #666;
+      cursor: not-allowed;
+    }
+    
+    .submit-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    /* Success Message */
+    .success-message {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 0.75rem;
+      display: none;
+    }
+    
+    .success-message.show {
+      display: block;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .success-message h4 {
+      font-weight: 700;
+      color: #22c55e;
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .success-message h4 svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    .success-message p {
+      font-size: 0.875rem;
+      color: #d1d5db;
+    }
+    
+    .success-message .warning {
+      font-size: 0.75rem;
+      color: #eab308;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .success-message .warning svg {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+    
+    /* About Section */
+    .about-section {
+      margin-top: 3rem;
+    }
+    
+    .about-section .card-header span {
+      font-size: 1.5rem;
+    }
+    
+    .about-section p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+    
+    .about-section p:first-of-type {
+      font-weight: 500;
+      color: var(--foreground);
+    }
+    
+    .about-section p:last-child {
+      color: var(--primary);
+      font-weight: 700;
+      padding-top: 0.5rem;
+      margin-bottom: 0;
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: #000;
+      padding: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    
+    .footer a {
+      display: block;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      opacity: 0.2;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    
+    .footer a:hover {
+      opacity: 1;
+    }
+    
+    /* Sticky Card */
+    @media (min-width: 1024px) {
+      .sticky-card {
+        position: sticky;
+        top: 2rem;
+      }
+    }
+    
+    /* Date Input Styling */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      background-color: var(--primary);
+      padding: 0.25rem;
+      border-radius: 0.25rem;
       cursor: pointer;
     }
-
+    
+    /* Section Title with Icon */
     .section-title {
-      font-size: 18px;
-      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 0.5rem;
+      font-size: 1rem;
       font-weight: 600;
-    }
-
-    .section-title span.icon {
-      font-size: 20px;
+      color: var(--primary);
+      margin-bottom: 1rem;
     }
     
-    /* Confirmation Message Styles */
-    .confirmation-box {
+    .section-title svg {
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      z-index: 1000;
       display: none;
-      margin-top: 24px;
-      padding: 20px;
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      border-radius: 12px;
-      animation: fadeIn 0.5s ease-in-out;
+      max-width: 24rem;
     }
     
-    .confirmation-box h4 {
-      color: #22c55e;
-      font-weight: bold;
-      font-size: 18px;
-      margin: 0 0 12px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .toast.show {
+      display: block;
+      animation: slideIn 0.3s ease-out;
     }
     
-    .confirmation-box p {
-      margin: 6px 0;
-      font-size: 14px;
-      color: #d1d5db;
-      line-height: 1.5;
+    .toast.error {
+      border-color: rgba(239, 68, 68, 0.5);
     }
     
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .toast h4 {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
     }
     
-    footer {
-      text-align: center;
-      margin-top: 60px;
-      font-size: 13px;
-      color: #6b7280;
-      padding-bottom: 20px;
-    }
-
-    /* --- MEDIA QUERIES --- */
-    @media (min-width: 820px) {
-      .grid {
-        grid-template-columns: 1.2fr 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .hero-buttons {
-        flex-direction: column;
-      }
-      .hero-btn {
-        width: 100%;
-      }
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-      .hero-logo img {
-        width: 160px;
-      }
-      .page {
-        padding: 20px 12px 40px;
-      }
-      .card {
-        padding: 20px 16px;
-      }
-      .radio-row {
-        flex-direction: column;
-        gap: 8px;
-      }
+    .toast p {
+      font-size: 0.875rem;
+      color: var(--muted);
     }
     
-    html {
-      scroll-behavior: smooth;
+    .toast.error h4 {
+      color: #ef4444;
     }
   </style>
 </head>
 <body>
-
+  
   <!-- HERO SECTION -->
-  <div class="hero">
-    <div class="hero-logo">
-      <!-- Logo : Assurez-vous que le fichier 1.png est dans le même dossier que ce fichier index.html -->
-      <img src="1.png" alt="Logo PHENO&CO" onerror="this.style.display='none';"/>
-    </div>
-    <div class="hero-titles">
-      <h1>PHENO&CO</h1>
-      <p class="subtitle">Barbershop depuis 2009</p>
-    </div>
-    
-    <div class="hero-buttons">
-      <button class="hero-btn btn-yellow" onclick="document.getElementById('reservation').scrollIntoView({behavior: 'smooth'})">
-        Louer un Fauteuil
-      </button>
-      <a href="https://phenoandco.com/" target="_blank" class="hero-btn btn-dark">
-        Prendre RDV Coiffure
-      </a>
-      <a href="https://wa.me/message/MZYDVEN32I55L1" target="_blank" class="hero-btn btn-green">
-        Contact WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <div class="page">
-    <h1 style="margin-top: 20px;">Réserver un fauteuil</h1>
-    <p class="intro">
-      Choisissez vos dates, votre formule et vos options.<br />
-      Vous recevrez un récapitulatif et la réservation sera confirmée après paiement de l’acompte.
-    </p>
-
-    <form id="reservation-form">
-      <div class="grid" id="reservation">
-        <!-- Colonne gauche : formulaire -->
-        <div class="card">
-          <div class="section-title">
-            <span class="icon">⏱️</span>
-            <span>Type de location</span>
-          </div>
-
-          <label>Durée de location *</label>
-          <div class="radio-row">
-            <label class="radio-pill active" id="pill-courte">
-              <input type="radio" name="duree" value="courte" checked />
-              <div>
-                <span>Courte durée</span>
-                <span class="muted">Heure, journée<br>Acompte 50%</span>
-              </div>
-            </label>
-            <label class="radio-pill" id="pill-longue">
-              <input type="radio" name="duree" value="longue" />
-              <div>
-                <span>Semaine & Mensuel</span>
-                <span class="muted">Semaine ou Mois<br>Acompte 25%</span>
-              </div>
-            </label>
-          </div>
-
-          <label for="formule-courte">Formule courte durée *</label>
-          <select id="formule-courte" name="formule_courte">
-            <option value="heure">À l'heure — 10 € HT</option>
-            <option value="demi">Demi-journée (4h) — 35 € HT</option>
-            <option value="journee">Journée — 65 € HT</option>
-          </select>
-
-          <label for="formule-longue">Formule longue durée *</label>
-          <select id="formule-longue" name="formule_longue" disabled>
-            <option value="semaine">Semaine — 60 € HT / jour</option>
-            <option value="mensuel">Mensuel — 55 € HT / jour</option>
-          </select>
-
-          <label for="pack-materiel">Pack matériel</label>
-          <select id="pack-materiel" name="pack_materiel">
-            <option value="aucun">Aucun — 0 €</option>
-            <option value="essentiel">Pack Essentiel — 20 € HT / jour</option>
-            <option value="premium">Pack Premium — 30 € HT / jour</option>
-          </select>
-          <p class="muted" style="margin-top: -12px; margin-bottom: 16px;">
-            <strong>Pack Essentiel :</strong> 20 € HT/jour (tondeuse, finition, serviettes, cape, poste équipé).<br>
-            <strong>Pack Premium :</strong> 30 € HT/jour (Essentiel + shaver + serviettes en plus).
-          </p>
-
-          <div class="warning">
-            Les montants calculés sont indicatifs. Le calcul final se fera au prorata selon la grille tarifaire lors de la confirmation.
-          </div>
-
-          <hr style="border: 0; border-top: 1px solid #1f2937; margin: 20px 0;" />
-
-          <div class="section-title">
-            <span class="icon">📅</span>
-            <span>Dates de location</span>
-          </div>
-
-          <label for="date-debut">Date de début *</label>
-          <input type="date" id="date-debut" name="date_debut" required />
-
-          <label for="date-fin">Date de fin (optionnel)</label>
-          <input type="date" id="date-fin" name="date_fin" />
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div>
-              <label for="heure-debut">Heure de début *</label>
-              <select id="heure-debut" name="heure_debut" required>
-                <!-- Options générées par JS -->
-              </select>
-            </div>
-            <div>
-              <label for="heure-fin">Heure de fin *</label>
-              <select id="heure-fin" name="heure_fin" required>
-                <!-- Options générées par JS -->
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Colonne droite : infos + récap -->
-        <div class="card">
-          <div class="section-title">
-            <span class="icon">👤</span>
-            <span>Vos informations</span>
-          </div>
-
-          <label for="nom">Nom complet *</label>
-          <input type="text" id="nom" name="nom" required placeholder="Votre nom" />
-
-          <label for="email">Email *</label>
-          <input type="email" id="email" name="email" required placeholder="votre@email.com" />
-
-          <label for="telephone">Téléphone *</label>
-          <input type="tel" id="telephone" name="telephone" required placeholder="06 00 00 00 00" />
-
-          <label for="commentaire">Commentaire (optionnel)</label>
-          <textarea id="commentaire" name="commentaire" placeholder="Précisez par exemple votre expérience, vos besoins, vos jours de présence souhaités…"></textarea>
-
-          <div class="checkbox-row">
-            <input type="checkbox" id="cgv" required />
-            <label for="cgv">
-              En cochant cette case, j'accepte les <a href="#cgv-details" class="cgv-link">CGV et la Charte du Salon</a> (valant contrat de location). Je recevrai le dossier complet après validation. La réservation sera confirmée après le paiement de l'acompte.
-            </label>
-          </div>
-
-          <div id="summary" class="summary-box">
-            <h3>Récapitulatif (indicatif)</h3>
-            <div id="summary-content">
-              <!-- Rempli par JS -->
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary" id="btn-submit" disabled>
-            Envoyer ma demande
-          </button>
-
-          <!-- Message de confirmation -->
-          <div id="confirmation-message" class="confirmation-box">
-            <h4>✅ Demande bien reçue !</h4>
-            <p><span class="check">✅</span>Vous retrouvez aussi votre message dans notre conversation WhatsApp.</p>
-            <p id="email-success-msg"><span class="check">✅</span>Vous allez recevoir un email récapitulatif avec le détail de votre demande.</p>
-            <p id="email-error-msg" style="display:none; color: #facc15; font-weight: bold;">⚠️ L'envoi de l'email a été bloqué par votre navigateur (AdBlock), mais la réservation WhatsApp est bien confirmée.</p>
-            
-            <!-- Calendar Button will be inserted here by JS -->
-            <div id="calendar-container"></div>
-
-            <div style="border-top: 1px solid rgba(34, 197, 94, 0.2); margin-top: 12px; padding-top: 10px;">
-              <p>
-                PHENO&CO vous enverra ensuite un lien de paiement pour régler l’acompte.
-                <strong>La réservation sera confirmée uniquement après paiement de cet acompte.</strong>
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </form>
-
-    <!-- CGV très simplifiées -->
-    <div id="cgv-details" class="card" style="margin-top: 24px;">
-      <div class="section-title">
-        <span class="icon">ℹ️</span>
-        <span>Conditions générales de location (résumé)</span>
-      </div>
-      <ul style="padding-left: 20px; line-height: 1.6; opacity: 0.9;">
-        <li>La réservation est confirmée uniquement après paiement de l’acompte (50&nbsp;% pour les locations courtes, 25&nbsp;% pour les locations longues).</li>
-        <li>Les tarifs indiqués sont hors taxes. La TVA applicable sera ajoutée lors de la facturation.</li>
-        <li>Le locataire est responsable de son activité, de sa clientèle, de son assurance professionnelle et du respect des règles d’hygiène.</li>
-        <li>Tout matériel mis à disposition doit être utilisé et entretenu avec soin. En cas de casse manifeste par négligence, un remplacement pourra être facturé.</li>
-        <li>En cas d’annulation moins de 72h avant la date de début, l’acompte peut être conservé à titre de dédommagement.</li>
-        <li>PHENO&CO se réserve le droit de refuser ou d’interrompre une location en cas de non-respect des valeurs du salon ou des règles de fonctionnement.</li>
-      </ul>
-      <p class="muted" style="margin-top: 16px;">
-        La version complète des conditions pourra être envoyée par mail avec le contrat de location.
-      </p>
-    </div>
-    
-    <footer>
-      PHENO&CO — Barbershop & Coworking • Montpellier
-    </footer>
-  </div>
-
-  <script>
-    // --- INITIALISATION DES HEURES ---
-    const heureDebutSelect = document.getElementById('heure-debut');
-    const heureFinSelect = document.getElementById('heure-fin');
-    
-    function populateTimes() {
-      const times = [];
-      for (let h = 10; h <= 18; h++) {
-        times.push(`${h.toString().padStart(2, '0')}:00`);
-        if (h < 18) times.push(`${h.toString().padStart(2, '0')}:30`);
-      }
+  <section class="hero">
+    <div class="hero-content">
+      <img src="https://i.imgur.com/YOUR_LOGO.png" alt="PHENO&CO Logo" class="logo" id="logo">
       
-      times.forEach(t => {
-        const opt = document.createElement('option');
-        opt.value = t;
-        opt.text = t;
-        heureDebutSelect.appendChild(opt.cloneNode(true));
-        heureFinSelect.appendChild(opt.cloneNode(true));
+      <div>
+        <h1 class="font-serif">PHENO&CO</h1>
+        <p class="subtitle">Barbershop depuis 2009</p>
+      </div>
+      
+      <div class="hero-buttons">
+        <button onclick="scrollToReservation()" class="btn btn-primary">
+          <i data-lucide="calendar"></i>
+          Louer un Fauteuil
+        </button>
+        
+        <a href="https://phenoandco.com/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <i data-lucide="scissors"></i>
+          Prendre RDV Coiffure
+        </a>
+        
+        <a href="https://wa.me/message/MZYDVEN32I55L1" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+          <i data-lucide="message-circle"></i>
+          Contact WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- RESERVATION SECTION -->
+  <section id="reservation" class="reservation-section">
+    <div class="container">
+      
+      <header class="section-header">
+        <h2 class="font-serif">Réserver un fauteuil</h2>
+        <p>Choisissez vos dates, votre formule et vos options.<br>Vous recevrez un récapitulatif et la réservation sera confirmée après paiement de l'acompte.</p>
+      </header>
+      
+      <form id="reservationForm" class="form-grid">
+        
+        <!-- Left Column -->
+        <div>
+          <div class="card">
+            
+            <!-- Type de location -->
+            <div class="card-header">
+              <i data-lucide="clock"></i>
+              <h3>Type de location</h3>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Durée de location *</label>
+              <div class="radio-cards">
+                <label class="radio-card selected" id="card-courte">
+                  <input type="radio" name="duree" value="courte" checked onchange="updateDuree()">
+                  <div class="radio-card-content">
+                    <span class="title">Courte durée</span>
+                    <span class="desc">Heure, journée<br>Acompte 50%</span>
+                  </div>
+                </label>
+                
+                <label class="radio-card" id="card-longue">
+                  <input type="radio" name="duree" value="longue" onchange="updateDuree()">
+                  <div class="radio-card-content">
+                    <span class="title">Semaine & Mensuel</span>
+                    <span class="desc">Semaine ou Mois<br>Acompte 25%</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" id="formule-label">Formule courte *</label>
+                <select id="formuleCourte" name="formuleCourte" class="form-select" onchange="updateFormule()">
+                  <option value="heure">À l'heure — 10 € HT</option>
+                  <option value="demi">Demi-journée (4h) — 35 € HT</option>
+                  <option value="journee">Journée — 65 € HT</option>
+                </select>
+                <select id="formuleLongue" name="formuleLongue" class="form-select" style="display:none;" onchange="updateFormule()">
+                  <option value="semaine">Semaine — 60 € HT / jour</option>
+                  <option value="mensuel">Mensuel — 55 € HT / jour</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Pack Matériel</label>
+                <select id="packMateriel" name="packMateriel" class="form-select" onchange="calculatePrice()">
+                  <option value="aucun">Aucun — 0 €</option>
+                  <option value="essentiel">Pack Essentiel — 20 € HT / jour</option>
+                  <option value="premium">Pack Premium — 30 € HT / jour</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="info-box">
+              <p><strong>Pack Essentiel :</strong> 20 € HT/jour (tondeuse, finition, serviettes, cape, poste équipé).</p>
+              <p><strong>Pack Premium :</strong> 30 € HT/jour (Essentiel + shaver + serviettes en plus).</p>
+            </div>
+            
+            <div class="warning-box" style="margin-top: 1.5rem;">
+              <i data-lucide="alert-circle"></i>
+              <p>Les montants calculés sont indicatifs. Le calcul final se fera au prorata selon la grille tarifaire lors de la confirmation.</p>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- Dates & Horaires -->
+            <div class="card-header">
+              <i data-lucide="calendar"></i>
+              <h3>Dates & Horaires</h3>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Date de début *</label>
+                <input type="date" id="dateDebut" name="dateDebut" class="form-input" required onchange="validateDate('dateDebut'); calculatePrice();">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Date de fin (optionnel)</label>
+                <input type="date" id="dateFin" name="dateFin" class="form-input" onchange="validateDate('dateFin'); calculatePrice();">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Heure de début *</label>
+                <select id="heureDebut" name="heureDebut" class="form-select" required onchange="updateEndTime(); calculatePrice();">
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Heure de fin *</label>
+                <select id="heureFin" name="heureFin" class="form-select" required onchange="calculatePrice();">
+                </select>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div>
+          <div class="card sticky-card">
+            
+            <div class="card-header">
+              <i data-lucide="user"></i>
+              <h3>Vos informations</h3>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Nom / prénom *</label>
+              <input type="text" id="nom" name="nom" class="form-input" placeholder="Votre nom" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="votre@email.com" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Téléphone / WhatsApp *</label>
+              <input type="tel" id="telephone" name="telephone" class="form-input" placeholder="06 00 00 00 00" required>
+            </div>
+            
+            <div class="divider" style="margin: 1rem 0;"></div>
+            
+            <!-- Profil Professionnel -->
+            <div class="section-title">
+              Profil Professionnel
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Statut *</label>
+              <div class="radio-group">
+                <label class="radio-item">
+                  <input type="radio" name="statut" value="auto" checked>
+                  <span>Auto-entrepreneur / Micro</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="statut" value="societe">
+                  <span>Société</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="statut" value="creation">
+                  <span>En cours de création</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Expérience *</label>
+              <select id="experience" name="experience" class="form-select">
+                <option value="0-3">0–3 ans</option>
+                <option value="3-5">3–5 ans</option>
+                <option value="5-10">5–10 ans</option>
+                <option value="10+">10+ ans</option>
+              </select>
+            </div>
+            
+            <div class="divider" style="margin: 1rem 0;"></div>
+            
+            <!-- Spécialités -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <div class="section-title" style="margin-bottom: 0;">Compétences & Spécialités</div>
+              <span style="font-size: 0.75rem; color: var(--muted);">(Plusieurs choix possibles)</span>
+            </div>
+            
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" name="specialites" value="Coiffeur mixte (H/F)">
+                <span>Coiffeur mixte (H/F)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="specialites" value="Barbier">
+                <span>Barbier</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="specialites" value="Spécialité afro (tresses, locks, vanilles, etc.)">
+                <span>Spécialité afro (tresses, locks, vanilles, etc.)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="specialites" value="Coloriste (mèches, balayage, déco)">
+                <span>Coloriste (mèches, balayage, déco)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="specialites" value="Design & finitions (contours, dessins, rasage, etc.)">
+                <span>Design & finitions (contours, dessins, rasage, etc.)</span>
+              </label>
+            </div>
+            
+            <div class="divider" style="margin: 1rem 0;"></div>
+            
+            <!-- Engagement -->
+            <div class="engagement-box">
+              <h4>
+                <i data-lucide="check"></i>
+                Engagement
+              </h4>
+              
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" name="certif_3ans" id="certif_3ans">
+                  <span>Je certifie avoir au moins 3 ans d'expérience.</span>
+                </label>
+                
+                <label class="checkbox-item">
+                  <input type="checkbox" name="certif_diplome" id="certif_diplome">
+                  <span>Je possède un diplôme reconnu (CAP / BP ou équivalent).</span>
+                </label>
+                
+                <label class="checkbox-item">
+                  <input type="checkbox" name="certif_docs" id="certif_docs" required>
+                  <span>Je m'engage à fournir les documents justificatifs avant le début de la location.</span>
+                </label>
+                
+                <label class="checkbox-item">
+                  <input type="checkbox" name="cgv" id="cgv" required>
+                  <span>J'ai lu et j'accepte les <a href="cgv-location.html" target="_blank">CGV & Contrat de location PHENO&CO</a>.</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label class="form-label">Commentaire (optionnel)</label>
+              <textarea id="commentaire" name="commentaire" class="form-textarea" placeholder="Précisez par exemple vos jours de présence souhaités…"></textarea>
+            </div>
+            
+            <!-- Summary -->
+            <div class="summary">
+              <h4>
+                <i data-lucide="info"></i>
+                Récapitulatif (indicatif)
+              </h4>
+              
+              <div class="summary-row">
+                <span class="label">Formule</span>
+                <span class="value" id="summary-formule">À l'heure — 10 € HT</span>
+              </div>
+              
+              <div class="summary-row">
+                <span class="label">Durée</span>
+                <span class="value" id="summary-duree">1.0h / jour sur 1 jours ouvrés</span>
+              </div>
+              
+              <div class="summary-row" id="summary-pack-row" style="display: none;">
+                <span class="label">Pack Matériel</span>
+                <span class="value" id="summary-pack">Aucun</span>
+              </div>
+              
+              <div class="summary-divider"></div>
+              
+              <div class="summary-row">
+                <span class="label">Total HT</span>
+                <span class="value" id="summary-ht">10.00 €</span>
+              </div>
+              
+              <div class="summary-row">
+                <span class="label">TVA (20%)</span>
+                <span class="value" id="summary-tva">2.00 €</span>
+              </div>
+              
+              <div class="summary-total">
+                <span>TOTAL TTC</span>
+                <span id="summary-ttc">12.00 €</span>
+              </div>
+              
+              <div class="summary-deposit">
+                <div class="row deposit">
+                  <span>Acompte à régler (<span id="acompte-taux">50</span>%)</span>
+                  <span id="summary-acompte">6.00 €</span>
+                </div>
+                <div class="row remaining">
+                  <span>Solde restant</span>
+                  <span id="summary-solde">6.00 €</span>
+                </div>
+              </div>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">
+              Envoyer ma demande
+              <i data-lucide="arrow-right"></i>
+            </button>
+            
+            <div class="success-message" id="successMessage">
+              <h4>
+                <i data-lucide="check"></i>
+                Demande envoyée
+              </h4>
+              <p>Votre demande a été envoyée.<br>Un récapitulatif vous a été transmis par WhatsApp / email.</p>
+              <div class="warning" id="emailWarning" style="display: none;">
+                <i data-lucide="alert-circle"></i>
+                Note: L'email n'a pas pu être envoyé, mais WhatsApp a fonctionné.
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+      </form>
+      
+      <!-- About Section -->
+      <div class="about-section">
+        <div class="card">
+          <div class="card-header">
+            <span>✨</span>
+            <h3>À propos</h3>
+          </div>
+          
+          <p>PHENO&CO, plus qu'un salon : un espace fondé sur le respect, la bienveillance et l'exigence.</p>
+          <p>On partage l'énergie et la passion du métier. Chaque coiffeur arrive avec son histoire, son style et son talent, contribuant à maintenir une ambiance conviviale et familiale.</p>
+          <p>Que vous soyez de passage ou en longue collaboration, l'essentiel reste le même : passion, sérieux et bonne vibe.</p>
+          <p>À bientôt.</p>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>PHENO&CO — Barbershop & Coworking • Montpellier</p>
+    <a href="admin.html">Admin</a>
+  </footer>
+  
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <h4 id="toast-title">Notification</h4>
+    <p id="toast-message">Message</p>
+  </div>
+  
+  <script>
+    // Initialize EmailJS
+    emailjs.init("uBxESnC6CTyqiNyS6");
+    
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Time slots
+    const TIME_SLOTS = [];
+    for (let h = 10; h <= 18; h++) {
+      TIME_SLOTS.push(`${h.toString().padStart(2, '0')}:00`);
+      if (h < 18) TIME_SLOTS.push(`${h.toString().padStart(2, '0')}:30`);
+    }
+    
+    // Set minimum date to tomorrow
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    
+    document.getElementById('dateDebut').min = tomorrowStr;
+    document.getElementById('dateDebut').value = tomorrowStr;
+    document.getElementById('dateFin').min = tomorrowStr;
+    
+    // Populate time selects
+    function populateTimeSelects() {
+      const heureDebut = document.getElementById('heureDebut');
+      const heureFin = document.getElementById('heureFin');
+      
+      heureDebut.innerHTML = '';
+      heureFin.innerHTML = '';
+      
+      TIME_SLOTS.forEach(time => {
+        heureDebut.innerHTML += `<option value="${time}">${time}</option>`;
+        heureFin.innerHTML += `<option value="${time}">${time}</option>`;
       });
       
-      // Valeurs par défaut
-      heureDebutSelect.value = "10:00";
-      heureFinSelect.value = "11:00";
+      heureDebut.value = '10:00';
+      heureFin.value = '11:00';
     }
-    populateTimes();
-
-    // --- INITIALISATION DES DATES ---
-    const dateDebutInput = document.getElementById('date-debut');
-    const dateFinInput = document.getElementById('date-fin');
-    const today = new Date().toISOString().split('T')[0];
-    dateDebutInput.value = today;
-    dateDebutInput.min = today;
     
-    // --- GESTION JOURS INTERDITS (Dimanche=0, Lundi=1) ---
-    function validateDate(input) {
-      const d = new Date(input.value);
-      const day = d.getDay();
+    populateTimeSelects();
+    
+    // Scroll to reservation
+    function scrollToReservation() {
+      document.getElementById('reservation').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Update duration type
+    function updateDuree() {
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const cardCourte = document.getElementById('card-courte');
+      const cardLongue = document.getElementById('card-longue');
+      const formuleCourte = document.getElementById('formuleCourte');
+      const formuleLongue = document.getElementById('formuleLongue');
+      const formuleLabel = document.getElementById('formule-label');
+      
+      if (duree === 'courte') {
+        cardCourte.classList.add('selected');
+        cardLongue.classList.remove('selected');
+        formuleCourte.style.display = 'block';
+        formuleLongue.style.display = 'none';
+        formuleLabel.textContent = 'Formule courte *';
+      } else {
+        cardCourte.classList.remove('selected');
+        cardLongue.classList.add('selected');
+        formuleCourte.style.display = 'none';
+        formuleLongue.style.display = 'block';
+        formuleLabel.textContent = 'Formule longue *';
+      }
+      
+      updateFormule();
+    }
+    
+    // Update formule and time constraints
+    function updateFormule() {
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const heureDebut = document.getElementById('heureDebut');
+      const heureFin = document.getElementById('heureFin');
+      
+      if (duree === 'courte') {
+        const formule = document.getElementById('formuleCourte').value;
+        
+        if (formule === 'journee') {
+          heureDebut.value = '10:00';
+          heureFin.value = '18:00';
+          heureDebut.disabled = true;
+          heureFin.disabled = true;
+        } else if (formule === 'demi') {
+          heureDebut.disabled = false;
+          heureFin.disabled = true;
+          updateEndTime();
+        } else {
+          heureDebut.disabled = false;
+          heureFin.disabled = false;
+        }
+      } else {
+        heureDebut.disabled = false;
+        heureFin.disabled = false;
+      }
+      
+      calculatePrice();
+    }
+    
+    // Update end time for half-day
+    function updateEndTime() {
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const formule = document.getElementById('formuleCourte').value;
+      
+      if (duree === 'courte' && formule === 'demi') {
+        const startTime = document.getElementById('heureDebut').value;
+        const [h, m] = startTime.split(':').map(Number);
+        let endH = h + 4;
+        if (endH > 18) endH = 18;
+        const endTime = `${endH.toString().padStart(2, '0')}:${m === 30 ? '30' : '00'}`;
+        document.getElementById('heureFin').value = endTime;
+      }
+      
+      calculatePrice();
+    }
+    
+    // Validate date (no Sunday/Monday)
+    function validateDate(fieldId) {
+      const input = document.getElementById(fieldId);
+      const date = new Date(input.value);
+      const day = date.getDay();
+      
       if (day === 0 || day === 1) {
-        alert("Le salon est fermé le dimanche et le lundi. Veuillez choisir une autre date.");
-        input.value = ""; // Reset
-        updateSummary();
+        showToast('Jour de fermeture', 'Le salon est fermé le dimanche et le lundi. Merci de choisir une autre date.', true);
+        input.value = '';
+      }
+      
+      // Update dateFin min
+      if (fieldId === 'dateDebut' && input.value) {
+        document.getElementById('dateFin').min = input.value;
       }
     }
-
-    dateDebutInput.addEventListener('change', () => {
-      validateDate(dateDebutInput);
-      dateFinInput.min = dateDebutInput.value;
-      updateSummary();
-    });
     
-    dateFinInput.addEventListener('change', () => {
-      if (dateFinInput.value) validateDate(dateFinInput);
-      updateSummary();
-    });
-
-    // --- CALCUL PRIX ---
-    const PRICING = {
-      courte: {
-        heure: { price: 10, label: "À l'heure — 10 € HT" },
-        demi: { price: 35, label: "Demi-journée (4h) — 35 € HT" },
-        journee: { price: 65, label: "Journée — 65 € HT" },
-      },
-      longue: {
-        semaine: { price: 60, label: "Semaine — 60 € HT / jour" },
-        mensuel: { price: 55, label: "Mensuel — 55 € HT / jour" },
-      },
-      pack: {
-        aucun: { price: 0, label: "Aucun — 0 €" },
-        essentiel: { price: 20, label: "Pack Essentiel — 20 € HT / jour" },
-        premium: { price: 30, label: "Pack Premium — 30 € HT / jour" },
-      },
-    };
-
+    // Count business days (exclude Sunday and Monday)
     function countBusinessDays(startDate, endDate) {
       let count = 0;
-      let current = new Date(startDate);
+      const current = new Date(startDate);
       current.setHours(0, 0, 0, 0);
-      const endD = new Date(endDate);
-      endD.setHours(0, 0, 0, 0);
-
-      while (current <= endD) {
+      const end = new Date(endDate);
+      end.setHours(0, 0, 0, 0);
+      
+      while (current <= end) {
         const day = current.getDay();
-        // 0 = Sunday, 1 = Monday
         if (day !== 0 && day !== 1) {
           count++;
         }
         current.setDate(current.getDate() + 1);
       }
+      
       return Math.max(1, count);
     }
-
-    function getPrix() {
-      // Get values
-      const dureeVal = document.querySelector('input[name="duree"]:checked').value;
-      const packVal = document.getElementById('pack-materiel').value;
-      const dDebut = dateDebutInput.value;
-      const dFin = dateFinInput.value || dDebut;
+    
+    // Calculate price
+    function calculatePrice() {
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const packMateriel = document.getElementById('packMateriel').value;
+      const dateDebut = document.getElementById('dateDebut').value;
+      const dateFin = document.getElementById('dateFin').value || dateDebut;
+      const heureDebut = document.getElementById('heureDebut').value;
+      const heureFin = document.getElementById('heureFin').value;
       
-      // Calc days
-      const days = dDebut ? countBusinessDays(dDebut, dFin) : 0;
+      if (!dateDebut) return;
+      
+      const startDate = new Date(dateDebut);
+      const endDate = new Date(dateFin);
+      const businessDays = countBusinessDays(startDate, endDate);
       
       let baseHT = 0;
-      let formuleLabel = "";
-      let durationDetails = "";
+      let formuleLabel = '';
+      let durationDetails = '';
       
-      if (dureeVal === 'courte') {
-        const fCourte = document.getElementById('formule-courte').value;
+      if (duree === 'courte') {
+        const formule = document.getElementById('formuleCourte').value;
         
-        if (fCourte === 'heure') {
-          // Calc hours
-          const hDeb = parseInt(heureDebutSelect.value.split(':')[0]) + (heureDebutSelect.value.includes('30') ? 0.5 : 0);
-          const hFin = parseInt(heureFinSelect.value.split(':')[0]) + (heureFinSelect.value.includes('30') ? 0.5 : 0);
-          let hours = Math.max(0, hFin - hDeb);
-          
-          baseHT = hours * 10 * days;
-          formuleLabel = "À l'heure — 10 € HT";
-          durationDetails = `${hours}h / jour sur ${days} jours ouvrés`;
-        } else if (fCourte === 'demi') {
-          baseHT = 35 * days;
-          formuleLabel = "Demi-journée (4h) — 35 € HT";
-          durationDetails = `Demi-journée (4h) x ${days} jours ouvrés`;
-        } else { // journee
-          baseHT = 65 * days;
-          formuleLabel = "Journée — 65 € HT";
-          durationDetails = `${days} jours ouvrés`;
+        if (formule === 'heure') {
+          const [h1, m1] = heureDebut.split(':').map(Number);
+          const [h2, m2] = heureFin.split(':').map(Number);
+          const minutes = (h2 * 60 + m2) - (h1 * 60 + m1);
+          const hours = Math.max(0, minutes / 60);
+          baseHT = hours * 10 * businessDays;
+          formuleLabel = 'À l\'heure — 10 € HT';
+          durationDetails = `${hours.toFixed(1)}h / jour sur ${businessDays} jours ouvrés`;
+        } else if (formule === 'demi') {
+          baseHT = 35 * businessDays;
+          formuleLabel = 'Demi-journée (4h) — 35 € HT';
+          durationDetails = `Demi-journée (4h) x ${businessDays} jours ouvrés`;
+        } else if (formule === 'journee') {
+          baseHT = 65 * businessDays;
+          formuleLabel = 'Journée — 65 € HT';
+          durationDetails = `${businessDays} jours ouvrés`;
         }
       } else {
-        const fLongue = document.getElementById('formule-longue').value;
-        if (fLongue === 'semaine') {
-           baseHT = 60 * days;
-           formuleLabel = "Semaine — 60 € HT / jour";
-           durationDetails = `${days} jours ouvrés (Tarif Semaine)`;
-        } else {
-           baseHT = 55 * days;
-           formuleLabel = "Mensuel — 55 € HT / jour";
-           durationDetails = `${days} jours ouvrés (Tarif Mensuel)`;
+        const formule = document.getElementById('formuleLongue').value;
+        
+        if (formule === 'semaine') {
+          baseHT = 60 * businessDays;
+          formuleLabel = 'Semaine — 60 € HT / jour';
+          durationDetails = `${businessDays} jours ouvrés (Tarif Semaine)`;
+        } else if (formule === 'mensuel') {
+          baseHT = 55 * businessDays;
+          formuleLabel = 'Mensuel — 55 € HT / jour';
+          durationDetails = `${businessDays} jours ouvrés (Tarif Mensuel)`;
         }
       }
       
       // Pack
-      const packPrice = PRICING.pack[packVal].price;
-      const packHT = packPrice * days;
-      const packLabel = PRICING.pack[packVal].label;
+      let packHT = 0;
+      let packLabel = 'Aucun — 0 €';
+      if (packMateriel === 'essentiel') {
+        packHT = 20 * businessDays;
+        packLabel = 'Pack Essentiel — 20 € HT / jour';
+      } else if (packMateriel === 'premium') {
+        packHT = 30 * businessDays;
+        packLabel = 'Pack Premium — 30 € HT / jour';
+      }
       
-      // Totals
       const totalHT = baseHT + packHT;
-      const tva = totalHT * 0.20;
+      const tva = totalHT * 0.2;
       const totalTTC = totalHT + tva;
-      
-      const acompteTaux = (dureeVal === 'courte') ? 0.50 : 0.25;
+      const acompteTaux = duree === 'courte' ? 0.5 : 0.25;
       const acompteTTC = totalTTC * acompteTaux;
       const soldeTTC = totalTTC - acompteTTC;
       
-      return {
-        baseHT, packHT, totalHT, tva, totalTTC, acompteTTC, soldeTTC,
-        formuleLabel, packLabel, durationDetails, duree: dureeVal, acompteTaux
+      // Update UI
+      document.getElementById('summary-formule').textContent = formuleLabel;
+      document.getElementById('summary-duree').textContent = durationDetails;
+      
+      const packRow = document.getElementById('summary-pack-row');
+      if (packMateriel !== 'aucun') {
+        packRow.style.display = 'flex';
+        document.getElementById('summary-pack').textContent = packLabel;
+      } else {
+        packRow.style.display = 'none';
+      }
+      
+      document.getElementById('summary-ht').textContent = totalHT.toFixed(2) + ' €';
+      document.getElementById('summary-tva').textContent = tva.toFixed(2) + ' €';
+      document.getElementById('summary-ttc').textContent = totalTTC.toFixed(2) + ' €';
+      document.getElementById('acompte-taux').textContent = (acompteTaux * 100).toFixed(0);
+      document.getElementById('summary-acompte').textContent = acompteTTC.toFixed(2) + ' €';
+      document.getElementById('summary-solde').textContent = soldeTTC.toFixed(2) + ' €';
+      
+      // Store for later use
+      window.priceInfo = {
+        baseHT, packHT, totalHT, tva, totalTTC, acompteTaux, acompteTTC, soldeTTC,
+        formuleLabel, packLabel, durationDetails, businessDays
       };
     }
-
-    // --- HELPER: GOOGLE CALENDAR LINK ---
-    function getGoogleCalendarLink(title, details, startDate, endDate, startTime, endTime) {
-      // Simple ISO format YYYYMMDDTHHmmss
-      const s = (startDate + 'T' + startTime).replace(/[-:]/g, '') + '00';
-      // End date: if empty use start date
-      const eDate = endDate || startDate;
-      const e = (eDate + 'T' + endTime).replace(/[-:]/g, '') + '00';
+    
+    // Show toast notification
+    function showToast(title, message, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toast-title');
+      const toastMessage = document.getElementById('toast-message');
       
-      const url = new URL("https://www.google.com/calendar/render");
-      url.searchParams.append("action", "TEMPLATE");
-      url.searchParams.append("text", title);
-      url.searchParams.append("details", details);
-      url.searchParams.append("dates", `${s}/${e}`);
-      url.searchParams.append("location", "PHENO&CO, Montpellier");
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      
+      toast.classList.remove('error');
+      if (isError) toast.classList.add('error');
+      
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 5000);
+    }
+    
+    // Get Google Calendar link
+    function getGoogleCalendarLink(title, details, startDate, endDate, startTime, endTime) {
+      const start = new Date(`${startDate}T${startTime}:00`);
+      const end = new Date(`${endDate || startDate}T${endTime}:00`);
+      
+      const formatTime = (date) => {
+        return date.toISOString().replace(/-|:|\.\d\d\d/g, '').substring(0, 15) + 'Z';
+      };
+      
+      const url = new URL('https://www.google.com/calendar/render');
+      url.searchParams.append('action', 'TEMPLATE');
+      url.searchParams.append('text', title);
+      url.searchParams.append('details', details);
+      url.searchParams.append('dates', `${formatTime(start)}/${formatTime(end)}`);
+      url.searchParams.append('location', 'PHENO&CO, Montpellier');
+      
       return url.toString();
     }
-
-    // --- UPDATE UI ---
-    const summaryDiv = document.getElementById('summary-content');
-    const submitBtn = document.getElementById('btn-submit');
-    const cgvCheckbox = document.getElementById('cgv');
-    const confirmationMessage = document.getElementById('confirmation-message');
-    const calendarContainer = document.getElementById('calendar-container');
     
-    // Toggle Submit Button
-    function updateSubmitButton() {
-      const isValid = document.getElementById('reservation-form').checkValidity();
-      submitBtn.disabled = !isValid;
+    // Get status label
+    function getStatutLabel(value) {
+      const labels = {
+        'auto': 'Auto-entrepreneur / Micro-entreprise',
+        'societe': 'Société',
+        'creation': 'En cours de création'
+      };
+      return labels[value] || value;
     }
     
-    document.getElementById('reservation-form').addEventListener('input', updateSubmitButton);
-    
-    // Update Summary Display
-    function updateSummary() {
-      const info = getPrix();
-      
-      // Check if we have valid dates/times to show meaningful price
-      // (basic check: start date exists)
-      if (!dateDebutInput.value) {
-         summaryDiv.innerHTML = '<p class="muted" style="text-align:center;">Veuillez sélectionner vos dates pour voir l\'estimation.</p>';
-         return;
-      }
-
-      summaryDiv.innerHTML = `
-        <div class="summary-row">
-          <span>Durée</span>
-          <span>${info.durationDetails}</span>
-        </div>
-        <div class="summary-row">
-          <span>Formule</span>
-          <span>${info.formuleLabel}</span>
-        </div>
-        <div class="summary-row">
-          <span>Pack Matériel</span>
-          <span>${info.packLabel}</span>
-        </div>
-        
-        <div class="summary-row total-ht">
-          <span>Total HT</span>
-          <span>${info.totalHT.toFixed(2)} €</span>
-        </div>
-        <div class="summary-row muted">
-          <span>Dont TVA (20%)</span>
-          <span>${info.tva.toFixed(2)} €</span>
-        </div>
-        
-        <div class="summary-row total-ttc">
-          <span>TOTAL TTC</span>
-          <span>${info.totalTTC.toFixed(2)} €</span>
-        </div>
-        
-        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #374151;">
-          <div class="summary-row acompte">
-            <span>Acompte à régler (${(info.acompteTaux * 100).toFixed(0)}%)</span>
-            <span>${info.acompteTTC.toFixed(2)} €</span>
-          </div>
-          <div class="summary-row muted">
-            <span>Solde restant</span>
-            <span>${info.soldeTTC.toFixed(2)} €</span>
-          </div>
-        </div>
-      `;
+    // Get experience label
+    function getExperienceLabel(value) {
+      const labels = {
+        '0-3': '0 à 3 ans d\'expérience',
+        '3-5': '3 à 5 ans d\'expérience',
+        '5-10': '5 à 10 ans d\'expérience',
+        '10+': 'Plus de 10 ans d\'expérience'
+      };
+      return labels[value] || value;
     }
     
-    // --- TOGGLE SECTIONS ---
-    const dureeRadios = document.querySelectorAll('input[name="duree"]');
-    const selectCourte = document.getElementById('formule-courte');
-    const selectLongue = document.getElementById('formule-longue');
-    
-    const pillCourte = document.getElementById('pill-courte');
-    const pillLongue = document.getElementById('pill-longue');
-    
-    function updatePills() {
-        document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('active'));
-        if(document.querySelector('input[value="courte"]').checked) pillCourte.classList.add('active');
-        else pillLongue.classList.add('active');
-    }
-
-    // Events
-    dureeRadios.forEach(r => {
-      r.addEventListener('change', () => {
-        if (r.value === 'courte' && r.checked) {
-          selectCourte.disabled = false;
-          selectLongue.disabled = true;
-        } else if (r.value === 'longue' && r.checked) {
-          selectCourte.disabled = true;
-          selectLongue.disabled = false;
-        }
-        updatePills();
-        updateConstraints();
-        updateSummary();
-      });
-    });
-
-    [selectCourte, selectLongue, document.getElementById('pack-materiel')].forEach(el => {
-      el.addEventListener('change', () => {
-        updateConstraints();
-        updateSummary();
-      });
-    });
-    
-    [heureDebutSelect, heureFinSelect].forEach(el => {
-      el.addEventListener('change', () => {
-        if (el === heureDebutSelect) updateConstraints(); // Only start time triggers constraint update (for demi)
-        updateSummary();
-      });
-    });
-
-    // --- CONSTRAINTS LOGIC ---
-    function updateConstraints() {
-      const dureeVal = document.querySelector('input[name="duree"]:checked').value;
-      const fCourte = selectCourte.value;
-      
-      if (dureeVal === 'longue') {
-        // Force 10:00 - 18:00
-        heureDebutSelect.value = "10:00";
-        heureFinSelect.value = "18:00";
-        heureDebutSelect.disabled = true;
-        heureFinSelect.disabled = true;
-      } else { // courte
-        if (fCourte === 'journee') {
-           // Force 10:00 - 18:00
-           heureDebutSelect.value = "10:00";
-           heureFinSelect.value = "18:00";
-           heureDebutSelect.disabled = true;
-           heureFinSelect.disabled = true;
-        } else if (fCourte === 'demi') {
-           // Demi: Enable start, Force end = start + 4h
-           heureDebutSelect.disabled = false;
-           heureFinSelect.disabled = false; // Let it be disabled? No, user sees it change
-           
-           // Calculate end time
-           const startParts = heureDebutSelect.value.split(':');
-           let h = parseInt(startParts[0]);
-           let m = parseInt(startParts[1]);
-           
-           let endH = h + 4;
-           
-           // Max 18:00
-           if (endH > 18 || (endH === 18 && m > 0)) {
-             // If start is too late, clamp to 18:00 (user should pick earlier)
-             endH = 18;
-             m = 0;
-           }
-           
-           const endStr = `${endH.toString().padStart(2, '0')}:${m === 30 ? '30' : '00'}`;
-           heureFinSelect.value = endStr;
-           heureFinSelect.disabled = true; // Disable end time selection for demi
-        } else {
-           // Heure: Free choice
-           heureDebutSelect.disabled = false;
-           heureFinSelect.disabled = false;
-        }
-      }
-    }
-
-    // --- ROBUST EMAIL RETRY LOGIC ---
-    async function sendEmailWithRetry(serviceId, templateId, params, publicKey, retries = 3) {
-        for (let i = 0; i < retries; i++) {
-            try {
-                return await emailjs.send(serviceId, templateId, params, publicKey);
-            } catch (error) {
-                console.warn(`Email attempt ${i + 1} failed:`, error);
-                if (i === retries - 1) throw error;
-                // Wait 1s
-                await new Promise(r => setTimeout(r, 1000));
-            }
-        }
-    }
-
-    // Soumission
-    form.addEventListener('submit', function (e) {
+    // Form submission
+    document.getElementById('reservationForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      // Disable button
+      const cgv = document.getElementById('cgv').checked;
+      const certifDocs = document.getElementById('certif_docs').checked;
+      
+      if (!cgv || !certifDocs) {
+        showToast('Champs requis', 'Veuillez accepter les CGV et vous engager à fournir les documents.', true);
+        return;
+      }
+      
+      const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.textContent = "Envoi en cours...";
-
-      const info = getPrix();
+      submitBtn.innerHTML = 'Envoi en cours...';
+      
+      // Gather form data
       const nom = document.getElementById('nom').value;
       const email = document.getElementById('email').value;
-      const tel = document.getElementById('telephone').value;
-      const commentaire = document.getElementById('commentaire').value || '—';
-      const dateDebut = dateDebutInput.value;
-      const dateFin = dateFinInput.value || 'Non précisé';
-      const heureDebut = heureDebutSelect.value;
-      const heureFin = heureFinSelect.value;
-
-      // Generate Calendar Link
-      const calTitle = "Location Fauteuil - PHENO&CO";
-      const calDetails = `Réservation de fauteuil.\nFormule: ${info.formuleLabel}\nPack: ${info.packLabel}\nTotal TTC: ${info.totalTTC.toFixed(2)}€`;
-      const calLink = getGoogleCalendarLink(calTitle, calDetails, dateDebut, dateFin === 'Non précisé' ? '' : dateFin, heureDebut, heureFin);
+      const telephone = document.getElementById('telephone').value;
+      const dateDebut = document.getElementById('dateDebut').value;
+      const dateFin = document.getElementById('dateFin').value || dateDebut;
+      const heureDebut = document.getElementById('heureDebut').value;
+      const heureFin = document.getElementById('heureFin').value;
+      const duree = document.querySelector('input[name="duree"]:checked').value;
+      const statut = document.querySelector('input[name="statut"]:checked').value;
+      const experience = document.getElementById('experience').value;
+      const commentaire = document.getElementById('commentaire').value;
+      const certif3ans = document.getElementById('certif_3ans').checked;
+      const certifDiplome = document.getElementById('certif_diplome').checked;
       
-      // Insert Calendar Button
-      calendarContainer.innerHTML = `
-        <a href="${calLink}" target="_blank" class="btn-calendar">
-          📅 Ajouter à mon Google Agenda
-        </a>
-      `;
+      // Get specialties
+      const specialitesCheckboxes = document.querySelectorAll('input[name="specialites"]:checked');
+      const specialites = Array.from(specialitesCheckboxes).map(cb => cb.value);
+      
+      const priceInfo = window.priceInfo || { totalTTC: 0, acompteTTC: 0, acompteTaux: 0.5, formuleLabel: '', packLabel: 'Aucun' };
+      
+      const baseUrl = window.location.origin;
+      const cgvUrl = `${baseUrl}/cgv-location.html`;
+      
+      // Google Calendar link
+      const calendarLink = getGoogleCalendarLink(
+        'Location Fauteuil - PHENO&CO',
+        `Réservation de fauteuil.\nFormule: ${priceInfo.formuleLabel}\nPack: ${priceInfo.packLabel}\nTotal TTC: ${priceInfo.totalTTC.toFixed(2)}€`,
+        dateDebut,
+        dateFin,
+        heureDebut,
+        heureFin
+      );
+      
+      // WhatsApp message
+      const whatsappMessage = `
+Bonjour ${nom},
 
-      // --- WHATSAPP REDIRECTION (IMMEDIATE) ---
-      const message = `
-Nouvelle demande de location de fauteuil – PHENO&CO
+Merci pour votre demande de location de fauteuil chez PHENO&CO.
 
-📋 IDENTITÉ
-Nom : ${nom}
-Email : ${email}
-Tél : ${tel}
+Voici votre récapitulatif :
+– Profil : ${getStatutLabel(statut)}, ${getExperienceLabel(experience)}
+– Spécialités : ${specialites.join(", ") || "Non précisé"}
+– Formule : ${priceInfo.formuleLabel}
+– Dates : ${dateDebut} → ${dateFin}
+– Montant total : ${priceInfo.totalTTC.toFixed(2)} € TTC
+– Acompte à régler : ${priceInfo.acompteTTC.toFixed(2)} € TTC (${(priceInfo.acompteTaux * 100).toFixed(0)}% ${duree === 'courte' ? 'courte durée' : 'longue durée'})
 
-📅 PÉRIODE
-Du : ${dateDebut}
-Au : ${dateFin}
-Horaires : ${heureDebut} à ${heureFin}
-Type : ${info.duree === 'courte' ? 'Courte durée' : 'Longue durée'}
+Pour valider votre réservation, merci de nous envoyer :
+– une pièce d'identité
+– votre CAP/BP (ou équivalent)
+– votre justificatif d'activité (SIREN/URSSAF)
+– votre attestation d'assurance RC Pro (si vous la possédez déjà)
 
-⚙️ FORMULE & OPTIONS
-Formule : ${info.formuleLabel}
-Pack Matériel : ${info.packLabel}
+📧 Documents à envoyer : location.phenoandco@gmail.com
 
-💰 ESTIMATION
-Base HT : ${info.baseHT.toFixed(2)} €
-Pack : ${info.packHT.toFixed(2)} €
-Total HT : ${info.totalHT.toFixed(2)} €
-TVA (20%) : ${info.tva.toFixed(2)} €
-TOTAL TTC : ${info.totalTTC.toFixed(2)} €
+Dès que vos documents sont validés, nous vous transmettons votre lien de paiement d'acompte et bloquons votre créneau définitivement.
 
-💳 ACOMPTE À RÉGLER
-Montant (${(info.acompteTaux * 100).toFixed(0)} %) : ${info.acompteTTC.toFixed(2)} € TTC
-Solde restant : ${info.soldeTTC.toFixed(2)} € TTC
+Nous restons disponibles si vous avez des questions.
+PHENO&CO
 
-🔔 Votre demande a bien été enregistrée.
-Après vérification, vous recevrez un lien de paiement sécurisé pour régler l’acompte. La réservation ne sera confirmée qu’après validation de ce paiement.
-Merci pour votre confiance.
+📄 CGV & Contrat : ${cgvUrl}
 
-💬 COMMENTAIRE
-${commentaire}
-
-📅 Ajouter à mon agenda :
-${calLink}
+📅 AJOUTER À VOTRE AGENDA GOOGLE :
+${calendarLink}
       `.trim();
-
-      const encoded = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/33769432605?text=${encoded}`;
       
-      // Open immediately
+      const whatsappUrl = `https://wa.me/33769432605?text=${encodeURIComponent(whatsappMessage)}`;
+      
+      // Open WhatsApp first
       window.open(whatsappUrl, '_blank');
-
-      // Generate formatted summary for email body (matches generic {{message}} tag)
+      
+      // Email template params
       const summaryText = `
 RÉCAPITULATIF DE LA DEMANDE
 
 --- CLIENT ---
 Nom : ${nom}
 Email : ${email}
-Téléphone : ${tel}
+Téléphone : ${telephone}
+
+--- PROFIL PROFESSIONNEL ---
+Statut : ${getStatutLabel(statut)}
+Expérience : ${getExperienceLabel(experience)}
+Compétences & Spécialités : ${specialites.join(", ") || "Aucune"}
+
+--- ENGAGEMENTS ---
+3 ans d'expérience : ${certif3ans ? "Oui" : "Non"}
+Diplôme (CAP/BP) : ${certifDiplome ? "Oui" : "Non"}
+Documents justificatifs : Oui
+CGV & Contrat acceptés : Oui
+Lien CGV & Contrat : ${cgvUrl}
 
 --- PÉRIODE ---
 Dates : Du ${dateDebut} au ${dateFin}
 Horaires : De ${heureDebut} à ${heureFin}
-Durée : ${info.duree === 'courte' ? 'Courte durée' : 'Longue durée'}
+Durée : ${priceInfo.durationDetails}
 
 --- FORMULE ---
-Formule : ${info.formuleLabel}
-Pack Matériel : ${info.packLabel}
+Type : ${duree === 'courte' ? 'Courte durée' : 'Longue durée'}
+Formule : ${priceInfo.formuleLabel}
+Pack Matériel : ${priceInfo.packLabel}
 
 --- TARIFS (Estimatif) ---
-Base HT : ${info.baseHT.toFixed(2)} €
-Pack HT : ${info.packHT.toFixed(2)} €
-Total HT : ${info.totalHT.toFixed(2)} €
-TVA (20%) : ${info.tva.toFixed(2)} €
-TOTAL TTC : ${info.totalTTC.toFixed(2)} €
+Base HT : ${priceInfo.baseHT.toFixed(2)} €
+Pack HT : ${priceInfo.packHT.toFixed(2)} €
+Total HT : ${priceInfo.totalHT.toFixed(2)} €
+TVA (20%) : ${priceInfo.tva.toFixed(2)} €
+TOTAL TTC : ${priceInfo.totalTTC.toFixed(2)} €
 
 --- PAIEMENT ---
-Acompte à régler : ${info.acompteTTC.toFixed(2)} €
-Solde restant : ${info.soldeTTC.toFixed(2)} €
+Acompte à régler : ${priceInfo.acompteTTC.toFixed(2)} €
+Solde restant : ${priceInfo.soldeTTC.toFixed(2)} €
 
 --- COMMENTAIRE ---
-${commentaire}
+${commentaire || 'Aucun'}
 
---- AGENDA ---
-Lien Google Calendar : ${calLink}
+===================================
+📅 AJOUTER À MON AGENDA
+${calendarLink}
+===================================
       `.trim();
-
-      // --- EMAIL SENDING LOGIC (BACKGROUND) ---
+      
       const templateParams = {
-        // Standard fields for generic templates
         name: nom,
         message: summaryText,
         title: "Nouvelle Réservation Fauteuil",
-
-        // Specific fields
         to_name: nom,
         to_email: email,
         manager_email: "location.phenoandco@gmail.com",
+        statut: getStatutLabel(statut),
+        experience: getExperienceLabel(experience),
+        specialites: specialites.join(", "),
         date_debut: dateDebut,
         date_fin: dateFin,
         heure_debut: heureDebut,
         heure_fin: heureFin,
-        duree_details: info.formuleLabel,
-        type_location: info.duree === 'courte' ? 'Courte durée' : 'Longue durée',
-        formule_label: info.formuleLabel,
-        pack_label: info.packLabel,
-        base_ht: info.baseHT.toFixed(2),
-        pack_ht: info.packHT.toFixed(2),
-        total_ht: info.totalHT.toFixed(2),
-        tva: info.tva.toFixed(2),
-        total_ttc: info.totalTTC.toFixed(2),
-        acompte_taux: (info.acompteTaux * 100).toFixed(0),
-        acompte_ttc: info.acompteTTC.toFixed(2),
-        solde_ttc: info.soldeTTC.toFixed(2),
-        telephone: tel,
-        commentaire: commentaire,
-        calendar_link: calLink
+        duree_details: priceInfo.durationDetails,
+        type_location: duree === 'courte' ? 'Courte durée' : 'Longue durée',
+        formule_label: priceInfo.formuleLabel,
+        pack_label: priceInfo.packLabel,
+        total_ht: priceInfo.totalHT.toFixed(2),
+        tva: priceInfo.tva.toFixed(2),
+        total_ttc: priceInfo.totalTTC.toFixed(2),
+        acompte_taux: (priceInfo.acompteTaux * 100).toFixed(0),
+        acompte_ttc: priceInfo.acompteTTC.toFixed(2),
+        solde_ttc: priceInfo.soldeTTC.toFixed(2),
+        telephone: telephone,
+        commentaire: commentaire || "Aucun",
+        calendar_link: calendarLink
       };
-
-      // Send to Manager AND Client (Sequential calls to ensure both)
-      // 1. Send to Manager
-      // We modify the 'to_email' param dynamically
-      const paramsManager = Object.assign({}, templateParams);
-      paramsManager.to_email = "location.phenoandco@gmail.com";
-      paramsManager.to_name = "Manager PHENO&CO";
-
-      const paramsClient = Object.assign({}, templateParams);
-      paramsClient.to_email = email; // Client email
-      paramsClient.to_name = nom;
-
-      // Parallel execution for speed with individual error handling
-      // We pass Public Key explicitly (4th arg) to guarantee authentication
-      const publicKey = "uBxESnC6CTyqiNyS6";
       
-      const pManager = sendEmailWithRetry('service_llizndy', 'template_m6uvyuq', paramsManager, publicKey)
-         .then(res => ({ status: 'fulfilled', value: res }))
-         .catch(err => {
-             const msg = err.text || err.message || JSON.stringify(err);
-             console.error("Manager Email Error:", msg);
-             return { status: 'rejected', reason: msg };
-         });
-
-      const pClient = sendEmailWithRetry('service_llizndy', 'template_m6uvyuq', paramsClient, publicKey)
-         .then(res => ({ status: 'fulfilled', value: res }))
-         .catch(err => {
-             const msg = err.text || err.message || JSON.stringify(err);
-             console.error("Client Email Error:", msg);
-             return { status: 'rejected', reason: msg };
-         });
-
-      Promise.all([pManager, pClient])
-      .then(function(results) {
-           console.log('Email results:', results);
-           
-           const failures = results.filter(r => r.status === 'rejected');
-           if (failures.length > 0) {
-             console.warn('Some emails failed:', failures);
-             // Show warning in UI instead of alert
-             document.getElementById('email-success-msg').style.display = 'none';
-             document.getElementById('email-error-msg').style.display = 'block';
-           } else {
-             // Success
-             document.getElementById('email-success-msg').style.display = 'block';
-             document.getElementById('email-error-msg').style.display = 'none';
-           }
-
-           confirmationMessage.style.display = 'block';
-        })
-        .finally(function() {
-            submitBtn.textContent = "Envoyer ma demande";
-            submitBtn.disabled = true; // Keep disabled to
+      let emailError = false;
+      
+      try {
+        // Send emails
+        await Promise.all([
+          emailjs.send('service_llizndy', 'template_m6uvyuq', { ...templateParams, to_email: "location.phenoandco@gmail.com", to_name: "Manager PHENO&CO" }),
+          emailjs.send('service_llizndy', 'template_m6uvyuq', { ...templateParams, to_email: email, to_name: nom })
+        ]);
+      } catch (error) {
+        console.error('Email error:', error);
+        emailError = true;
+      }
+      
+      // Show success
+      submitBtn.innerHTML = '<svg class="lucide" width="24" height="24"><use href="#check"/></svg> Demande Envoyée !';
+      
+      const successMessage = document.getElementById('successMessage');
+      successMessage.classList.add('show');
+      
+      if (emailError) {
+        document.getElementById('emailWarning').style.display = 'flex';
+      }
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        successMessage.classList.remove('show');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Envoyer ma demande <i data-lucide="arrow-right"></i>';
+        lucide.createIcons();
+        document.getElementById('reservationForm').reset();
+        
+        // Reset UI
+        document.getElementById('card-courte').classList.add('selected');
+        document.getElementById('card-longue').classList.remove('selected');
+        document.getElementById('formuleCourte').style.display = 'block';
+        document.getElementById('formuleLongue').style.display = 'none';
+        document.getElementById('formule-label').textContent = 'Formule courte *';
+        document.getElementById('heureDebut').disabled = false;
+        document.getElementById('heureFin').disabled = false;
+        
+        document.getElementById('dateDebut').value = tomorrowStr;
+        document.getElementById('heureDebut').value = '10:00';
+        document.getElementById('heureFin').value = '11:00';
+        
+        calculatePrice();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 3000);
+    });
+    
+    // Initial calculation
+    calculatePrice();
+  </script>
+  
+</body>
+</html>
