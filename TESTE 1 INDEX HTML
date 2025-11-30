@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>CGV & Contrat de Location – PHENO&CO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conditions générales de vente et contrat de location de fauteuil professionnel au sein du salon PHENO&CO, barbershop & coworking à Montpellier.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #F9C800;
+      --background: #050505;
+      --card: #111111;
+      --card-border: #222222;
+      --foreground: #ffffff;
+      --muted: #bbbbbb;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.7;
+      padding: 2rem 1rem 3rem;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+      text-align: center;
+    }
+    
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    
+    @media (min-width: 768px) {
+      .card {
+        padding: 2.5rem 2rem;
+      }
+    }
+    
+    h2 {
+      font-size: 1.2rem;
+      margin: 1.8rem 0 0.6rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    
+    h2:first-of-type {
+      margin-top: 0;
+    }
+    
+    p {
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+    
+    ul {
+      margin: 0.25rem 0 0.9rem 1.2rem;
+      font-size: 0.95rem;
+    }
+    
+    li {
+      margin-bottom: 0.25rem;
+    }
+    
+    .section-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .highlight {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      opacity: 0.8;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <a href="index.html" class="back-link">← Retour à la réservation</a>
+    
+    <div class="card">
+      <h1>CGV & CONTRAT DE LOCATION</h1>
+      <div class="subtitle">PHENO&CO — Barbershop & Coworking • 18 rue d’Alger, 34000 Montpellier</div>
+      <div class="section-label">Document contractuel – à accepter avant toute réservation</div>
+      
+      <h2>1. Objet du contrat</h2>
+      <p>
+        Le présent document définit les conditions de location d’un fauteuil professionnel au sein du salon
+        <span class="highlight">PHENO&CO</span>, situé au 18 rue d’Alger, 34000 Montpellier, par un travailleur indépendant.
+        La location peut être de courte ou de longue durée, selon les formules disponibles sur le site de réservation.
+      </p>
+      
+      <h2>2. Formules et acomptes</h2>
+      <h3>A — Courte durée (acompte 50&nbsp;%)</h3>
+      <ul>
+        <li>À l’heure&nbsp;: 10&nbsp;€ HT</li>
+        <li>Demi-journée (4h)&nbsp;: 35&nbsp;€ HT</li>
+        <li>Journée&nbsp;: 65&nbsp;€ HT</li>
+      </ul>
+      <p>
+        <span class="highlight">Acompte obligatoire&nbsp;: 50&nbsp;%.</span><br>
+        Le solde doit être réglé avant l’installation du locataire.
+      </p>
+      
+      <h3>B — Longue durée (acompte 25&nbsp;%)</h3>
+      <ul>
+        <li>Semaine&nbsp;: 60&nbsp;€ HT / jour</li>
+        <li>Mensuel&nbsp;: 55&nbsp;€ HT / jour</li>
+      </ul>
+      <p>
+        <span class="highlight">Acompte obligatoire&nbsp;: 25&nbsp;%.</span><br>
+        Le solde est payable selon les modalités convenues (à la semaine ou au mois).
+      </p>
+      
+      <h2>3. Pack matériel (optionnel)</h2>
+      <p>
+        Le locataire dispose librement du poste complet (fauteuil, miroir, plan de travail, lavabo et installations nécessaires).
+        Le petit matériel professionnel (tondeuses, finition, shaver, sèche-cheveux, etc.) peut être loué en supplément.
+      </p>
+      <ul>
+        <li>Aucun&nbsp;: 0&nbsp;€</li>
+        <li>Pack Essentiel&nbsp;: 20&nbsp;€ HT / jour (tondeuse, finition, cape, serviettes, poste équipé)</li>
+        <li>Pack Premium&nbsp;: 30&nbsp;€ HT / jour (Pack Essentiel + shaver + serviettes supplémentaires)</li>
+      </ul>
+      <p>
+        Tout matériel mis à disposition doit être restitué propre, complet et en parfait état.
+        Toute casse, perte ou dégradation pourra être facturée.
+      </p>
+      
+      <h2>4. Profil du locataire (accès réservé aux professionnels)</h2>
+      <p>
+        <span class="highlight">PHENO&CO est un écosystème&nbsp;:</span> chacun est indépendant, mais tout le monde porte la même vibration.
+        Respect, bienveillance, transmission… Ce lieu tient parce que chacun y apporte une bonne énergie et la préserve.
+        Celui qui entre ici s’engage à travailler dans cet esprit — pour soi, pour les autres, et pour garantir une qualité de service irréprochable.
+        Chez PHENO&CO, chaque client mérite une attention particulière.
+      </p>
+      <p>Le locataire atteste, via le formulaire de réservation, qu’il&nbsp;:</p>
+      <ul>
+        <li>est auto-entrepreneur, micro-entreprise, société ou en cours de création&nbsp;;</li>
+        <li>exerce la coiffure ou le barbering en professionnel&nbsp;;</li>
+        <li>possède au moins trois ans d’expérience&nbsp;;</li>
+        <li>détient un CAP/BP ou est en cours d’obtention&nbsp;;</li>
+        <li>fournit les documents suivants&nbsp;:
+          <ul>
+            <li>pièce d’identité ou titre de séjour autorisant le travail&nbsp;;</li>
+            <li>numéro SIREN (ou justificatif de création en cours)&nbsp;;</li>
+            <li>attestation d’assurance Responsabilité Civile Professionnelle&nbsp;;</li>
+            <li>diplôme ou justificatif équivalent.</li>
+          </ul>
+        </li>
+      </ul>
+      <p><span class="highlight">Tout document manquant suspend la location.</span></p>
+      
+      <h2>5. Responsabilités du locataire</h2>
+      <p>Le locataire est entièrement responsable&nbsp;:</p>
+      <ul>
+        <li>de ses prestations&nbsp;;</li>
+        <li>de sa clientèle&nbsp;;</li>
+        <li>de ses encaissements&nbsp;;</li>
+        <li>de son chiffre d’affaires&nbsp;;</li>
+        <li>du respect de l’hygiène et de la propreté du poste&nbsp;;</li>
+        <li>de la désinfection et de la sécurité&nbsp;;</li>
+        <li>de l’utilisation de son propre matériel ou du matériel loué.</li>
+      </ul>
+      <p>
+        PHENO&CO n’intervient jamais dans l’activité du locataire et décline toute responsabilité concernant ses prestations.
+      </p>
+      
+      <h2>6. Responsabilités de PHENO&CO</h2>
+      <p>PHENO&CO assure&nbsp;:</p>
+      <ul>
+        <li>la mise à disposition du fauteuil&nbsp;;</li>
+        <li>un environnement propre et sécurisé&nbsp;;</li>
+        <li>l’accès au salon selon les horaires définis&nbsp;;</li>
+        <li>les installations nécessaires (électricité, eau).</li>
+      </ul>
+      <p>
+        PHENO&CO ne garantit aucun chiffre d’affaires et ne fournit pas de clientèle.
+      </p>
+      
+      <h2>7. Règlement intérieur</h2>
+      <p>Le locataire s’engage à&nbsp;:</p>
+      <ul>
+        <li>respecter le calme, les clients et l’équipe&nbsp;;</li>
+        <li>adopter une tenue professionnelle correcte
+          (pas de jogging ni de tenue négligée&nbsp;; tenue noire ou blanche conseillée)&nbsp;;</li>
+        <li>maintenir un poste propre avant et après chaque client&nbsp;;</li>
+        <li>respecter les horaires du salon&nbsp;;</li>
+        <li>ne pas utiliser les produits du salon sans autorisation&nbsp;;</li>
+        <li>préserver l’intégrité du matériel et des installations.</li>
+      </ul>
+      <p>
+        Toute violation peut entraîner une suspension immédiate de la location.
+      </p>
+      
+      <h2>8. Annulation et no-show</h2>
+      <h3>Courte durée (acompte 50&nbsp;%)</h3>
+      <ul>
+        <li>Annulation à moins de 48 heures&nbsp;: acompte perdu&nbsp;;</li>
+        <li>No-show&nbsp;: acompte perdu&nbsp;;</li>
+        <li>Aucun remboursement une fois la prestation commencée.</li>
+      </ul>
+      
+      <h3>Longue durée (acompte 25&nbsp;%)</h3>
+      <ul>
+        <li>Annulation à moins de 72 heures&nbsp;: acompte perdu&nbsp;;</li>
+        <li>Interruption par le locataire&nbsp;: aucun remboursement.</li>
+      </ul>
+      <p>
+        PHENO&CO peut annuler pour cause de force majeure ou incident technique (acompte remboursé).
+      </p>
+      
+      <h2>9. Dégradations et matériel</h2>
+      <p>Le locataire est responsable&nbsp;:</p>
+      <ul>
+        <li>des dommages causés volontairement ou par négligence&nbsp;;</li>
+        <li>de la casse du matériel loué en supplément.</li>
+      </ul>
+      <p>
+        Une facturation de remplacement peut être appliquée.
+      </p>
+      
+      <h2>10. Suspension ou exclusion immédiate</h2>
+      <p>PHENO&CO peut mettre fin à la location en cas de&nbsp;:</p>
+      <ul>
+        <li>documents non fournis&nbsp;;</li>
+        <li>comportement irrespectueux&nbsp;;</li>
+        <li>insultes, menaces ou violences&nbsp;;</li>
+        <li>travail non déclaré&nbsp;;</li>
+        <li>non-paiement&nbsp;;</li>
+        <li>dégradation volontaire&nbsp;;</li>
+        <li>non-respect de l’hygiène.</li>
+      </ul>
+      <p><span class="highlight">Aucun remboursement ne sera effectué.</span></p>
+      
+      <h2>11. Facturation et TVA</h2>
+      <p>
+        Les tarifs sont exprimés en euros, hors taxes. La TVA applicable sera ajoutée selon le taux légal en vigueur au moment de la facturation.
+      </p>
+      
+      <h2>12. Données et récapitulatif</h2>
+      <p>
+        Le locataire reçoit automatiquement, par e-mail et/ou WhatsApp&nbsp;:
+      </p>
+      <ul>
+        <li>le récapitulatif de sa demande&nbsp;;</li>
+        <li>le lien vers les présentes CGV & Contrat de location&nbsp;;</li>
+        <li>la liste des pièces à fournir&nbsp;;</li>
+        <li>les instructions d’accès.</li>
+      </ul>
+      
+      <h2>13. Acceptation</h2>
+      <p>
+        En cochant la case «&nbsp;J’ai lu et j’accepte les CGV PHENO&CO&nbsp;» dans le formulaire de réservation,
+        le locataire reconnaît accepter sans réserve&nbsp;:
+      </p>
+      <ul>
+        <li>les présentes conditions générales&nbsp;;</li>
+        <li>le contrat de location&nbsp;;</li>
+        <li>le règlement intérieur&nbsp;;</li>
+        <li>les engagements déclarés dans le formulaire.</li>
+      </ul>
+      <p>
+        La case cochée vaut <span class="highlight">signature électronique</span> et engagement contractuel.
+      </p>
+      
+      <div class="footer-note">
+        Document à jour pour PHENO&CO – Location de fauteuil professionnel.<br>
+        À conserver par le locataire pour toute future réservation.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
