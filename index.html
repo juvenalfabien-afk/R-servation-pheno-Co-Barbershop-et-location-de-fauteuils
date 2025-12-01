@@ -6,20 +6,15 @@
   <title>PHENO&CO - Location de Fauteuil | Barbershop Montpellier</title>
   <meta name="description" content="Réservez votre fauteuil chez PHENO&CO, barbershop à Montpellier depuis 2009. Location courte ou longue durée pour coiffeurs et barbiers indépendants.">
   
-  <!-- Open Graph -->
   <meta property="og:title" content="PHENO&CO - Location de Fauteuil">
   <meta property="og:description" content="Réservez votre fauteuil chez PHENO&CO, barbershop à Montpellier depuis 2009.">
   <meta property="og:type" content="website">
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   
-  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
@@ -38,11 +33,7 @@
       --danger: #ef4444;
     }
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
       font-family: 'DM Sans', sans-serif;
@@ -51,11 +42,11 @@
       line-height: 1.6;
     }
     
-    .font-serif {
-      font-family: 'Playfair Display', serif;
-    }
+    .font-serif { font-family: 'Playfair Display', serif; }
     
-    /* Hero Section */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+    
     .hero {
       background-color: #000;
       color: #fff;
@@ -68,10 +59,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     
-    .hero-content {
-      max-width: 56rem;
-      width: 100%;
-    }
+    .hero-content { max-width: 56rem; width: 100%; }
     
     .logo {
       width: 13rem;
@@ -81,9 +69,7 @@
       transition: opacity 0.3s;
     }
     
-    .logo:hover {
-      opacity: 1;
-    }
+    .logo:hover { opacity: 1; }
     
     .hero h1 {
       font-size: 2.5rem;
@@ -112,12 +98,8 @@
     }
     
     @media (min-width: 768px) {
-      .hero-buttons {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .hero h1 {
-        font-size: 3rem;
-      }
+      .hero-buttons { grid-template-columns: repeat(3, 1fr); }
+      .hero h1 { font-size: 3rem; }
     }
     
     .btn {
@@ -136,81 +118,32 @@
       font-size: 1rem;
     }
     
-    .btn:hover {
-      transform: translateY(-2px);
-    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
     
-    .btn:active {
-      transform: translateY(0);
-    }
+    .btn-primary { background-color: var(--primary); color: #000; }
+    .btn-primary:hover { background-color: var(--primary-hover); }
     
-    .btn-primary {
-      background-color: var(--primary);
-      color: #000;
-    }
+    .btn-secondary { background-color: #111827; color: #fff; border: 1px solid #374151; }
+    .btn-secondary:hover { background-color: #1f2937; }
     
-    .btn-primary:hover {
-      background-color: var(--primary-hover);
-    }
+    .btn-whatsapp { background-color: #25D366; color: #fff; }
+    .btn-whatsapp:hover { background-color: #20bd5a; }
     
-    .btn-secondary {
-      background-color: #111827;
-      color: #fff;
-      border: 1px solid #374151;
-    }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--foreground); }
+    .btn-outline:hover { background-color: rgba(255,255,255,0.05); }
     
-    .btn-secondary:hover {
-      background-color: #1f2937;
-    }
+    .reservation-section { padding: 3rem 1rem; }
     
-    .btn-whatsapp {
-      background-color: #25D366;
-      color: #fff;
-    }
+    .container { max-width: 72rem; margin: 0 auto; }
+    .container-sm { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
     
-    .btn-whatsapp:hover {
-      background-color: #20bd5a;
-    }
+    .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .section-header h2 { font-size: 1.875rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; }
+    .section-header p { color: var(--muted); max-width: 42rem; margin: 0 auto; }
     
-    /* Reservation Section */
-    .reservation-section {
-      padding: 3rem 1rem;
-    }
-    
-    .container {
-      max-width: 72rem;
-      margin: 0 auto;
-    }
-    
-    .section-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-    
-    .section-header h2 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-    
-    .section-header p {
-      color: var(--muted);
-      max-width: 42rem;
-      margin: 0 auto;
-    }
-    
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-    
-    @media (min-width: 1024px) {
-      .form-grid {
-        grid-template-columns: 7fr 5fr;
-      }
-    }
+    .form-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+    @media (min-width: 1024px) { .form-grid { grid-template-columns: 7fr 5fr; } }
     
     .card {
       background-color: var(--card);
@@ -218,13 +151,10 @@
       border-radius: 1rem;
       padding: 1.5rem;
       box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin-bottom: 2rem;
     }
     
-    @media (min-width: 768px) {
-      .card {
-        padding: 2rem;
-      }
-    }
+    @media (min-width: 768px) { .card { padding: 2rem; } }
     
     .card-header {
       display: flex;
@@ -235,32 +165,13 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     
-    .card-header svg {
-      width: 1.5rem;
-      height: 1.5rem;
-      color: var(--primary);
-    }
+    .card-header svg { width: 1.5rem; height: 1.5rem; color: var(--primary); }
+    .card-header h3 { font-size: 1.25rem; font-weight: 600; }
     
-    .card-header h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--muted); margin-bottom: 0.5rem; }
     
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    
-    .form-label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-    
-    .form-input,
-    .form-select,
-    .form-textarea {
+    .form-input, .form-select, .form-textarea {
       width: 100%;
       background-color: var(--input-bg);
       border: 1px solid var(--border);
@@ -272,9 +183,7 @@
       transition: all 0.2s;
     }
     
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 2px rgba(249, 200, 0, 0.2);
@@ -289,41 +198,14 @@
       padding-right: 2.5rem;
     }
     
-    .form-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+    .form-textarea { min-height: 100px; resize: vertical; }
+    .form-input:disabled, .form-select:disabled { opacity: 0.5; cursor: not-allowed; }
     
-    .form-input:disabled,
-    .form-select:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    @media (min-width: 768px) { .form-row { grid-template-columns: 1fr 1fr; } }
     
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    
-    @media (min-width: 768px) {
-      .form-row {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    
-    /* Radio Cards */
-    .radio-cards {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    
-    @media (min-width: 640px) {
-      .radio-cards {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
+    .radio-cards { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 640px) { .radio-cards { grid-template-columns: 1fr 1fr; } }
     
     .radio-card {
       position: relative;
@@ -338,9 +220,7 @@
       background-color: var(--input-bg);
     }
     
-    .radio-card:hover {
-      border-color: rgba(249, 200, 0, 0.3);
-    }
+    .radio-card:hover { border-color: rgba(249, 200, 0, 0.3); }
     
     .radio-card.selected {
       background-color: rgba(249, 200, 0, 0.1);
@@ -348,29 +228,11 @@
       box-shadow: 0 0 0 1px rgba(249, 200, 0, 0.2);
     }
     
-    .radio-card input[type="radio"] {
-      margin-top: 0.25rem;
-      accent-color: var(--primary);
-      width: 1rem;
-      height: 1rem;
-    }
+    .radio-card input[type="radio"] { margin-top: 0.25rem; accent-color: var(--primary); width: 1rem; height: 1rem; }
+    .radio-card-content span { display: block; }
+    .radio-card-content .title { font-weight: 600; }
+    .radio-card-content .desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; line-height: 1.4; }
     
-    .radio-card-content span {
-      display: block;
-    }
-    
-    .radio-card-content .title {
-      font-weight: 600;
-    }
-    
-    .radio-card-content .desc {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 0.25rem;
-      line-height: 1.4;
-    }
-    
-    /* Info Box */
     .info-box {
       background-color: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
@@ -380,17 +242,9 @@
       color: var(--muted);
     }
     
-    .info-box p {
-      margin-bottom: 0.5rem;
-    }
-    
-    .info-box p:last-child {
-      margin-bottom: 0;
-    }
-    
-    .info-box strong {
-      color: var(--foreground);
-    }
+    .info-box p { margin-bottom: 0.5rem; }
+    .info-box p:last-child { margin-bottom: 0; }
+    .info-box strong { color: var(--foreground); }
     
     .warning-box {
       background-color: rgba(234, 179, 8, 0.1);
@@ -404,48 +258,16 @@
       font-size: 0.875rem;
     }
     
-    .warning-box svg {
-      width: 1.25rem;
-      height: 1.25rem;
-      flex-shrink: 0;
-      margin-top: 0.125rem;
-    }
+    .warning-box svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; margin-top: 0.125rem; }
     
-    .divider {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      margin: 2rem 0;
-    }
+    .divider { border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
     
-    /* Radio Buttons Inline */
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+    .radio-group { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .radio-item { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    .radio-item input[type="radio"] { accent-color: var(--primary); width: 1rem; height: 1rem; }
+    .radio-item span { font-size: 0.875rem; }
     
-    .radio-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-    }
-    
-    .radio-item input[type="radio"] {
-      accent-color: var(--primary);
-      width: 1rem;
-      height: 1rem;
-    }
-    
-    .radio-item span {
-      font-size: 0.875rem;
-    }
-    
-    /* Checkboxes */
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    .checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
     
     .checkbox-item {
       display: flex;
@@ -457,22 +279,10 @@
       transition: background-color 0.2s;
     }
     
-    .checkbox-item:hover {
-      background-color: rgba(255,255,255,0.05);
-    }
+    .checkbox-item:hover { background-color: rgba(255,255,255,0.05); }
+    .checkbox-item input[type="checkbox"] { accent-color: var(--primary); width: 1rem; height: 1rem; margin-top: 0.125rem; }
+    .checkbox-item span { font-size: 0.875rem; }
     
-    .checkbox-item input[type="checkbox"] {
-      accent-color: var(--primary);
-      width: 1rem;
-      height: 1rem;
-      margin-top: 0.125rem;
-    }
-    
-    .checkbox-item span {
-      font-size: 0.875rem;
-    }
-    
-    /* Engagement Box */
     .engagement-box {
       background-color: rgba(249, 200, 0, 0.05);
       border: 1px solid rgba(249, 200, 0, 0.1);
@@ -490,101 +300,27 @@
       margin-bottom: 0.75rem;
     }
     
-    .engagement-box h4 svg {
-      width: 1rem;
-      height: 1rem;
-    }
+    .engagement-box h4 svg { width: 1rem; height: 1rem; }
+    .engagement-box .checkbox-item { padding: 0.25rem 0; }
+    .engagement-box a { color: var(--primary); text-decoration: underline; }
+    .engagement-box a:hover { opacity: 0.8; }
     
-    .engagement-box .checkbox-item {
-      padding: 0.25rem 0;
-    }
+    .summary { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: 2rem; }
+    .summary h4 { font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .summary h4 svg { width: 1.25rem; height: 1.25rem; color: var(--primary); }
     
-    .engagement-box a {
-      color: var(--primary);
-      text-decoration: underline;
-    }
+    .summary-row { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .summary-row .label { color: var(--muted); }
+    .summary-row .value { font-weight: 500; text-align: right; }
     
-    .engagement-box a:hover {
-      opacity: 0.8;
-    }
+    .summary-divider { border-top: 1px solid rgba(255,255,255,0.1); margin: 0.75rem 0; }
+    .summary-total { display: flex; justify-content: space-between; font-size: 1.125rem; font-weight: 700; color: var(--primary); padding-top: 0.5rem; }
     
-    /* Summary */
-    .summary {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 1.5rem;
-      margin-top: 2rem;
-    }
+    .summary-deposit { background-color: rgba(249, 200, 0, 0.1); border-radius: 0.5rem; padding: 0.75rem; margin-top: 1rem; }
+    .summary-deposit .row { display: flex; justify-content: space-between; font-size: 0.875rem; }
+    .summary-deposit .deposit { font-weight: 500; color: #22c55e; }
+    .summary-deposit .remaining { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
     
-    .summary h4 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .summary h4 svg {
-      width: 1.25rem;
-      height: 1.25rem;
-      color: var(--primary);
-    }
-    
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .summary-row .label {
-      color: var(--muted);
-    }
-    
-    .summary-row .value {
-      font-weight: 500;
-      text-align: right;
-    }
-    
-    .summary-divider {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      margin: 0.75rem 0;
-    }
-    
-    .summary-total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: var(--primary);
-      padding-top: 0.5rem;
-    }
-    
-    .summary-deposit {
-      background-color: rgba(249, 200, 0, 0.1);
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      margin-top: 1rem;
-    }
-    
-    .summary-deposit .row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.875rem;
-    }
-    
-    .summary-deposit .deposit {
-      font-weight: 500;
-      color: #22c55e;
-    }
-    
-    .summary-deposit .remaining {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 0.25rem;
-    }
-    
-    /* Submit Button */
     .submit-btn {
       width: 100%;
       padding: 1rem 1.5rem;
@@ -603,27 +339,11 @@
       color: #000;
     }
     
-    .submit-btn:hover:not(:disabled) {
-      background-color: var(--primary-hover);
-      transform: translateY(-2px);
-    }
+    .submit-btn:hover:not(:disabled) { background-color: var(--primary-hover); transform: translateY(-2px); }
+    .submit-btn:active:not(:disabled) { transform: translateY(0); }
+    .submit-btn:disabled { background-color: #333; color: #666; cursor: not-allowed; }
+    .submit-btn svg { width: 1.25rem; height: 1.25rem; }
     
-    .submit-btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-    
-    .submit-btn:disabled {
-      background-color: #333;
-      color: #666;
-      cursor: not-allowed;
-    }
-    
-    .submit-btn svg {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-    
-    /* Success Message */
     .success-message {
       margin-top: 1.5rem;
       padding: 1rem;
@@ -633,84 +353,25 @@
       display: none;
     }
     
-    .success-message.show {
-      display: block;
-      animation: slideIn 0.3s ease-out;
-    }
+    .success-message.show { display: block; animation: slideIn 0.3s ease-out; }
     
     @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
-    .success-message h4 {
-      font-weight: 700;
-      color: #22c55e;
-      font-size: 1.125rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-    }
+    .success-message h4 { font-weight: 700; color: #22c55e; font-size: 1.125rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .success-message h4 svg { width: 1.25rem; height: 1.25rem; }
+    .success-message p { font-size: 0.875rem; color: #d1d5db; }
+    .success-message .warning { font-size: 0.75rem; color: #eab308; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .success-message .warning svg { width: 0.75rem; height: 0.75rem; }
     
-    .success-message h4 svg {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
+    .about-section { margin-top: 3rem; }
+    .about-section .card-header span { font-size: 1.5rem; }
+    .about-section p { color: var(--muted); margin-bottom: 1rem; line-height: 1.7; }
+    .about-section p:first-of-type { font-weight: 500; color: var(--foreground); }
+    .about-section p:last-child { color: var(--primary); font-weight: 700; padding-top: 0.5rem; margin-bottom: 0; }
     
-    .success-message p {
-      font-size: 0.875rem;
-      color: #d1d5db;
-    }
-    
-    .success-message .warning {
-      font-size: 0.75rem;
-      color: #eab308;
-      margin-top: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .success-message .warning svg {
-      width: 0.75rem;
-      height: 0.75rem;
-    }
-    
-    /* About Section */
-    .about-section {
-      margin-top: 3rem;
-    }
-    
-    .about-section .card-header span {
-      font-size: 1.5rem;
-    }
-    
-    .about-section p {
-      color: var(--muted);
-      margin-bottom: 1rem;
-      line-height: 1.7;
-    }
-    
-    .about-section p:first-of-type {
-      font-weight: 500;
-      color: var(--foreground);
-    }
-    
-    .about-section p:last-child {
-      color: var(--primary);
-      font-weight: 700;
-      padding-top: 0.5rem;
-      margin-bottom: 0;
-    }
-    
-    /* Footer */
     .footer {
       background-color: #000;
       padding: 2rem;
@@ -720,29 +381,13 @@
       font-size: 0.875rem;
     }
     
-    .footer a {
-      display: block;
-      margin-top: 1rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      opacity: 0.2;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
+    .footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer a:hover { color: var(--primary); }
+    .footer .admin-link { display: block; margin-top: 1rem; font-size: 0.75rem; opacity: 0.2; }
+    .footer .admin-link:hover { opacity: 1; }
     
-    .footer a:hover {
-      opacity: 1;
-    }
+    @media (min-width: 1024px) { .sticky-card { position: sticky; top: 2rem; } }
     
-    /* Sticky Card */
-    @media (min-width: 1024px) {
-      .sticky-card {
-        position: sticky;
-        top: 2rem;
-      }
-    }
-    
-    /* Date Input Styling */
     input[type="date"]::-webkit-calendar-picker-indicator {
       background-color: var(--primary);
       padding: 0.25rem;
@@ -750,23 +395,9 @@
       cursor: pointer;
     }
     
-    /* Section Title with Icon */
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
+    .section-title { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem; }
+    .section-title svg { width: 1rem; height: 1rem; }
     
-    .section-title svg {
-      width: 1rem;
-      height: 1rem;
-    }
-    
-    /* Toast Notification */
     .toast {
       position: fixed;
       bottom: 2rem;
@@ -781,36 +412,187 @@
       max-width: 24rem;
     }
     
-    .toast.show {
-      display: block;
-      animation: slideIn 0.3s ease-out;
+    .toast.show { display: block; animation: slideIn 0.3s ease-out; }
+    .toast.error { border-color: rgba(239, 68, 68, 0.5); }
+    .toast h4 { font-weight: 600; margin-bottom: 0.25rem; }
+    .toast p { font-size: 0.875rem; color: var(--muted); }
+    .toast.error h4 { color: #ef4444; }
+    
+    /* Admin Styles */
+    .admin-header {
+      background-color: #000;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     
-    .toast.error {
-      border-color: rgba(239, 68, 68, 0.5);
+    .admin-header h1 { font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .admin-header p { color: var(--muted); font-size: 0.875rem; }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: opacity 0.2s;
     }
     
-    .toast h4 {
+    .back-link:hover { opacity: 0.8; }
+    
+    .admin-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+    
+    .login-card {
+      max-width: 400px;
+      margin: 4rem auto;
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .login-card h2 { color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .login-card h2 svg { width: 1.5rem; height: 1.5rem; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    
+    .stat-card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .stat-card .number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-card .label { font-size: 0.875rem; color: var(--muted); margin-top: 0.25rem; }
+    
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+    }
+    
+    .filter-bar select { flex: 1; min-width: 150px; }
+    
+    .reservations-list { display: flex; flex-direction: column; gap: 1rem; }
+    
+    .reservation-card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    
+    .reservation-card:hover { border-color: rgba(249, 200, 0, 0.3); }
+    
+    .reservation-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+    .reservation-client h3 { font-size: 1.125rem; font-weight: 600; }
+    .reservation-client p { font-size: 0.875rem; color: var(--muted); }
+    
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
       font-weight: 600;
-      margin-bottom: 0.25rem;
+      text-transform: uppercase;
     }
     
-    .toast p {
+    .status-pending { background-color: rgba(234, 179, 8, 0.2); color: #eab308; }
+    .status-confirmed { background-color: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .status-cancelled { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    
+    .reservation-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; padding: 1rem; background-color: rgba(255,255,255,0.02); border-radius: 0.5rem; }
+    .reservation-details .detail-item { font-size: 0.875rem; }
+    .reservation-details .detail-label { color: var(--muted); }
+    .reservation-details .detail-value { font-weight: 500; }
+    
+    .reservation-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    
+    .action-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
       font-size: 0.875rem;
-      color: var(--muted);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
     }
     
-    .toast.error h4 {
-      color: #ef4444;
+    .action-btn svg { width: 1rem; height: 1rem; }
+    .action-btn.confirm { background-color: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .action-btn.confirm:hover { background-color: rgba(34, 197, 94, 0.3); }
+    .action-btn.cancel { background-color: rgba(234, 179, 8, 0.2); color: #eab308; }
+    .action-btn.cancel:hover { background-color: rgba(234, 179, 8, 0.3); }
+    .action-btn.delete { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .action-btn.delete:hover { background-color: rgba(239, 68, 68, 0.3); }
+    .action-btn.whatsapp { background-color: rgba(37, 211, 102, 0.2); color: #25D366; }
+    .action-btn.whatsapp:hover { background-color: rgba(37, 211, 102, 0.3); }
+    
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+    .empty-state svg { width: 4rem; height: 4rem; opacity: 0.3; margin-bottom: 1rem; }
+    
+    /* CGV Styles */
+    .cgv-container { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
+    
+    .cgv-card {
+      background-color: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
     }
+    
+    .cgv-card h2 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .cgv-card h3 { color: var(--foreground); font-size: 1.125rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .cgv-card p { color: var(--muted); margin-bottom: 1rem; line-height: 1.8; }
+    .cgv-card ul, .cgv-card ol { color: var(--muted); margin-bottom: 1rem; padding-left: 1.5rem; }
+    .cgv-card li { margin-bottom: 0.5rem; }
+    .cgv-card strong { color: var(--foreground); }
+    
+    .highlight {
+      background-color: rgba(249, 200, 0, 0.1);
+      border-left: 3px solid var(--primary);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+    
+    .highlight p { margin-bottom: 0; color: var(--foreground); }
+    
+    .cgv-card table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .cgv-card th, .cgv-card td { padding: 0.75rem 1rem; text-align: left; border: 1px solid var(--border); }
+    .cgv-card th { background-color: rgba(249, 200, 0, 0.1); color: var(--primary); font-weight: 600; }
+    .cgv-card td { color: var(--muted); }
   </style>
 </head>
 <body>
+
+<!-- ==================== PAGE RESERVATION ==================== -->
+<div id="page-reservation" class="page-section active">
   
-  <!-- HERO SECTION -->
   <section class="hero">
     <div class="hero-content">
-      <img src="https://i.imgur.com/YOUR_LOGO.png" alt="PHENO&CO Logo" class="logo" id="logo">
+      <img src="logo.png" alt="PHENO&CO Logo" class="logo" id="logo">
       
       <div>
         <h1 class="font-serif">PHENO&CO</h1>
@@ -836,7 +618,6 @@
     </div>
   </section>
   
-  <!-- RESERVATION SECTION -->
   <section id="reservation" class="reservation-section">
     <div class="container">
       
@@ -847,11 +628,9 @@
       
       <form id="reservationForm" class="form-grid">
         
-        <!-- Left Column -->
         <div>
           <div class="card">
             
-            <!-- Type de location -->
             <div class="card-header">
               <i data-lucide="clock"></i>
               <h3>Type de location</h3>
@@ -896,235 +675,260 @@
                 <label class="form-label">Pack Matériel</label>
                 <select id="packMateriel" name="packMateriel" class="form-select" onchange="calculatePrice()">
                   <option value="aucun">Aucun — 0 €</option>
-                  <option value="essentiel">Pack Essentiel — 20 € HT / jour</option>
-                  <option value="premium">Pack Premium — 30 € HT / jour</option>
+                  <option value="essentiel">Essentiel — 20 € HT/jour</option>
+                  <option value="premium">Premium — 30 € HT/jour</option>
                 </select>
               </div>
             </div>
             
-            <div class="info-box">
-              <p><strong>Pack Essentiel :</strong> 20 € HT/jour (tondeuse, finition, serviettes, cape, poste équipé).</p>
-              <p><strong>Pack Premium :</strong> 30 € HT/jour (Essentiel + shaver + serviettes en plus).</p>
-            </div>
-            
-            <div class="warning-box" style="margin-top: 1.5rem;">
-              <i data-lucide="alert-circle"></i>
-              <p>Les montants calculés sont indicatifs. Le calcul final se fera au prorata selon la grille tarifaire lors de la confirmation.</p>
+            <div class="info-box" style="margin-bottom: 1.5rem;">
+              <p><strong>Pack Essentiel :</strong> Tondeuses, outils de finition, cape, serviettes</p>
+              <p><strong>Pack Premium :</strong> Essentiel + rasoir + serviettes supplémentaires</p>
             </div>
             
             <div class="divider"></div>
             
-            <!-- Dates & Horaires -->
-            <div class="card-header">
-              <i data-lucide="calendar"></i>
+            <div class="card-header" style="margin-top: 0;">
+              <i data-lucide="calendar-days"></i>
               <h3>Dates & Horaires</h3>
             </div>
             
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Date de début *</label>
-                <input type="date" id="dateDebut" name="dateDebut" class="form-input" required onchange="validateDate('dateDebut'); calculatePrice();">
+                <input type="date" id="dateDebut" name="dateDebut" class="form-input" required onchange="calculatePrice()">
               </div>
               
               <div class="form-group">
-                <label class="form-label">Date de fin (optionnel)</label>
-                <input type="date" id="dateFin" name="dateFin" class="form-input" onchange="validateDate('dateFin'); calculatePrice();">
+                <label class="form-label">Date de fin</label>
+                <input type="date" id="dateFin" name="dateFin" class="form-input" onchange="calculatePrice()">
               </div>
             </div>
             
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Heure de début *</label>
-                <select id="heureDebut" name="heureDebut" class="form-select" required onchange="updateEndTime(); calculatePrice();">
+                <select id="heureDebut" name="heureDebut" class="form-select" required onchange="calculatePrice()">
+                  <option value="10:00">10:00</option>
+                  <option value="10:30">10:30</option>
+                  <option value="11:00">11:00</option>
+                  <option value="11:30">11:30</option>
+                  <option value="12:00">12:00</option>
+                  <option value="12:30">12:30</option>
+                  <option value="13:00">13:00</option>
+                  <option value="13:30">13:30</option>
+                  <option value="14:00">14:00</option>
+                  <option value="14:30">14:30</option>
+                  <option value="15:00">15:00</option>
+                  <option value="15:30">15:30</option>
+                  <option value="16:00">16:00</option>
+                  <option value="16:30">16:30</option>
+                  <option value="17:00">17:00</option>
                 </select>
               </div>
               
               <div class="form-group">
                 <label class="form-label">Heure de fin *</label>
-                <select id="heureFin" name="heureFin" class="form-select" required onchange="calculatePrice();">
+                <select id="heureFin" name="heureFin" class="form-select" required onchange="calculatePrice()">
+                  <option value="11:00">11:00</option>
+                  <option value="11:30">11:30</option>
+                  <option value="12:00">12:00</option>
+                  <option value="12:30">12:30</option>
+                  <option value="13:00">13:00</option>
+                  <option value="13:30">13:30</option>
+                  <option value="14:00">14:00</option>
+                  <option value="14:30">14:30</option>
+                  <option value="15:00">15:00</option>
+                  <option value="15:30">15:30</option>
+                  <option value="16:00">16:00</option>
+                  <option value="16:30">16:30</option>
+                  <option value="17:00">17:00</option>
+                  <option value="17:30">17:30</option>
+                  <option value="18:00">18:00</option>
                 </select>
+              </div>
+            </div>
+            
+            <div class="warning-box">
+              <i data-lucide="info"></i>
+              <div>
+                <strong>Horaires d'ouverture :</strong><br>
+                Lundi-Samedi : 10h-18h | Dimanche : 10h-17h30
+              </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="card-header" style="margin-top: 0;">
+              <i data-lucide="user"></i>
+              <h3>Vos coordonnées</h3>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nom complet *</label>
+                <input type="text" id="nom" name="nom" class="form-input" placeholder="Jean Dupont" required>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="jean@exemple.com" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Téléphone *</label>
+              <input type="tel" id="telephone" name="telephone" class="form-input" placeholder="06 12 34 56 78" required>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="card-header" style="margin-top: 0;">
+              <i data-lucide="briefcase"></i>
+              <h3>Profil professionnel</h3>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Statut professionnel *</label>
+              <div class="radio-group">
+                <label class="radio-item">
+                  <input type="radio" name="statut" value="auto-entrepreneur" required>
+                  <span>Auto-entrepreneur</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="statut" value="societe">
+                  <span>Société (SARL, SAS...)</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="statut" value="en-cours">
+                  <span>En cours d'immatriculation</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Années d'expérience *</label>
+              <select id="experience" name="experience" class="form-select" required>
+                <option value="">Sélectionner...</option>
+                <option value="3-5">3 à 5 ans</option>
+                <option value="5-10">5 à 10 ans</option>
+                <option value="10+">Plus de 10 ans</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Spécialité(s)</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" name="specialite" value="mixte">
+                  <span>Coiffeur mixte (H/F)</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" name="specialite" value="barber">
+                  <span>Barber</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" name="specialite" value="afro">
+                  <span>Spécialiste afro (tresses, locks...)</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" name="specialite" value="coloriste">
+                  <span>Coloriste (mèches, balayage...)</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" name="specialite" value="design">
+                  <span>Design & finitions (contours, traits, rasage)</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Notes ou demandes particulières</label>
+              <textarea id="notes" name="notes" class="form-textarea" placeholder="Précisez vos besoins spécifiques, équipements souhaités, etc."></textarea>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="engagement-box">
+              <h4><i data-lucide="shield-check"></i> Engagements requis</h4>
+              
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" id="engagement3ans" name="engagement3ans" required>
+                  <span>Je confirme avoir au moins 3 ans d'expérience professionnelle *</span>
+                </label>
+                
+                <label class="checkbox-item">
+                  <input type="checkbox" id="engagementDiplome" name="engagementDiplome" required>
+                  <span>Je possède un CAP/BP Coiffure ou équivalent *</span>
+                </label>
+                
+                <label class="checkbox-item">
+                  <input type="checkbox" id="engagementDocuments" name="engagementDocuments" required>
+                  <span>Je fournirai les justificatifs demandés (diplôme, SIRET, assurance) *</span>
+                </label>
+                
+                <label class="checkbox-item">
+                  <input type="checkbox" id="acceptCGV" name="acceptCGV" required>
+                  <span>J'accepte les <a href="#" onclick="showPage('cgv'); return false;">CGV & Contrat de location PHENO&CO</a> *</span>
+                </label>
               </div>
             </div>
             
           </div>
         </div>
         
-        <!-- Right Column -->
         <div>
           <div class="card sticky-card">
             
             <div class="card-header">
-              <i data-lucide="user"></i>
-              <h3>Vos informations</h3>
+              <i data-lucide="calculator"></i>
+              <h3>Récapitulatif</h3>
             </div>
             
-            <div class="form-group">
-              <label class="form-label">Nom / prénom *</label>
-              <input type="text" id="nom" name="nom" class="form-input" placeholder="Votre nom" required>
+            <div class="summary-row">
+              <span class="label">Formule</span>
+              <span class="value" id="summaryFormule">À l'heure</span>
             </div>
             
-            <div class="form-group">
-              <label class="form-label">Email *</label>
-              <input type="email" id="email" name="email" class="form-input" placeholder="votre@email.com" required>
+            <div class="summary-row">
+              <span class="label">Date(s)</span>
+              <span class="value" id="summaryDates">-</span>
             </div>
             
-            <div class="form-group">
-              <label class="form-label">Téléphone / WhatsApp *</label>
-              <input type="tel" id="telephone" name="telephone" class="form-input" placeholder="06 00 00 00 00" required>
+            <div class="summary-row">
+              <span class="label">Horaires</span>
+              <span class="value" id="summaryHoraires">10:00 - 11:00</span>
             </div>
             
-            <div class="divider" style="margin: 1rem 0;"></div>
-            
-            <!-- Profil Professionnel -->
-            <div class="section-title">
-              Profil Professionnel
+            <div class="summary-row">
+              <span class="label">Pack matériel</span>
+              <span class="value" id="summaryPack">Aucun</span>
             </div>
             
-            <div class="form-group">
-              <label class="form-label">Statut *</label>
-              <div class="radio-group">
-                <label class="radio-item">
-                  <input type="radio" name="statut" value="auto" checked>
-                  <span>Auto-entrepreneur / Micro</span>
-                </label>
-                <label class="radio-item">
-                  <input type="radio" name="statut" value="societe">
-                  <span>Société</span>
-                </label>
-                <label class="radio-item">
-                  <input type="radio" name="statut" value="creation">
-                  <span>En cours de création</span>
-                </label>
+            <div class="summary-divider"></div>
+            
+            <div class="summary-row">
+              <span class="label">Total HT</span>
+              <span class="value" id="summaryHT">10,00 €</span>
+            </div>
+            
+            <div class="summary-row">
+              <span class="label">TVA (20%)</span>
+              <span class="value" id="summaryTVA">2,00 €</span>
+            </div>
+            
+            <div class="summary-total">
+              <span>Total TTC</span>
+              <span id="summaryTTC">12,00 €</span>
+            </div>
+            
+            <div class="summary-deposit">
+              <div class="row">
+                <span>Acompte à verser</span>
+                <span class="deposit" id="summaryDeposit">6,00 €</span>
               </div>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Expérience *</label>
-              <select id="experience" name="experience" class="form-select">
-                <option value="0-3">0–3 ans</option>
-                <option value="3-5">3–5 ans</option>
-                <option value="5-10">5–10 ans</option>
-                <option value="10+">10+ ans</option>
-              </select>
-            </div>
-            
-            <div class="divider" style="margin: 1rem 0;"></div>
-            
-            <!-- Spécialités -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <div class="section-title" style="margin-bottom: 0;">Compétences & Spécialités</div>
-              <span style="font-size: 0.75rem; color: var(--muted);">(Plusieurs choix possibles)</span>
-            </div>
-            
-            <div class="checkbox-group">
-              <label class="checkbox-item">
-                <input type="checkbox" name="specialites" value="Coiffeur mixte (H/F)">
-                <span>Coiffeur mixte (H/F)</span>
-              </label>
-              <label class="checkbox-item">
-                <input type="checkbox" name="specialites" value="Barbier">
-                <span>Barbier</span>
-              </label>
-              <label class="checkbox-item">
-                <input type="checkbox" name="specialites" value="Spécialité afro (tresses, locks, vanilles, etc.)">
-                <span>Spécialité afro (tresses, locks, vanilles, etc.)</span>
-              </label>
-              <label class="checkbox-item">
-                <input type="checkbox" name="specialites" value="Coloriste (mèches, balayage, déco)">
-                <span>Coloriste (mèches, balayage, déco)</span>
-              </label>
-              <label class="checkbox-item">
-                <input type="checkbox" name="specialites" value="Design & finitions (contours, dessins, rasage, etc.)">
-                <span>Design & finitions (contours, dessins, rasage, etc.)</span>
-              </label>
-            </div>
-            
-            <div class="divider" style="margin: 1rem 0;"></div>
-            
-            <!-- Engagement -->
-            <div class="engagement-box">
-              <h4>
-                <i data-lucide="check"></i>
-                Engagement
-              </h4>
-              
-              <div class="checkbox-group">
-                <label class="checkbox-item">
-                  <input type="checkbox" name="certif_3ans" id="certif_3ans">
-                  <span>Je certifie avoir au moins 3 ans d'expérience.</span>
-                </label>
-                
-                <label class="checkbox-item">
-                  <input type="checkbox" name="certif_diplome" id="certif_diplome">
-                  <span>Je possède un diplôme reconnu (CAP / BP ou équivalent).</span>
-                </label>
-                
-                <label class="checkbox-item">
-                  <input type="checkbox" name="certif_docs" id="certif_docs" required>
-                  <span>Je m'engage à fournir les documents justificatifs avant le début de la location.</span>
-                </label>
-                
-                <label class="checkbox-item">
-                  <input type="checkbox" name="cgv" id="cgv" required>
-                  <span>J'ai lu et j'accepte les <a href="cgv-location.html" target="_blank">CGV & Contrat de location PHENO&CO</a>.</span>
-                </label>
-              </div>
-            </div>
-            
-            <div class="form-group" style="margin-top: 1.5rem;">
-              <label class="form-label">Commentaire (optionnel)</label>
-              <textarea id="commentaire" name="commentaire" class="form-textarea" placeholder="Précisez par exemple vos jours de présence souhaités…"></textarea>
-            </div>
-            
-            <!-- Summary -->
-            <div class="summary">
-              <h4>
-                <i data-lucide="info"></i>
-                Récapitulatif (indicatif)
-              </h4>
-              
-              <div class="summary-row">
-                <span class="label">Formule</span>
-                <span class="value" id="summary-formule">À l'heure — 10 € HT</span>
-              </div>
-              
-              <div class="summary-row">
-                <span class="label">Durée</span>
-                <span class="value" id="summary-duree">1.0h / jour sur 1 jours ouvrés</span>
-              </div>
-              
-              <div class="summary-row" id="summary-pack-row" style="display: none;">
-                <span class="label">Pack Matériel</span>
-                <span class="value" id="summary-pack">Aucun</span>
-              </div>
-              
-              <div class="summary-divider"></div>
-              
-              <div class="summary-row">
-                <span class="label">Total HT</span>
-                <span class="value" id="summary-ht">10.00 €</span>
-              </div>
-              
-              <div class="summary-row">
-                <span class="label">TVA (20%)</span>
-                <span class="value" id="summary-tva">2.00 €</span>
-              </div>
-              
-              <div class="summary-total">
-                <span>TOTAL TTC</span>
-                <span id="summary-ttc">12.00 €</span>
-              </div>
-              
-              <div class="summary-deposit">
-                <div class="row deposit">
-                  <span>Acompte à régler (<span id="acompte-taux">50</span>%)</span>
-                  <span id="summary-acompte">6.00 €</span>
-                </div>
-                <div class="row remaining">
-                  <span>Solde restant</span>
-                  <span id="summary-solde">6.00 €</span>
-                </div>
-              </div>
+              <div class="remaining" id="summaryRemaining">Reste à payer sur place : 6,00 €</div>
             </div>
             
             <button type="submit" class="submit-btn" id="submitBtn">
@@ -1132,586 +936,807 @@
               <i data-lucide="arrow-right"></i>
             </button>
             
-            <div class="success-message" id="successMessage">
-              <h4>
-                <i data-lucide="check"></i>
-                Demande envoyée
-              </h4>
-              <p>Votre demande a été envoyée.<br>Un récapitulatif vous a été transmis par WhatsApp / email.</p>
-              <div class="warning" id="emailWarning" style="display: none;">
-                <i data-lucide="alert-circle"></i>
-                Note: L'email n'a pas pu être envoyé, mais WhatsApp a fonctionné.
-              </div>
+            <div id="successMessage" class="success-message">
+              <h4><i data-lucide="check-circle"></i> Demande envoyée !</h4>
+              <p>Nous avons bien reçu votre demande de réservation. Vous recevrez un email de confirmation avec les instructions de paiement.</p>
+              <p class="warning" id="emailWarning" style="display: none;">
+                <i data-lucide="alert-triangle"></i>
+                L'envoi d'email a échoué. Veuillez nous contacter par WhatsApp.
+              </p>
             </div>
             
+          </div>
+          
+          <div class="card about-section">
+            <div class="card-header">
+              <span>✂️</span>
+              <h3>PHENO&CO</h3>
+            </div>
+            
+            <p>Barbershop emblématique de Montpellier depuis 2009, nous offrons un espace de travail premium pour les professionnels de la coiffure.</p>
+            
+            <p>Notre salon est équipé de matériel haut de gamme et bénéficie d'une clientèle fidèle et variée. L'ambiance conviviale et professionnelle fait de PHENO&CO un lieu idéal pour exercer votre art.</p>
+            
+            <p>« Rejoignez une communauté de passionnés ! »</p>
           </div>
         </div>
         
       </form>
       
-      <!-- About Section -->
-      <div class="about-section">
-        <div class="card">
-          <div class="card-header">
-            <span>✨</span>
-            <h3>À propos</h3>
-          </div>
-          
-          <p>PHENO&CO, plus qu'un salon : un espace fondé sur le respect, la bienveillance et l'exigence.</p>
-          <p>On partage l'énergie et la passion du métier. Chaque coiffeur arrive avec son histoire, son style et son talent, contribuant à maintenir une ambiance conviviale et familiale.</p>
-          <p>Que vous soyez de passage ou en longue collaboration, l'essentiel reste le même : passion, sérieux et bonne vibe.</p>
-          <p>À bientôt.</p>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <p>PHENO&CO — Barbershop & Coworking • Montpellier</p>
+    <a href="#" onclick="showPage('admin'); return false;" class="admin-link">Admin</a>
+  </footer>
+  
+</div>
+
+<!-- ==================== PAGE ADMIN ==================== -->
+<div id="page-admin" class="page-section">
+  
+  <header class="admin-header">
+    <a href="#" onclick="showPage('reservation'); return false;" class="back-link">← Retour au site</a>
+    <h1 class="font-serif">Back-Office PHENO&CO</h1>
+    <p>Gestion des réservations de fauteuils</p>
+  </header>
+  
+  <div class="admin-container">
+    
+    <div id="adminLogin" class="login-card">
+      <h2><i data-lucide="lock"></i> Accès sécurisé</h2>
+      <div class="form-group">
+        <label class="form-label">Code d'accès</label>
+        <input type="password" id="adminCode" class="form-input" placeholder="Entrez le code" onkeypress="if(event.key==='Enter')checkAdminCode()">
+      </div>
+      <button onclick="checkAdminCode()" class="btn btn-primary" style="margin-top: 1rem;">
+        <i data-lucide="log-in"></i> Connexion
+      </button>
+    </div>
+    
+    <div id="adminDashboard" style="display: none;">
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number" id="statTotal">0</div>
+          <div class="label">Total réservations</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="statPending">0</div>
+          <div class="label">En attente</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="statConfirmed">0</div>
+          <div class="label">Confirmées</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="statCancelled">0</div>
+          <div class="label">Annulées</div>
+        </div>
+      </div>
+      
+      <div class="filter-bar">
+        <select id="filterStatus" class="form-select" onchange="filterReservations()">
+          <option value="all">Tous les statuts</option>
+          <option value="pending">En attente</option>
+          <option value="confirmed">Confirmées</option>
+          <option value="cancelled">Annulées</option>
+        </select>
+        
+        <select id="filterFormule" class="form-select" onchange="filterReservations()">
+          <option value="all">Toutes les formules</option>
+          <option value="heure">À l'heure</option>
+          <option value="demi">Demi-journée</option>
+          <option value="journee">Journée</option>
+          <option value="semaine">Semaine</option>
+          <option value="mensuel">Mensuel</option>
+        </select>
+        
+        <button onclick="exportReservations()" class="btn btn-outline" style="flex: 0;">
+          <i data-lucide="download"></i> Exporter
+        </button>
+      </div>
+      
+      <div id="reservationsList" class="reservations-list">
+        <div class="empty-state">
+          <i data-lucide="inbox"></i>
+          <p>Aucune réservation pour le moment</p>
         </div>
       </div>
       
     </div>
-  </section>
-  
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>PHENO&CO — Barbershop & Coworking • Montpellier</p>
-    <a href="admin.html">Admin</a>
-  </footer>
-  
-  <!-- Toast Notification -->
-  <div class="toast" id="toast">
-    <h4 id="toast-title">Notification</h4>
-    <p id="toast-message">Message</p>
+    
   </div>
   
-  <script>
-    // Initialize EmailJS
-    emailjs.init("uBxESnC6CTyqiNyS6");
+  <footer class="footer">
+    <p>PHENO&CO — Back-Office</p>
+    <a href="#" onclick="showPage('reservation'); return false;">← Retour au formulaire</a>
+  </footer>
+  
+</div>
+
+<!-- ==================== PAGE CGV ==================== -->
+<div id="page-cgv" class="page-section">
+  
+  <header class="admin-header">
+    <a href="#" onclick="showPage('reservation'); return false;" class="back-link">← Retour au formulaire</a>
+    <h1 class="font-serif">CGV & Contrat de Location</h1>
+    <p>Conditions générales de location de fauteuil PHENO&CO</p>
+  </header>
+  
+  <div class="cgv-container">
     
-    // Initialize Lucide icons
+    <div class="cgv-card">
+      <h2>Article 1 — Objet du Contrat</h2>
+      <p>Le présent contrat a pour objet de définir les conditions de mise à disposition d'un poste de travail (fauteuil) au sein du salon de coiffure <strong>PHENO&CO</strong>, situé à Montpellier.</p>
+      <p>Le locataire, professionnel de la coiffure indépendant, loue un espace équipé pour exercer son activité auprès de sa propre clientèle, dans le respect du règlement intérieur du salon.</p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 2 — Conditions d'Éligibilité</h2>
+      <p>Pour louer un fauteuil chez PHENO&CO, le locataire doit :</p>
+      <ul>
+        <li>Justifier d'au moins <strong>3 ans d'expérience professionnelle</strong> en coiffure/barbier</li>
+        <li>Être titulaire d'un <strong>CAP/BP Coiffure</strong> ou diplôme équivalent reconnu</li>
+        <li>Être immatriculé en tant qu'<strong>auto-entrepreneur, société, ou en cours d'immatriculation</strong></li>
+        <li>Disposer d'une <strong>assurance responsabilité civile professionnelle</strong> valide</li>
+        <li>Fournir les justificatifs correspondants avant la première location</li>
+      </ul>
+      <div class="highlight">
+        <p><strong>Important :</strong> Toute fausse déclaration entraînera l'annulation immédiate de la réservation sans remboursement.</p>
+      </div>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 3 — Tarification</h2>
+      
+      <h3>3.1 Location Courte Durée</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Formule</th>
+            <th>Tarif HT</th>
+            <th>Acompte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>À l'heure</td>
+            <td>10 € HT</td>
+            <td>50%</td>
+          </tr>
+          <tr>
+            <td>Demi-journée (4h)</td>
+            <td>35 € HT</td>
+            <td>50%</td>
+          </tr>
+          <tr>
+            <td>Journée complète</td>
+            <td>65 € HT</td>
+            <td>50%</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>3.2 Location Longue Durée</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Formule</th>
+            <th>Tarif HT</th>
+            <th>Acompte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Semaine (5 jours)</td>
+            <td>60 € HT / jour (300 € HT/semaine)</td>
+            <td>25%</td>
+          </tr>
+          <tr>
+            <td>Mensuel</td>
+            <td>55 € HT / jour</td>
+            <td>25%</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>3.3 Packs Matériel (optionnels)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Pack</th>
+            <th>Contenu</th>
+            <th>Tarif HT/jour</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Essentiel</td>
+            <td>Tondeuses, outils de finition, cape, serviettes</td>
+            <td>20 € HT</td>
+          </tr>
+          <tr>
+            <td>Premium</td>
+            <td>Essentiel + rasoir + serviettes supplémentaires</td>
+            <td>30 € HT</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <p style="margin-top: 1rem;"><strong>TVA :</strong> 20% appliquée à tous les tarifs.</p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 4 — Réservation et Paiement</h2>
+      
+      <h3>4.1 Processus de réservation</h3>
+      <ol>
+        <li>Remplir le formulaire de demande en ligne</li>
+        <li>Réception d'un email de confirmation avec récapitulatif</li>
+        <li>Envoi des justificatifs requis par email</li>
+        <li>Réception du lien de paiement pour l'acompte (SumUp)</li>
+        <li>Confirmation définitive après réception du paiement</li>
+      </ol>
+      
+      <h3>4.2 Modalités de paiement</h3>
+      <ul>
+        <li><strong>Acompte :</strong> À régler lors de la confirmation (50% courte durée, 25% longue durée)</li>
+        <li><strong>Solde :</strong> À régler sur place, le jour de la prestation</li>
+        <li><strong>Moyens acceptés :</strong> Carte bancaire, espèces, virement</li>
+      </ul>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 5 — Annulation et Remboursement</h2>
+      <ul>
+        <li><strong>Plus de 48h avant :</strong> Remboursement intégral de l'acompte</li>
+        <li><strong>Entre 24h et 48h :</strong> Remboursement de 50% de l'acompte</li>
+        <li><strong>Moins de 24h :</strong> Acompte non remboursable</li>
+        <li><strong>Non-présentation :</strong> Acompte acquis, facturation possible du solde</li>
+      </ul>
+      <p>En cas de force majeure dûment justifiée, un report pourra être proposé.</p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 6 — Obligations du Locataire</h2>
+      <p>Le locataire s'engage à :</p>
+      <ul>
+        <li>Respecter les horaires convenus</li>
+        <li>Maintenir le poste de travail propre et rangé</li>
+        <li>Utiliser le matériel mis à disposition avec soin</li>
+        <li>Respecter la clientèle et le personnel du salon</li>
+        <li>Ne pas sous-louer le fauteuil à un tiers</li>
+        <li>Signaler tout dysfonctionnement ou dégradation</li>
+        <li>Respecter le règlement intérieur du salon</li>
+      </ul>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 7 — Responsabilités</h2>
+      <p><strong>PHENO&CO</strong> met à disposition un espace de travail équipé et fonctionnel. Le locataire reste seul responsable :</p>
+      <ul>
+        <li>De ses prestations auprès de sa clientèle</li>
+        <li>De ses obligations fiscales et sociales</li>
+        <li>Des dommages causés par lui-même ou sa clientèle</li>
+        <li>De son matériel personnel</li>
+      </ul>
+      <p>PHENO&CO décline toute responsabilité en cas de vol, perte ou dégradation des effets personnels.</p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 8 — Horaires du Salon</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td><strong>Lundi à Samedi</strong></td>
+            <td>10h00 - 18h00</td>
+          </tr>
+          <tr>
+            <td><strong>Dimanche</strong></td>
+            <td>10h00 - 17h30</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 1rem;">Les réservations doivent respecter ces plages horaires. Toute extension doit faire l'objet d'un accord préalable.</p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 9 — Résiliation</h2>
+      <p>En cas de non-respect des présentes CGV ou du règlement intérieur, PHENO&CO se réserve le droit de mettre fin à la location sans préavis ni indemnité. Les sommes déjà versées resteront acquises.</p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 10 — Données Personnelles</h2>
+      <p>Les données collectées lors de la réservation sont utilisées exclusivement pour la gestion de la location et la communication avec le locataire. Elles ne sont pas transmises à des tiers.</p>
+      <p>Conformément au RGPD, le locataire dispose d'un droit d'accès, de rectification et de suppression de ses données. Contact : <strong>location.phenoandco@gmail.com</strong></p>
+    </div>
+    
+    <div class="cgv-card">
+      <h2>Article 11 — Droit Applicable</h2>
+      <p>Le présent contrat est soumis au droit français. En cas de litige, les parties s'engagent à rechercher une solution amiable. À défaut, les tribunaux de Montpellier seront seuls compétents.</p>
+    </div>
+    
+    <div class="cgv-card" style="text-align: center;">
+      <h2>Contact</h2>
+      <p style="font-size: 1.125rem; color: var(--foreground);">
+        <strong>PHENO&CO</strong><br>
+        Barbershop & Coworking — Montpellier<br><br>
+        📧 <a href="mailto:location.phenoandco@gmail.com" style="color: var(--primary);">location.phenoandco@gmail.com</a><br>
+        📱 WhatsApp : <a href="https://wa.me/message/MZYDVEN32I55L1" target="_blank" style="color: var(--primary);">Nous contacter</a>
+      </p>
+    </div>
+    
+  </div>
+  
+  <footer class="footer">
+    <p>PHENO&CO — Barbershop & Coworking • Montpellier</p>
+    <a href="#" onclick="showPage('reservation'); return false;">← Retour au formulaire de réservation</a>
+  </footer>
+  
+</div>
+
+<div id="toast" class="toast">
+  <h4 id="toastTitle">Notification</h4>
+  <p id="toastMessage">Message</p>
+</div>
+
+<script>
+  // ==================== NAVIGATION ====================
+  function showPage(pageName) {
+    document.querySelectorAll('.page-section').forEach(section => {
+      section.classList.remove('active');
+    });
+    document.getElementById('page-' + pageName).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  
+  // ==================== EMAILJS INIT ====================
+  emailjs.init('rED9fYCIlPUjzgGZo');
+  
+  // ==================== RESERVATION FUNCTIONS ====================
+  function scrollToReservation() {
+    document.getElementById('reservation').scrollIntoView({ behavior: 'smooth' });
+  }
+  
+  function updateDuree() {
+    const duree = document.querySelector('input[name="duree"]:checked').value;
+    const cardCourte = document.getElementById('card-courte');
+    const cardLongue = document.getElementById('card-longue');
+    const formuleCourte = document.getElementById('formuleCourte');
+    const formuleLongue = document.getElementById('formuleLongue');
+    const formuleLabel = document.getElementById('formule-label');
+    const heureDebut = document.getElementById('heureDebut');
+    const heureFin = document.getElementById('heureFin');
+    
+    if (duree === 'courte') {
+      cardCourte.classList.add('selected');
+      cardLongue.classList.remove('selected');
+      formuleCourte.style.display = 'block';
+      formuleLongue.style.display = 'none';
+      formuleLabel.textContent = 'Formule courte *';
+      heureDebut.disabled = false;
+      heureFin.disabled = false;
+    } else {
+      cardCourte.classList.remove('selected');
+      cardLongue.classList.add('selected');
+      formuleCourte.style.display = 'none';
+      formuleLongue.style.display = 'block';
+      formuleLabel.textContent = 'Formule longue *';
+      heureDebut.disabled = true;
+      heureFin.disabled = true;
+    }
+    
+    calculatePrice();
+  }
+  
+  function updateFormule() {
+    calculatePrice();
+  }
+  
+  function calculatePrice() {
+    const duree = document.querySelector('input[name="duree"]:checked').value;
+    const formuleCourte = document.getElementById('formuleCourte').value;
+    const formuleLongue = document.getElementById('formuleLongue').value;
+    const packMateriel = document.getElementById('packMateriel').value;
+    const dateDebut = document.getElementById('dateDebut').value;
+    const dateFin = document.getElementById('dateFin').value;
+    const heureDebut = document.getElementById('heureDebut').value;
+    const heureFin = document.getElementById('heureFin').value;
+    
+    let basePrice = 0;
+    let formuleText = '';
+    let nbJours = 1;
+    let depositRate = 0.5;
+    
+    if (duree === 'courte') {
+      switch (formuleCourte) {
+        case 'heure':
+          const h1 = parseInt(heureDebut.split(':')[0]) + parseInt(heureDebut.split(':')[1]) / 60;
+          const h2 = parseInt(heureFin.split(':')[0]) + parseInt(heureFin.split(':')[1]) / 60;
+          const heures = Math.max(1, Math.ceil(h2 - h1));
+          basePrice = heures * 10;
+          formuleText = `À l'heure (${heures}h)`;
+          break;
+        case 'demi':
+          basePrice = 35;
+          formuleText = 'Demi-journée (4h)';
+          break;
+        case 'journee':
+          basePrice = 65;
+          formuleText = 'Journée';
+          break;
+      }
+      depositRate = 0.5;
+    } else {
+      if (dateDebut && dateFin) {
+        const d1 = new Date(dateDebut);
+        const d2 = new Date(dateFin);
+        nbJours = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
+      }
+      
+      switch (formuleLongue) {
+        case 'semaine':
+          basePrice = 60 * nbJours;
+          formuleText = `Semaine (${nbJours} jours)`;
+          break;
+        case 'mensuel':
+          basePrice = 55 * nbJours;
+          formuleText = `Mensuel (${nbJours} jours)`;
+          break;
+      }
+      depositRate = 0.25;
+    }
+    
+    let packPrice = 0;
+    let packText = 'Aucun';
+    switch (packMateriel) {
+      case 'essentiel':
+        packPrice = 20 * nbJours;
+        packText = `Essentiel (${nbJours}j)`;
+        break;
+      case 'premium':
+        packPrice = 30 * nbJours;
+        packText = `Premium (${nbJours}j)`;
+        break;
+    }
+    
+    const totalHT = basePrice + packPrice;
+    const tva = totalHT * 0.2;
+    const totalTTC = totalHT + tva;
+    const deposit = totalTTC * depositRate;
+    const remaining = totalTTC - deposit;
+    
+    document.getElementById('summaryFormule').textContent = formuleText;
+    document.getElementById('summaryPack').textContent = packText;
+    document.getElementById('summaryHT').textContent = totalHT.toFixed(2) + ' €';
+    document.getElementById('summaryTVA').textContent = tva.toFixed(2) + ' €';
+    document.getElementById('summaryTTC').textContent = totalTTC.toFixed(2) + ' €';
+    document.getElementById('summaryDeposit').textContent = deposit.toFixed(2) + ' €';
+    document.getElementById('summaryRemaining').textContent = `Reste à payer sur place : ${remaining.toFixed(2)} €`;
+    
+    let datesText = '-';
+    if (dateDebut) {
+      const options = { day: 'numeric', month: 'short' };
+      datesText = new Date(dateDebut).toLocaleDateString('fr-FR', options);
+      if (dateFin && dateFin !== dateDebut) {
+        datesText += ' → ' + new Date(dateFin).toLocaleDateString('fr-FR', options);
+      }
+    }
+    document.getElementById('summaryDates').textContent = datesText;
+    
+    if (duree === 'courte') {
+      document.getElementById('summaryHoraires').textContent = heureDebut + ' - ' + heureFin;
+    } else {
+      document.getElementById('summaryHoraires').textContent = 'Journée complète';
+    }
+  }
+  
+  function showToast(title, message, isError = false) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastMessage').textContent = message;
+    toast.classList.toggle('error', isError);
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+  
+  // ==================== ADMIN FUNCTIONS ====================
+  const ADMIN_CODE = '1141';
+  let reservations = JSON.parse(localStorage.getItem('phenoReservations') || '[]');
+  
+  function checkAdminCode() {
+    const code = document.getElementById('adminCode').value;
+    if (code === ADMIN_CODE) {
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminDashboard').style.display = 'block';
+      renderReservations();
+    } else {
+      showToast('Erreur', 'Code d\'accès incorrect', true);
+    }
+  }
+  
+  function updateStats() {
+    const total = reservations.length;
+    const pending = reservations.filter(r => r.status === 'pending').length;
+    const confirmed = reservations.filter(r => r.status === 'confirmed').length;
+    const cancelled = reservations.filter(r => r.status === 'cancelled').length;
+    
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statConfirmed').textContent = confirmed;
+    document.getElementById('statCancelled').textContent = cancelled;
+  }
+  
+  function filterReservations() {
+    renderReservations();
+  }
+  
+  function renderReservations() {
+    updateStats();
+    
+    const statusFilter = document.getElementById('filterStatus').value;
+    const formuleFilter = document.getElementById('filterFormule').value;
+    
+    let filtered = [...reservations];
+    
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(r => r.status === statusFilter);
+    }
+    
+    if (formuleFilter !== 'all') {
+      filtered = filtered.filter(r => r.formule === formuleFilter);
+    }
+    
+    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    const container = document.getElementById('reservationsList');
+    
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i data-lucide="inbox"></i>
+          <p>Aucune réservation trouvée</p>
+        </div>
+      `;
+      lucide.createIcons();
+      return;
+    }
+    
+    container.innerHTML = filtered.map(r => {
+      const statusClass = r.status === 'pending' ? 'status-pending' : r.status === 'confirmed' ? 'status-confirmed' : 'status-cancelled';
+      const statusText = r.status === 'pending' ? 'En attente' : r.status === 'confirmed' ? 'Confirmée' : 'Annulée';
+      
+      return `
+        <div class="reservation-card">
+          <div class="reservation-header">
+            <div class="reservation-client">
+              <h3>${r.nom}</h3>
+              <p>${r.email} • ${r.telephone}</p>
+            </div>
+            <span class="status-badge ${statusClass}">${statusText}</span>
+          </div>
+          
+          <div class="reservation-details">
+            <div class="detail-item">
+              <div class="detail-label">Formule</div>
+              <div class="detail-value">${r.formuleText || r.formule}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Date(s)</div>
+              <div class="detail-value">${r.dateDebut}${r.dateFin && r.dateFin !== r.dateDebut ? ' → ' + r.dateFin : ''}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Horaires</div>
+              <div class="detail-value">${r.heureDebut} - ${r.heureFin}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Total TTC</div>
+              <div class="detail-value" style="color: var(--primary); font-weight: 700;">${r.totalTTC} €</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Acompte</div>
+              <div class="detail-value" style="color: #22c55e;">${r.deposit} €</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Pack</div>
+              <div class="detail-value">${r.packMateriel || 'Aucun'}</div>
+            </div>
+          </div>
+          
+          ${r.notes ? `<p style="font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem;"><strong>Notes:</strong> ${r.notes}</p>` : ''}
+          
+          <div class="reservation-actions">
+            ${r.status === 'pending' ? `
+              <button onclick="updateStatus('${r.id}', 'confirmed')" class="action-btn confirm">
+                <i data-lucide="check"></i> Confirmer
+              </button>
+              <button onclick="updateStatus('${r.id}', 'cancelled')" class="action-btn cancel">
+                <i data-lucide="x"></i> Annuler
+              </button>
+            ` : ''}
+            ${r.status === 'cancelled' ? `
+              <button onclick="updateStatus('${r.id}', 'pending')" class="action-btn confirm">
+                <i data-lucide="rotate-ccw"></i> Réactiver
+              </button>
+            ` : ''}
+            <a href="https://wa.me/${r.telephone?.replace(/\s/g, '').replace(/^0/, '33')}" target="_blank" class="action-btn whatsapp">
+              <i data-lucide="message-circle"></i> WhatsApp
+            </a>
+            <button onclick="deleteReservation('${r.id}')" class="action-btn delete">
+              <i data-lucide="trash-2"></i> Supprimer
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    lucide.createIcons();
+  }
+  
+  function updateStatus(id, newStatus) {
+    const index = reservations.findIndex(r => r.id === id);
+    if (index !== -1) {
+      reservations[index].status = newStatus;
+      localStorage.setItem('phenoReservations', JSON.stringify(reservations));
+      renderReservations();
+      showToast('Succès', `Réservation ${newStatus === 'confirmed' ? 'confirmée' : newStatus === 'cancelled' ? 'annulée' : 'mise à jour'}`);
+    }
+  }
+  
+  function deleteReservation(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')) {
+      reservations = reservations.filter(r => r.id !== id);
+      localStorage.setItem('phenoReservations', JSON.stringify(reservations));
+      renderReservations();
+      showToast('Succès', 'Réservation supprimée');
+    }
+  }
+  
+  function exportReservations() {
+    if (reservations.length === 0) {
+      showToast('Info', 'Aucune réservation à exporter');
+      return;
+    }
+    
+    const headers = ['Nom', 'Email', 'Téléphone', 'Formule', 'Date début', 'Date fin', 'Heure début', 'Heure fin', 'Pack', 'Total TTC', 'Acompte', 'Statut', 'Notes'];
+    const rows = reservations.map(r => [
+      r.nom, r.email, r.telephone, r.formuleText || r.formule, r.dateDebut, r.dateFin || '', r.heureDebut, r.heureFin, r.packMateriel || 'Aucun', r.totalTTC, r.deposit, r.status, r.notes || ''
+    ]);
+    
+    const csv = [headers.join(';'), ...rows.map(row => row.join(';'))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'reservations_phenoandco.csv';
+    link.click();
+    
+    showToast('Succès', 'Export téléchargé');
+  }
+  
+  // ==================== FORM SUBMISSION ====================
+  document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg class="animate-spin" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Envoi en cours...';
+    
+    const formData = new FormData(this);
+    const nom = formData.get('nom');
+    const email = formData.get('email');
+    const telephone = formData.get('telephone');
+    const duree = formData.get('duree');
+    const formule = duree === 'courte' ? formData.get('formuleCourte') : formData.get('formuleLongue');
+    
+    const reservation = {
+      id: Date.now().toString(),
+      nom,
+      email,
+      telephone,
+      duree,
+      formule,
+      formuleText: document.getElementById('summaryFormule').textContent,
+      dateDebut: formData.get('dateDebut'),
+      dateFin: formData.get('dateFin'),
+      heureDebut: formData.get('heureDebut'),
+      heureFin: formData.get('heureFin'),
+      packMateriel: formData.get('packMateriel'),
+      statut: formData.get('statut'),
+      experience: formData.get('experience'),
+      specialites: formData.getAll('specialite'),
+      notes: formData.get('notes'),
+      totalHT: document.getElementById('summaryHT').textContent.replace(' €', ''),
+      totalTVA: document.getElementById('summaryTVA').textContent.replace(' €', ''),
+      totalTTC: document.getElementById('summaryTTC').textContent.replace(' €', ''),
+      deposit: document.getElementById('summaryDeposit').textContent.replace(' €', ''),
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+    
+    reservations.push(reservation);
+    localStorage.setItem('phenoReservations', JSON.stringify(reservations));
+    
+    let emailError = false;
+    try {
+      const templateParams = {
+        client_name: nom,
+        client_email: email,
+        client_phone: telephone,
+        formule: reservation.formuleText,
+        date_debut: reservation.dateDebut,
+        date_fin: reservation.dateFin || 'N/A',
+        heure_debut: reservation.heureDebut,
+        heure_fin: reservation.heureFin,
+        pack_materiel: reservation.packMateriel,
+        total_ht: reservation.totalHT,
+        total_tva: reservation.totalTVA,
+        total_ttc: reservation.totalTTC,
+        acompte: reservation.deposit,
+        statut_pro: reservation.statut,
+        experience: reservation.experience,
+        specialites: reservation.specialites.join(', ') || 'Non spécifié',
+        notes: reservation.notes || 'Aucune'
+      };
+      
+      await Promise.all([
+        emailjs.send('service_llizndy', 'template_m6uvyuq', { ...templateParams, to_email: "location.phenoandco@gmail.com", to_name: "Manager PHENO&CO" }),
+        emailjs.send('service_llizndy', 'template_m6uvyuq', { ...templateParams, to_email: email, to_name: nom })
+      ]);
+    } catch (error) {
+      console.error('Email error:', error);
+      emailError = true;
+    }
+    
+    submitBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Demande Envoyée !';
+    
+    const successMessage = document.getElementById('successMessage');
+    successMessage.classList.add('show');
+    
+    if (emailError) {
+      document.getElementById('emailWarning').style.display = 'flex';
+    }
+    
+    setTimeout(() => {
+      successMessage.classList.remove('show');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Envoyer ma demande <i data-lucide="arrow-right"></i>';
+      lucide.createIcons();
+      document.getElementById('reservationForm').reset();
+      
+      document.getElementById('card-courte').classList.add('selected');
+      document.getElementById('card-longue').classList.remove('selected');
+      document.getElementById('formuleCourte').style.display = 'block';
+      document.getElementById('formuleLongue').style.display = 'none';
+      document.getElementById('formule-label').textContent = 'Formule courte *';
+      document.getElementById('heureDebut').disabled = false;
+      document.getElementById('heureFin').disabled = false;
+      
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('dateDebut').value = tomorrow.toISOString().split('T')[0];
+      document.getElementById('heureDebut').value = '10:00';
+      document.getElementById('heureFin').value = '11:00';
+      
+      calculatePrice();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 3000);
+  });
+  
+  // ==================== INITIALIZATION ====================
+  document.addEventListener('DOMContentLoaded', function() {
     lucide.createIcons();
     
-    // Time slots
-    const TIME_SLOTS = [];
-    for (let h = 10; h <= 18; h++) {
-      TIME_SLOTS.push(`${h.toString().padStart(2, '0')}:00`);
-      if (h < 18) TIME_SLOTS.push(`${h.toString().padStart(2, '0')}:30`);
-    }
-    
-    // Set minimum date to tomorrow
-    const today = new Date();
-    const tomorrow = new Date(today);
+    const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    document.getElementById('dateDebut').value = tomorrow.toISOString().split('T')[0];
+    document.getElementById('heureDebut').value = '10:00';
+    document.getElementById('heureFin').value = '11:00';
     
-    document.getElementById('dateDebut').min = tomorrowStr;
-    document.getElementById('dateDebut').value = tomorrowStr;
-    document.getElementById('dateFin').min = tomorrowStr;
-    
-    // Populate time selects
-    function populateTimeSelects() {
-      const heureDebut = document.getElementById('heureDebut');
-      const heureFin = document.getElementById('heureFin');
-      
-      heureDebut.innerHTML = '';
-      heureFin.innerHTML = '';
-      
-      TIME_SLOTS.forEach(time => {
-        heureDebut.innerHTML += `<option value="${time}">${time}</option>`;
-        heureFin.innerHTML += `<option value="${time}">${time}</option>`;
-      });
-      
-      heureDebut.value = '10:00';
-      heureFin.value = '11:00';
-    }
-    
-    populateTimeSelects();
-    
-    // Scroll to reservation
-    function scrollToReservation() {
-      document.getElementById('reservation').scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    // Update duration type
-    function updateDuree() {
-      const duree = document.querySelector('input[name="duree"]:checked').value;
-      const cardCourte = document.getElementById('card-courte');
-      const cardLongue = document.getElementById('card-longue');
-      const formuleCourte = document.getElementById('formuleCourte');
-      const formuleLongue = document.getElementById('formuleLongue');
-      const formuleLabel = document.getElementById('formule-label');
-      
-      if (duree === 'courte') {
-        cardCourte.classList.add('selected');
-        cardLongue.classList.remove('selected');
-        formuleCourte.style.display = 'block';
-        formuleLongue.style.display = 'none';
-        formuleLabel.textContent = 'Formule courte *';
-      } else {
-        cardCourte.classList.remove('selected');
-        cardLongue.classList.add('selected');
-        formuleCourte.style.display = 'none';
-        formuleLongue.style.display = 'block';
-        formuleLabel.textContent = 'Formule longue *';
-      }
-      
-      updateFormule();
-    }
-    
-    // Update formule and time constraints
-    function updateFormule() {
-      const duree = document.querySelector('input[name="duree"]:checked').value;
-      const heureDebut = document.getElementById('heureDebut');
-      const heureFin = document.getElementById('heureFin');
-      
-      if (duree === 'courte') {
-        const formule = document.getElementById('formuleCourte').value;
-        
-        if (formule === 'journee') {
-          heureDebut.value = '10:00';
-          heureFin.value = '18:00';
-          heureDebut.disabled = true;
-          heureFin.disabled = true;
-        } else if (formule === 'demi') {
-          heureDebut.disabled = false;
-          heureFin.disabled = true;
-          updateEndTime();
-        } else {
-          heureDebut.disabled = false;
-          heureFin.disabled = false;
-        }
-      } else {
-        heureDebut.disabled = false;
-        heureFin.disabled = false;
-      }
-      
-      calculatePrice();
-    }
-    
-    // Update end time for half-day
-    function updateEndTime() {
-      const duree = document.querySelector('input[name="duree"]:checked').value;
-      const formule = document.getElementById('formuleCourte').value;
-      
-      if (duree === 'courte' && formule === 'demi') {
-        const startTime = document.getElementById('heureDebut').value;
-        const [h, m] = startTime.split(':').map(Number);
-        let endH = h + 4;
-        if (endH > 18) endH = 18;
-        const endTime = `${endH.toString().padStart(2, '0')}:${m === 30 ? '30' : '00'}`;
-        document.getElementById('heureFin').value = endTime;
-      }
-      
-      calculatePrice();
-    }
-    
-    // Validate date (no Sunday/Monday)
-    function validateDate(fieldId) {
-      const input = document.getElementById(fieldId);
-      const date = new Date(input.value);
-      const day = date.getDay();
-      
-      if (day === 0 || day === 1) {
-        showToast('Jour de fermeture', 'Le salon est fermé le dimanche et le lundi. Merci de choisir une autre date.', true);
-        input.value = '';
-      }
-      
-      // Update dateFin min
-      if (fieldId === 'dateDebut' && input.value) {
-        document.getElementById('dateFin').min = input.value;
-      }
-    }
-    
-    // Count business days (exclude Sunday and Monday)
-    function countBusinessDays(startDate, endDate) {
-      let count = 0;
-      const current = new Date(startDate);
-      current.setHours(0, 0, 0, 0);
-      const end = new Date(endDate);
-      end.setHours(0, 0, 0, 0);
-      
-      while (current <= end) {
-        const day = current.getDay();
-        if (day !== 0 && day !== 1) {
-          count++;
-        }
-        current.setDate(current.getDate() + 1);
-      }
-      
-      return Math.max(1, count);
-    }
-    
-    // Calculate price
-    function calculatePrice() {
-      const duree = document.querySelector('input[name="duree"]:checked').value;
-      const packMateriel = document.getElementById('packMateriel').value;
-      const dateDebut = document.getElementById('dateDebut').value;
-      const dateFin = document.getElementById('dateFin').value || dateDebut;
-      const heureDebut = document.getElementById('heureDebut').value;
-      const heureFin = document.getElementById('heureFin').value;
-      
-      if (!dateDebut) return;
-      
-      const startDate = new Date(dateDebut);
-      const endDate = new Date(dateFin);
-      const businessDays = countBusinessDays(startDate, endDate);
-      
-      let baseHT = 0;
-      let formuleLabel = '';
-      let durationDetails = '';
-      
-      if (duree === 'courte') {
-        const formule = document.getElementById('formuleCourte').value;
-        
-        if (formule === 'heure') {
-          const [h1, m1] = heureDebut.split(':').map(Number);
-          const [h2, m2] = heureFin.split(':').map(Number);
-          const minutes = (h2 * 60 + m2) - (h1 * 60 + m1);
-          const hours = Math.max(0, minutes / 60);
-          baseHT = hours * 10 * businessDays;
-          formuleLabel = 'À l\'heure — 10 € HT';
-          durationDetails = `${hours.toFixed(1)}h / jour sur ${businessDays} jours ouvrés`;
-        } else if (formule === 'demi') {
-          baseHT = 35 * businessDays;
-          formuleLabel = 'Demi-journée (4h) — 35 € HT';
-          durationDetails = `Demi-journée (4h) x ${businessDays} jours ouvrés`;
-        } else if (formule === 'journee') {
-          baseHT = 65 * businessDays;
-          formuleLabel = 'Journée — 65 € HT';
-          durationDetails = `${businessDays} jours ouvrés`;
-        }
-      } else {
-        const formule = document.getElementById('formuleLongue').value;
-        
-        if (formule === 'semaine') {
-          baseHT = 60 * businessDays;
-          formuleLabel = 'Semaine — 60 € HT / jour';
-          durationDetails = `${businessDays} jours ouvrés (Tarif Semaine)`;
-        } else if (formule === 'mensuel') {
-          baseHT = 55 * businessDays;
-          formuleLabel = 'Mensuel — 55 € HT / jour';
-          durationDetails = `${businessDays} jours ouvrés (Tarif Mensuel)`;
-        }
-      }
-      
-      // Pack
-      let packHT = 0;
-      let packLabel = 'Aucun — 0 €';
-      if (packMateriel === 'essentiel') {
-        packHT = 20 * businessDays;
-        packLabel = 'Pack Essentiel — 20 € HT / jour';
-      } else if (packMateriel === 'premium') {
-        packHT = 30 * businessDays;
-        packLabel = 'Pack Premium — 30 € HT / jour';
-      }
-      
-      const totalHT = baseHT + packHT;
-      const tva = totalHT * 0.2;
-      const totalTTC = totalHT + tva;
-      const acompteTaux = duree === 'courte' ? 0.5 : 0.25;
-      const acompteTTC = totalTTC * acompteTaux;
-      const soldeTTC = totalTTC - acompteTTC;
-      
-      // Update UI
-      document.getElementById('summary-formule').textContent = formuleLabel;
-      document.getElementById('summary-duree').textContent = durationDetails;
-      
-      const packRow = document.getElementById('summary-pack-row');
-      if (packMateriel !== 'aucun') {
-        packRow.style.display = 'flex';
-        document.getElementById('summary-pack').textContent = packLabel;
-      } else {
-        packRow.style.display = 'none';
-      }
-      
-      document.getElementById('summary-ht').textContent = totalHT.toFixed(2) + ' €';
-      document.getElementById('summary-tva').textContent = tva.toFixed(2) + ' €';
-      document.getElementById('summary-ttc').textContent = totalTTC.toFixed(2) + ' €';
-      document.getElementById('acompte-taux').textContent = (acompteTaux * 100).toFixed(0);
-      document.getElementById('summary-acompte').textContent = acompteTTC.toFixed(2) + ' €';
-      document.getElementById('summary-solde').textContent = soldeTTC.toFixed(2) + ' €';
-      
-      // Store for later use
-      window.priceInfo = {
-        baseHT, packHT, totalHT, tva, totalTTC, acompteTaux, acompteTTC, soldeTTC,
-        formuleLabel, packLabel, durationDetails, businessDays
-      };
-    }
-    
-    // Show toast notification
-    function showToast(title, message, isError = false) {
-      const toast = document.getElementById('toast');
-      const toastTitle = document.getElementById('toast-title');
-      const toastMessage = document.getElementById('toast-message');
-      
-      toastTitle.textContent = title;
-      toastMessage.textContent = message;
-      
-      toast.classList.remove('error');
-      if (isError) toast.classList.add('error');
-      
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 5000);
-    }
-    
-    // Get Google Calendar link
-    function getGoogleCalendarLink(title, details, startDate, endDate, startTime, endTime) {
-      const start = new Date(`${startDate}T${startTime}:00`);
-      const end = new Date(`${endDate || startDate}T${endTime}:00`);
-      
-      const formatTime = (date) => {
-        return date.toISOString().replace(/-|:|\.\d\d\d/g, '').substring(0, 15) + 'Z';
-      };
-      
-      const url = new URL('https://www.google.com/calendar/render');
-      url.searchParams.append('action', 'TEMPLATE');
-      url.searchParams.append('text', title);
-      url.searchParams.append('details', details);
-      url.searchParams.append('dates', `${formatTime(start)}/${formatTime(end)}`);
-      url.searchParams.append('location', 'PHENO&CO, Montpellier');
-      
-      return url.toString();
-    }
-    
-    // Get status label
-    function getStatutLabel(value) {
-      const labels = {
-        'auto': 'Auto-entrepreneur / Micro-entreprise',
-        'societe': 'Société',
-        'creation': 'En cours de création'
-      };
-      return labels[value] || value;
-    }
-    
-    // Get experience label
-    function getExperienceLabel(value) {
-      const labels = {
-        '0-3': '0 à 3 ans d\'expérience',
-        '3-5': '3 à 5 ans d\'expérience',
-        '5-10': '5 à 10 ans d\'expérience',
-        '10+': 'Plus de 10 ans d\'expérience'
-      };
-      return labels[value] || value;
-    }
-    
-    // Form submission
-    document.getElementById('reservationForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const cgv = document.getElementById('cgv').checked;
-      const certifDocs = document.getElementById('certif_docs').checked;
-      
-      if (!cgv || !certifDocs) {
-        showToast('Champs requis', 'Veuillez accepter les CGV et vous engager à fournir les documents.', true);
-        return;
-      }
-      
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Envoi en cours...';
-      
-      // Gather form data
-      const nom = document.getElementById('nom').value;
-      const email = document.getElementById('email').value;
-      const telephone = document.getElementById('telephone').value;
-      const dateDebut = document.getElementById('dateDebut').value;
-      const dateFin = document.getElementById('dateFin').value || dateDebut;
-      const heureDebut = document.getElementById('heureDebut').value;
-      const heureFin = document.getElementById('heureFin').value;
-      const duree = document.querySelector('input[name="duree"]:checked').value;
-      const statut = document.querySelector('input[name="statut"]:checked').value;
-      const experience = document.getElementById('experience').value;
-      const commentaire = document.getElementById('commentaire').value;
-      const certif3ans = document.getElementById('certif_3ans').checked;
-      const certifDiplome = document.getElementById('certif_diplome').checked;
-      
-      // Get specialties
-      const specialitesCheckboxes = document.querySelectorAll('input[name="specialites"]:checked');
-      const specialites = Array.from(specialitesCheckboxes).map(cb => cb.value);
-      
-      const priceInfo = window.priceInfo || { totalTTC: 0, acompteTTC: 0, acompteTaux: 0.5, formuleLabel: '', packLabel: 'Aucun' };
-      
-      const baseUrl = window.location.origin;
-      const cgvUrl = `${baseUrl}/cgv-location.html`;
-      
-      // Google Calendar link
-      const calendarLink = getGoogleCalendarLink(
-        'Location Fauteuil - PHENO&CO',
-        `Réservation de fauteuil.\nFormule: ${priceInfo.formuleLabel}\nPack: ${priceInfo.packLabel}\nTotal TTC: ${priceInfo.totalTTC.toFixed(2)}€`,
-        dateDebut,
-        dateFin,
-        heureDebut,
-        heureFin
-      );
-      
-      // WhatsApp message
-      const whatsappMessage = `
-Bonjour ${nom},
-
-Merci pour votre demande de location de fauteuil chez PHENO&CO.
-
-Voici votre récapitulatif :
-– Profil : ${getStatutLabel(statut)}, ${getExperienceLabel(experience)}
-– Spécialités : ${specialites.join(", ") || "Non précisé"}
-– Formule : ${priceInfo.formuleLabel}
-– Dates : ${dateDebut} → ${dateFin}
-– Montant total : ${priceInfo.totalTTC.toFixed(2)} € TTC
-– Acompte à régler : ${priceInfo.acompteTTC.toFixed(2)} € TTC (${(priceInfo.acompteTaux * 100).toFixed(0)}% ${duree === 'courte' ? 'courte durée' : 'longue durée'})
-
-Pour valider votre réservation, merci de nous envoyer :
-– une pièce d'identité
-– votre CAP/BP (ou équivalent)
-– votre justificatif d'activité (SIREN/URSSAF)
-– votre attestation d'assurance RC Pro (si vous la possédez déjà)
-
-📧 Documents à envoyer : location.phenoandco@gmail.com
-
-Dès que vos documents sont validés, nous vous transmettons votre lien de paiement d'acompte et bloquons votre créneau définitivement.
-
-Nous restons disponibles si vous avez des questions.
-PHENO&CO
-
-📄 CGV & Contrat : ${cgvUrl}
-
-📅 AJOUTER À VOTRE AGENDA GOOGLE :
-${calendarLink}
-      `.trim();
-      
-      const whatsappUrl = `https://wa.me/33769432605?text=${encodeURIComponent(whatsappMessage)}`;
-      
-      // Open WhatsApp first
-      window.open(whatsappUrl, '_blank');
-      
-      // Email template params
-      const summaryText = `
-RÉCAPITULATIF DE LA DEMANDE
-
---- CLIENT ---
-Nom : ${nom}
-Email : ${email}
-Téléphone : ${telephone}
-
---- PROFIL PROFESSIONNEL ---
-Statut : ${getStatutLabel(statut)}
-Expérience : ${getExperienceLabel(experience)}
-Compétences & Spécialités : ${specialites.join(", ") || "Aucune"}
-
---- ENGAGEMENTS ---
-3 ans d'expérience : ${certif3ans ? "Oui" : "Non"}
-Diplôme (CAP/BP) : ${certifDiplome ? "Oui" : "Non"}
-Documents justificatifs : Oui
-CGV & Contrat acceptés : Oui
-Lien CGV & Contrat : ${cgvUrl}
-
---- PÉRIODE ---
-Dates : Du ${dateDebut} au ${dateFin}
-Horaires : De ${heureDebut} à ${heureFin}
-Durée : ${priceInfo.durationDetails}
-
---- FORMULE ---
-Type : ${duree === 'courte' ? 'Courte durée' : 'Longue durée'}
-Formule : ${priceInfo.formuleLabel}
-Pack Matériel : ${priceInfo.packLabel}
-
---- TARIFS (Estimatif) ---
-Base HT : ${priceInfo.baseHT.toFixed(2)} €
-Pack HT : ${priceInfo.packHT.toFixed(2)} €
-Total HT : ${priceInfo.totalHT.toFixed(2)} €
-TVA (20%) : ${priceInfo.tva.toFixed(2)} €
-TOTAL TTC : ${priceInfo.totalTTC.toFixed(2)} €
-
---- PAIEMENT ---
-Acompte à régler : ${priceInfo.acompteTTC.toFixed(2)} €
-Solde restant : ${priceInfo.soldeTTC.toFixed(2)} €
-
---- COMMENTAIRE ---
-${commentaire || 'Aucun'}
-
-===================================
-📅 AJOUTER À MON AGENDA
-${calendarLink}
-===================================
-      `.trim();
-      
-      const templateParams = {
-        name: nom,
-        message: summaryText,
-        title: "Nouvelle Réservation Fauteuil",
-        to_name: nom,
-        to_email: email,
-        manager_email: "location.phenoandco@gmail.com",
-        statut: getStatutLabel(statut),
-        experience: getExperienceLabel(experience),
-        specialites: specialites.join(", "),
-        date_debut: dateDebut,
-        date_fin: dateFin,
-        heure_debut: heureDebut,
-        heure_fin: heureFin,
-        duree_details: priceInfo.durationDetails,
-        type_location: duree === 'courte' ? 'Courte durée' : 'Longue durée',
-        formule_label: priceInfo.formuleLabel,
-        pack_label: priceInfo.packLabel,
-        total_ht: priceInfo.totalHT.toFixed(2),
-        tva: priceInfo.tva.toFixed(2),
-        total_ttc: priceInfo.totalTTC.toFixed(2),
-        acompte_taux: (priceInfo.acompteTaux * 100).toFixed(0),
-        acompte_ttc: priceInfo.acompteTTC.toFixed(2),
-        solde_ttc: priceInfo.soldeTTC.toFixed(2),
-        telephone: telephone,
-        commentaire: commentaire || "Aucun",
-        calendar_link: calendarLink
-      };
-      
-      let emailError = false;
-      
-      try {
-        // Send emails
-        await Promise.all([
-          emailjs.send('service_llizndy', 'template_m6uvyuq', { ...templateParams, to_email: "location.phenoandco@gmail.com", to_name: "Manager PHENO&CO" }),
-          emailjs.send('service_llizndy', 'template_m6uvyuq', { ...templateParams, to_email: email, to_name: nom })
-        ]);
-      } catch (error) {
-        console.error('Email error:', error);
-        emailError = true;
-      }
-      
-      // Show success
-      submitBtn.innerHTML = '<svg class="lucide" width="24" height="24"><use href="#check"/></svg> Demande Envoyée !';
-      
-      const successMessage = document.getElementById('successMessage');
-      successMessage.classList.add('show');
-      
-      if (emailError) {
-        document.getElementById('emailWarning').style.display = 'flex';
-      }
-      
-      // Reset after 3 seconds
-      setTimeout(() => {
-        successMessage.classList.remove('show');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Envoyer ma demande <i data-lucide="arrow-right"></i>';
-        lucide.createIcons();
-        document.getElementById('reservationForm').reset();
-        
-        // Reset UI
-        document.getElementById('card-courte').classList.add('selected');
-        document.getElementById('card-longue').classList.remove('selected');
-        document.getElementById('formuleCourte').style.display = 'block';
-        document.getElementById('formuleLongue').style.display = 'none';
-        document.getElementById('formule-label').textContent = 'Formule courte *';
-        document.getElementById('heureDebut').disabled = false;
-        document.getElementById('heureFin').disabled = false;
-        
-        document.getElementById('dateDebut').value = tomorrowStr;
-        document.getElementById('heureDebut').value = '10:00';
-        document.getElementById('heureFin').value = '11:00';
-        
-        calculatePrice();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 3000);
-    });
-    
-    // Initial calculation
     calculatePrice();
-  </script>
-  
+  });
+</script>
+
 </body>
 </html>
