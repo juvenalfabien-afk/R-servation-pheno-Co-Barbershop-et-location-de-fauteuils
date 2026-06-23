@@ -1,0 +1,14 @@
+.next/
+.next-build/
+node_modules/
+out/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variables d'environnement — NE JAMAIS COMMITER
+.env
+.env.local
+.env.*.local
