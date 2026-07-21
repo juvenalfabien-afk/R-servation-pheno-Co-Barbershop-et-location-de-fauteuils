@@ -4,10 +4,12 @@ import type {
   StatutPro, ExperienceType, SpecialiteType, StatusType,
 } from './types'
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-)
+export function getSupabase() {
+  return createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+}
 
 export function toRow(r: Reservation): Record<string, unknown> {
   return {

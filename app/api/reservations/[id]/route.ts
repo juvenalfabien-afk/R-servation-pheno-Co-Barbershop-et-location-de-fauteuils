@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import { isAdminAuthenticated } from '@/lib/auth'
 import type { StatusType } from '@/lib/types'
 
@@ -12,7 +12,7 @@ export async function PATCH(
   }
   const { id } = await params
   const { status }: { status: StatusType } = await req.json()
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('reservations')
     .update({ status })
     .eq('id', id)
