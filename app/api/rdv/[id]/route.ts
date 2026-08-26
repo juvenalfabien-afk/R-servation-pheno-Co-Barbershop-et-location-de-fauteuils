@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabase'
 import { isAdminAuthenticated } from '@/lib/auth'
-import type { StatusType } from '@/lib/types'
+import type { RdvStatus } from '@/lib/rdv-types'
 
-const VALID_STATUSES: StatusType[] = ['pending', 'confirmed', 'cancelled']
+const VALID_STATUSES: RdvStatus[] = ['pending', 'confirmed', 'cancelled']
 
 export async function PATCH(
   req: Request,
@@ -23,16 +23,16 @@ export async function PATCH(
   }
 
   const { status } = body
-  if (!VALID_STATUSES.includes(status as StatusType)) {
+  if (!VALID_STATUSES.includes(status as RdvStatus)) {
     return NextResponse.json({ error: 'Statut invalide' }, { status: 422 })
   }
 
   const { error } = await getSupabase()
-    .from('reservations')
+    .from('rdv_bookings')
     .update({ status })
     .eq('id', id)
   if (error) {
-    console.error('Supabase update error:', error)
+    console.error('Supabase rdv update error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
   return NextResponse.json({ ok: true })

@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import './vitrine.css'
 
 export const metadata = {
@@ -64,9 +65,7 @@ export default function LandingPage() {
       {/* ── NAV ── */}
       <nav className="lp-nav">
         <div className="lp-nav-brand">
-          <span className="lp-logo-pheno">PHENO</span>
-          <span className="lp-brand-sep">·</span>
-          <span className="lp-logo-barber">BARBER</span>
+          <Image src="/logo-pheno.png" alt="PHENO&CO Barbershop" height={88} width={240} className="lp-nav-logo" priority />
         </div>
         <div className="lp-nav-links">
           <a href="#services">SERVICES</a>
@@ -75,7 +74,7 @@ export default function LandingPage() {
         </div>
         <div className="lp-nav-right">
           <a href="/location" className="lp-nav-location">Louer un fauteuil ↗</a>
-          <a href="https://phenoandco.com/" target="_blank" rel="noopener noreferrer" className="lp-btn-yellow">RÉSERVER</a>
+          <a href="/rdv" className="lp-btn-yellow">RÉSERVER</a>
         </div>
       </nav>
 
@@ -92,7 +91,7 @@ export default function LandingPage() {
             Dans un espace qui respecte votre temps et votre style.
           </p>
           <div className="lp-hero-btns">
-            <a href="https://phenoandco.com/" target="_blank" rel="noopener noreferrer" className="lp-btn-yellow lp-btn-hero">PRENDRE RDV</a>
+            <a href="/rdv" className="lp-btn-yellow lp-btn-hero">PRENDRE RDV</a>
             <a href="/location" className="lp-btn-outline">LOUER UN FAUTEUIL</a>
           </div>
         </div>
@@ -133,7 +132,7 @@ export default function LandingPage() {
           ))}
         </div>
         <div className="lp-services-cta">
-          <a href="https://phenoandco.com/" target="_blank" rel="noopener noreferrer" className="lp-btn-outline-sm">RÉSERVER UNE PRESTATION →</a>
+          <a href="/rdv" className="lp-btn-outline-sm">RÉSERVER UNE PRESTATION →</a>
         </div>
       </section>
 
@@ -188,7 +187,7 @@ export default function LandingPage() {
           Un créneau de libre, moins de 2 minutes.<br />
           Le reste, c&apos;est nous qui nous en occupons.
         </p>
-        <a href="https://phenoandco.com/" target="_blank" rel="noopener noreferrer" className="lp-btn-black">RÉSERVER MAINTENANT →</a>
+        <a href="/rdv" className="lp-btn-black">RÉSERVER MAINTENANT →</a>
         <a href="tel:0769432605" className="lp-cta-phone">Ou appelez-nous directement</a>
       </section>
 
@@ -284,6 +283,7 @@ export default function LandingPage() {
         <div className="lp-footer-bottom">
           <span>© 2026 Pheno Barber — Montpellier</span>
           <a href="/mentions-legales">Mentions légales</a>
+          <a href="/admin" style={{ color: '#333', fontSize: '0.75rem', textDecoration: 'none' }}>⚙ Admin</a>
         </div>
       </footer>
 

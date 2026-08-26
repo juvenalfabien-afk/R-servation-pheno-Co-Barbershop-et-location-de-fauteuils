@@ -6,7 +6,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "keep-alive": "node scripts/keep-alive.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

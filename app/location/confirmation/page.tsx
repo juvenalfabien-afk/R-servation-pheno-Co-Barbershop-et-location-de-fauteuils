@@ -54,11 +54,23 @@ export default function ConfirmationPage() {
   return (
     <div className="loc-page">
 
+      {/* Nav */}
+      <nav className="loc-nav">
+        <Link href="/" className="loc-nav-brand">
+          <span className="loc-nav-pheno">PHENO</span>
+          <span className="loc-nav-sep">·</span>
+          <span className="loc-nav-barber">BARBER</span>
+        </Link>
+        <Link href="/" className="loc-nav-back">← Accueil</Link>
+      </nav>
+
       {/* Hero */}
       <section className="loc-hero-section">
         <div className="loc-hero-inner">
-          <h1 className="loc-hero-title">PHENO&amp;CO</h1>
-          <p className="loc-hero-sub">Barbershop depuis 2009</p>
+          <p className="loc-hero-tag">Confirmation de demande</p>
+          <h1 className="loc-hero-title">
+            DEMANDE<br /><span className="loc-hero-title-yellow">ENVOYÉE</span>
+          </h1>
         </div>
       </section>
 
@@ -68,23 +80,23 @@ export default function ConfirmationPage() {
 
           {/* Bannière succès */}
           <div style={{
-            background: 'linear-gradient(135deg, #1a2e1a 0%, #0f1f0f 100%)',
-            border: '1px solid #2d5a2d',
-            borderRadius: '1rem',
+            background: '#0e0e0e',
+            border: '1px solid rgba(253,224,71,.25)',
+            borderRadius: '14px',
             padding: '2.5rem 2rem',
             textAlign: 'center',
-            marginBottom: '2rem',
+            marginBottom: '1.5rem',
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>✓</div>
-            <h2 style={{ color: '#4caf50', fontSize: '1.5rem', fontWeight: 700, margin: '0 0 0.5rem' }}>
-              Demande envoyée avec succès !
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(253,224,71,.1)', border: '2px solid #FDE047', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', fontSize: '1.6rem', color: '#FDE047' }}>✓</div>
+            <h2 style={{ fontFamily: 'var(--font-bebas, "Bebas Neue", sans-serif)', color: '#fff', fontSize: '1.8rem', letterSpacing: '.06em', margin: '0 0 .5rem', fontWeight: 400 }}>
+              Demande envoyée !
             </h2>
-            <p style={{ color: '#aaa', margin: 0 }}>
-              Merci {data.nom}, votre demande de location a bien été reçue.<br />
-              Un email de confirmation vous a été envoyé à <strong style={{ color: '#fff' }}>{data.email}</strong>.
+            <p style={{ color: 'rgba(255,255,255,.45)', margin: 0, fontSize: '.9rem', lineHeight: 1.6 }}>
+              Merci <strong style={{ color: '#fff' }}>{data.nom}</strong>, votre demande de location a bien été reçue.<br />
+              Un email de confirmation vous a été envoyé à <strong style={{ color: '#FDE047' }}>{data.email}</strong>.
             </p>
             {data.emailError && (
-              <p style={{ color: '#f59e0b', marginTop: '0.75rem', fontSize: '0.875rem' }}>
+              <p style={{ color: '#FDE047', marginTop: '.75rem', fontSize: '.8rem', opacity: .75 }}>
                 ⚠️ L&apos;email n&apos;a pas pu être envoyé, mais votre demande a bien été enregistrée.
               </p>
             )}
@@ -202,7 +214,7 @@ export default function ConfirmationPage() {
             </a>
             <Link
               href="/location"
-              style={{ textAlign: 'center', color: '#aaa', fontSize: '0.875rem', marginTop: '0.5rem' }}
+              style={{ textAlign: 'center', color: 'rgba(255,255,255,.35)', fontSize: '.82rem', marginTop: '.5rem', textDecoration: 'none' }}
             >
               ← Faire une nouvelle demande
             </Link>

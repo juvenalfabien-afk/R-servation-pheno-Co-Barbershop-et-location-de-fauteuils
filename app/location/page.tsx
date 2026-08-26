@@ -306,23 +306,35 @@ Commentaire : ${commentaire || 'Aucun'}
   return (
     <div className="loc-page">
 
+      {/* ── NAV ── */}
+      <nav className="loc-nav">
+        <Link href="/" className="loc-nav-brand">
+          <span className="loc-nav-pheno">PHENO</span>
+          <span className="loc-nav-sep">·</span>
+          <span className="loc-nav-barber">BARBER</span>
+        </Link>
+        <Link href="/" className="loc-nav-back">← Accueil</Link>
+      </nav>
+
       {/* ── HERO ── */}
       <section className="loc-hero-section">
         <div className="loc-hero-inner">
-          <h1 className="loc-hero-title">PHENO&amp;CO</h1>
-          <p className="loc-hero-sub">Barbershop depuis 2009</p>
+          <p className="loc-hero-tag">Barbershop Premium · Montpellier</p>
+          <h1 className="loc-hero-title">
+            LOUER UN<br /><span className="loc-hero-title-yellow">FAUTEUIL</span>
+          </h1>
+          <p className="loc-hero-sub">Espace professionnel — 18 rue d&apos;Alger, Saint-Roch</p>
           <div className="loc-hero-btns">
             <button onClick={() => document.getElementById('reservation')?.scrollIntoView({ behavior: 'smooth' })} className="loc-hero-btn loc-btn-yellow">
-              📅 Louer un Fauteuil
+              Réserver un fauteuil
             </button>
-            <a href="https://phenoandco.com/" target="_blank" rel="noopener noreferrer" className="loc-hero-btn loc-btn-dark">
-              ✂️ Prendre RDV Coiffure
-            </a>
-            <a href="https://wa.me/message/MZYDVEN32I55L1" target="_blank" rel="noopener noreferrer" className="loc-hero-btn loc-btn-whatsapp">
-              💬 Contact WhatsApp
+            <Link href="/rdv" className="loc-hero-btn loc-btn-dark">
+              Prendre RDV Coiffure
+            </Link>
+            <a href="https://wa.me/33769432605" target="_blank" rel="noopener noreferrer" className="loc-hero-btn loc-btn-whatsapp">
+              WhatsApp
             </a>
           </div>
-          <Link href="/" className="loc-hero-back">← Retour à l&apos;accueil</Link>
         </div>
       </section>
 
@@ -331,7 +343,7 @@ Commentaire : ${commentaire || 'Aucun'}
         <div className="loc-container">
 
           <header className="loc-header">
-            <h2 className="loc-header-title">Réserver un fauteuil</h2>
+            <h2 className="loc-header-title">RÉSERVER UN <span>FAUTEUIL</span></h2>
             <p className="loc-header-sub">
               Choisissez vos dates, votre formule et vos options.<br />
               La réservation est confirmée après paiement de l&apos;acompte.
