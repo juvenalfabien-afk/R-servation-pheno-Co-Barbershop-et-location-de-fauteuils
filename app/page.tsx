@@ -35,23 +35,22 @@ const services = [
 ]
 
 const whyItems = [
-  { title: 'Sans compromis', sub: "Coupe homme, dégradé, barbe — chaque prestation est réalisée avec le soin d'un vrai barbershop professionnel." },
-  { title: 'Réservation en ligne', sub: "Réservez votre coupe ou votre soin barbe à Montpellier en 2 minutes, sans appel, 24h/24." },
-  { title: 'Cœur de ville', sub: "18 rue d'Alger, Saint-Roch, Montpellier. À deux pas du tram, au centre de tout." },
-  { title: 'Expertise & savoir-faire', sub: "15 ans de métier, des techniques maîtrisées et un œil affûté pour sublimer chaque profil." },
+  { icon: '✦', title: 'Sans compromis', sub: "Coupe homme, dégradé, barbe — chaque prestation avec le soin d'un vrai barbershop professionnel." },
+  { icon: '✦', title: 'Résa en ligne', sub: "Réservez en 2 minutes, sans appel, 24h/24. Confirmation immédiate." },
+  { icon: '✦', title: 'Cœur de ville', sub: "18 rue d'Alger, Saint-Roch. À deux pas du tram, au centre de tout." },
+  { icon: '✦', title: '15 ans de métier', sub: "Techniques maîtrisées, œil affûté. Chaque client repart avec une coupe qui lui ressemble." },
 ]
 
 const galleryPhotos = [
-  { url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&h=460&q=80', alt: 'Intérieur barbershop' },
-  { url: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=700&h=460&q=80', alt: 'Barber au travail' },
-  { url: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=700&h=460&q=80', alt: 'Coupe précise' },
-  { url: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=700&h=460&q=80', alt: 'Finition dégradé' },
-  { url: 'https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?auto=format&fit=crop&w=700&h=460&q=80', alt: 'Soin barbe' },
-  { url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=700&h=460&q=80', alt: 'Ambiance salon' },
+  { url: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&h=480&q=80', alt: 'Dégradé précis' },
+  { url: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&h=480&q=80', alt: 'Finition soignée' },
+  { url: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=600&h=480&q=80', alt: 'Coupe nette' },
+  { url: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=600&h=480&q=80', alt: 'Barber au travail' },
+  { url: 'https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?auto=format&fit=crop&w=600&h=480&q=80', alt: 'Soin barbe' },
+  { url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&h=480&q=80', alt: 'Ambiance salon' },
 ]
 
 export default function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false)
   const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle')
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -73,7 +72,7 @@ export default function LandingPage() {
         name:       `${prenom} ${nom}`.trim(),
         message:    `De : ${prenom} ${nom}\nEmail : ${email}\nTél : ${tel || 'Non renseigné'}\n\n${message}`,
         telephone:  tel || 'Non renseigné',
-        commentaire: `Contact site web`,
+        commentaire: 'Contact site web',
         calendar_link: '',
       })
       setContactStatus('ok')
@@ -83,13 +82,12 @@ export default function LandingPage() {
     }
   }
 
-  // Scroll reveal
   useEffect(() => {
     const obs = new IntersectionObserver(
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) }
       }),
-      { threshold: 0.12 }
+      { threshold: 0.1 }
     )
     document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el))
     return () => obs.disconnect()
@@ -100,32 +98,18 @@ export default function LandingPage() {
 
       {/* ── NAV ── */}
       <nav className="lp-nav">
-        <div className="lp-nav-left">
-          <button className="lp-hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
-            <span /><span /><span />
-          </button>
-          <span className="lp-nav-brand">PHENO&amp;CO</span>
+        <Link href="/" className="lp-nav-brand">PHENO&amp;CO</Link>
+        <div className="lp-nav-links">
+          <a href="#services" className="lp-nav-link">Prestations</a>
+          <a href="#galerie"  className="lp-nav-link">Réalisations</a>
+          <Link href="/location" className="lp-nav-link">Location</Link>
+          <a href="#contact"  className="lp-nav-link">Contact</a>
         </div>
         <div className="lp-nav-right">
-          <a href="tel:0769432605" className="lp-nav-tel" aria-label="Appeler">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 12 19.79 19.79 0 0 1 1.06 3.4 2 2 0 0 1 3.04 1.4h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91A16 16 0 0 0 13 15.83l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
-            </svg>
-          </a>
+          <a href="tel:0769432605" className="lp-nav-tel">07 69 43 26 05</a>
           <Link href="/rdv" className="lp-btn-reserve">RÉSERVER</Link>
         </div>
       </nav>
-
-      {/* ── DROPDOWN ── */}
-      {menuOpen && (
-        <div className="lp-dropdown open" onClick={() => setMenuOpen(false)}>
-          <Link href="/rdv"      className="lp-dd-item">Prendre rendez-vous</Link>
-          <a href="#services"    className="lp-dd-item">Nos prestations</a>
-          <a href="#galerie"     className="lp-dd-item">Réalisations</a>
-          <Link href="/location" className="lp-dd-item">Louer un fauteuil</Link>
-          <a href="#contact"     className="lp-dd-item">Nous trouver</a>
-        </div>
-      )}
 
       {/* ── HERO ── */}
       <section className="lp-hero">
@@ -149,7 +133,7 @@ export default function LandingPage() {
           <Link href="/rdv" className="lp-btn-gold">PRENDRE RENDEZ-VOUS</Link>
           <Link href="/location" className="lp-btn-outline">LOUER UN FAUTEUIL</Link>
         </div>
-        <div className="lp-hero-eyebrow">18 rue d&apos;Alger · Saint-Roch · Montpellier</div>
+        <p className="lp-hero-eyebrow">18 rue d&apos;Alger · Saint-Roch · Montpellier</p>
         <div className="lp-hero-stats">
           <span><strong>1 200+</strong> clients</span>
           <span className="lp-hstat-dot">·</span>
@@ -181,14 +165,14 @@ export default function LandingPage() {
       </section>
 
       {/* ── POURQUOI PHENO ── */}
-      <section className="lp-why lp-section lp-section-center">
+      <section className="lp-why lp-section lp-section-center lp-section-light">
         <p className="lp-eyebrow" data-reveal>Pourquoi nous</p>
         <h2 className="lp-h2" data-reveal data-delay="1">Pourquoi PHENO&amp;CO ?</h2>
         <div className="lp-section-div" data-reveal data-delay="2" />
         <div className="lp-why-cols">
           {whyItems.map((item, i) => (
-            <div key={item.title} className="lp-why-col" data-reveal data-delay={String(i + 1)}>
-              <span className="lp-why-num">0{i + 1}</span>
+            <div key={item.title} className="lp-why-col" data-reveal data-delay={String((i % 2) + 1)}>
+              <span className="lp-why-icon">{item.icon}</span>
               <span className="lp-why-title">{item.title}</span>
               <div className="lp-why-line" />
               <p className="lp-why-sub">{item.sub}</p>
@@ -224,63 +208,82 @@ export default function LandingPage() {
           Un créneau de libre, moins de 2 minutes.<br />
           Le reste, c&apos;est nous qui nous en occupons.
         </p>
-        <Link href="/rdv" className="lp-btn-cta" data-reveal data-delay="2">RÉSERVER MAINTENANT →</Link>
-        <a href="tel:0769432605" className="lp-cta-phone" data-reveal data-delay="3">Ou appelez-nous directement · 07 69 43 26 05</a>
+        <Link href="/rdv" className="lp-btn-cta" data-reveal data-delay="2">
+          RÉSERVER MAINTENANT
+        </Link>
+        <a href="tel:0769432605" className="lp-cta-phone" data-reveal data-delay="3">
+          Ou appelez-nous · <strong>07 69 43 26 05</strong>
+        </a>
       </section>
 
       {/* ── CONTACT ── */}
-      <section className="lp-section" id="contact">
-        <p className="lp-eyebrow" data-reveal>Nous trouver</p>
-        <h2 className="lp-h2" data-reveal data-delay="1">Venez nous voir</h2>
-        <div className="lp-section-div" data-reveal data-delay="2" style={{ margin: '.6rem 0 0' }} />
-        <div className="lp-contact-info" data-reveal data-delay="1">
-          <p className="lp-contact-addr">18 Rue d&apos;Alger</p>
-          <p className="lp-contact-line">Montpellier 34000</p>
-          <p className="lp-contact-line">Mar – Sam : 10h – 18h</p>
-          <p className="lp-contact-line">
-            <a href="tel:0769432605" className="lp-contact-link">07 69 43 26 05</a>
-          </p>
-          <p className="lp-contact-line">
-            <a href="https://phenoandco.fr" target="_blank" rel="noopener noreferrer" className="lp-contact-link">phenoandco.fr</a>
-          </p>
-        </div>
-        <div className="lp-map" data-reveal data-delay="2">
-          <iframe
-            src="https://maps.google.com/maps?q=18+Rue+d%27Alger+34000+Montpellier&t=&z=16&ie=UTF8&iwloc=&output=embed"
-            width="100%"
-            height="100%"
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="PHENO&CO — 18 Rue d'Alger, Montpellier"
-          />
-        </div>
-        <div className="lp-form-sep" data-reveal />
-        <h3 className="lp-form-title" data-reveal data-delay="1">Nous écrire</h3>
-        <form ref={formRef} onSubmit={handleContact} data-reveal data-delay="2">
-          <div className="lp-form-row">
-            <input type="text" name="prenom" placeholder="Votre prénom *" className="lp-finput" required />
-            <input type="text" name="nom" placeholder="Votre nom" className="lp-finput" />
+      <section className="lp-section lp-section-light" id="contact">
+        <div className="lp-contact-grid">
+
+          {/* Colonne gauche : infos + carte */}
+          <div className="lp-contact-left" data-reveal>
+            <p className="lp-eyebrow">Nous trouver</p>
+            <h2 className="lp-h2">Venez<br />nous voir</h2>
+            <div className="lp-section-div" style={{ margin: '.6rem 0 1.75rem' }} />
+            <div className="lp-contact-details">
+              <div className="lp-contact-detail-row">
+                <span className="lp-contact-detail-label">Adresse</span>
+                <span className="lp-contact-detail-val">18 Rue d&apos;Alger, Montpellier 34000</span>
+              </div>
+              <div className="lp-contact-detail-row">
+                <span className="lp-contact-detail-label">Horaires</span>
+                <span className="lp-contact-detail-val">Mardi – Samedi · 10h–18h</span>
+              </div>
+              <div className="lp-contact-detail-row">
+                <span className="lp-contact-detail-label">Téléphone</span>
+                <a href="tel:0769432605" className="lp-contact-detail-val lp-contact-link">07 69 43 26 05</a>
+              </div>
+              <div className="lp-contact-detail-row">
+                <span className="lp-contact-detail-label">Site</span>
+                <a href="https://phenoandco.fr" target="_blank" rel="noopener noreferrer" className="lp-contact-detail-val lp-contact-link">phenoandco.fr</a>
+              </div>
+            </div>
+            <div className="lp-map">
+              <iframe
+                src="https://maps.google.com/maps?q=18+Rue+d%27Alger+34000+Montpellier&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%" height="100%"
+                allowFullScreen loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="PHENO&CO — 18 Rue d'Alger, Montpellier"
+              />
+            </div>
           </div>
-          <div className="lp-form-row">
-            <input type="email" name="email" placeholder="Votre email *" className="lp-finput" required />
-            <input type="tel" name="telephone" placeholder="Votre téléphone" className="lp-finput" />
+
+          {/* Colonne droite : formulaire */}
+          <div className="lp-contact-right" data-reveal data-delay="1">
+            <h3 className="lp-form-title">Nous écrire</h3>
+            <p className="lp-form-subtitle">Une question ? Un projet ? On vous répond sous 24h.</p>
+            <form ref={formRef} onSubmit={handleContact} className="lp-contact-form">
+              <div className="lp-form-row">
+                <input type="text"  name="prenom"    placeholder="Prénom *"    className="lp-finput" required />
+                <input type="text"  name="nom"        placeholder="Nom"         className="lp-finput" />
+              </div>
+              <div className="lp-form-row">
+                <input type="email" name="email"     placeholder="Email *"     className="lp-finput" required />
+                <input type="tel"   name="telephone" placeholder="Téléphone"   className="lp-finput" />
+              </div>
+              <textarea name="message" placeholder="Votre message *" className="lp-ftextarea" rows={5} required />
+              <button type="submit" className="lp-btn-submit" disabled={contactStatus === 'sending'}>
+                {contactStatus === 'sending' ? 'Envoi en cours…' : 'ENVOYER'}
+              </button>
+              {contactStatus === 'ok' && (
+                <p className="lp-form-success">✓ Message envoyé — nous vous répondrons rapidement.</p>
+              )}
+              {contactStatus === 'err' && (
+                <p className="lp-form-error-msg">
+                  ⚠ Erreur — écrivez-nous à{' '}
+                  <a href="mailto:location.phenoandco@gmail.com">location.phenoandco@gmail.com</a>
+                </p>
+              )}
+            </form>
           </div>
-          <textarea name="message" placeholder="Votre message… *" className="lp-ftextarea" rows={4} required />
-          <button type="submit" className="lp-btn-submit" disabled={contactStatus === 'sending'}>
-            {contactStatus === 'sending' ? 'Envoi…' : 'ENVOYER'}
-          </button>
-          {contactStatus === 'ok' && (
-            <p style={{ color: '#C9A84C', marginTop: '.75rem', fontSize: '.88rem' }}>
-              ✓ Message envoyé — nous vous répondrons rapidement.
-            </p>
-          )}
-          {contactStatus === 'err' && (
-            <p style={{ color: '#f87171', marginTop: '.75rem', fontSize: '.88rem' }}>
-              ⚠ Erreur d&apos;envoi — écrivez-nous directement à <a href="mailto:location.phenoandco@gmail.com" style={{ color: '#f87171' }}>location.phenoandco@gmail.com</a>
-            </p>
-          )}
-        </form>
+
+        </div>
       </section>
 
       {/* ── FOOTER ── */}
@@ -289,6 +292,7 @@ export default function LandingPage() {
           <div>
             <span className="lp-footer-brand-name">PHENO<span>&amp;CO</span></span>
             <p className="lp-footer-brand-sub">Barbershop &amp; Coiffure Afro · Montpellier</p>
+            <p className="lp-footer-brand-tagline">Depuis 2009, on sublime chaque profil.</p>
           </div>
           <nav className="lp-footer-nav" aria-label="Footer">
             <a href="#">Accueil</a>

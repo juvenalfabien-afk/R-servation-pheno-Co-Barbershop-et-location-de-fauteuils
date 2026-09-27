@@ -24,27 +24,99 @@ const bebasNeue = Bebas_Neue({
 })
 
 export const metadata: Metadata = {
-  title: 'PHENO&CO — Barbershop Premium Montpellier',
-  description: 'Barbershop premium à Montpellier. Coupe homme, dégradé, barbe — 15 ans de savoir-faire. Réservez en ligne ou louez un fauteuil. 18 rue d\'Alger, Saint-Roch.',
-  keywords: ['barbershop montpellier', 'coiffeur homme montpellier', 'dégradé montpellier', 'barbe montpellier', 'coupe homme', 'barbier saint-roch'],
+  metadataBase: new URL('https://phenoandco.fr'),
+  title: {
+    default: 'PHENO&CO — Barbershop & Coiffure Afro Montpellier',
+    template: '%s | PHENO&CO Barbershop Montpellier',
+  },
+  description: 'Barbershop & coiffure afro à Montpellier depuis 2009. Dégradé, coupe homme, barbe — 18 rue d\'Alger, Saint-Roch. Réservation en ligne 24h/24, sans attente.',
+  keywords: [
+    'barbershop montpellier',
+    'coiffeur afro montpellier',
+    'dégradé montpellier',
+    'coupe homme montpellier',
+    'barbe montpellier',
+    'skin fade montpellier',
+    'coiffure afro montpellier',
+    'barbier saint-roch montpellier',
+    'pheno barber',
+    'pheno and co',
+  ],
+  authors: [{ name: 'PHENO&CO Barbershop' }],
+  creator: 'PHENO&CO',
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   openGraph: {
-    title: 'PHENO&CO — Barbershop Premium Montpellier',
-    description: 'Coupe, dégradé, barbe — 15 ans de savoir-faire. Réservez en ligne.',
+    title: 'PHENO&CO — Barbershop & Coiffure Afro Montpellier',
+    description: 'Barbershop & coiffure afro depuis 2009. Dégradé, coupe, barbe — réservez en ligne.',
     type: 'website',
     locale: 'fr_FR',
-    images: [{ url: '/logo-pheno.png', width: 512, height: 512, alt: 'PHENO&CO Barbershop Montpellier' }],
+    url: 'https://phenoandco.fr',
+    siteName: 'PHENO&CO Barbershop',
+    images: [{
+      url: '/logo-pheno.png',
+      width: 512,
+      height: 512,
+      alt: 'PHENO&CO Barbershop & Coiffure Afro Montpellier',
+    }],
   },
   twitter: {
     card: 'summary',
-    title: 'PHENO&CO — Barbershop Premium Montpellier',
-    description: 'Coupe, dégradé, barbe — 15 ans de savoir-faire. Réservez en ligne.',
+    title: 'PHENO&CO — Barbershop & Coiffure Afro Montpellier',
+    description: 'Barbershop & coiffure afro depuis 2009. Dégradé, coupe, barbe — réservez en ligne.',
     images: ['/logo-pheno.png'],
   },
+  alternates: { canonical: 'https://phenoandco.fr' },
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HairSalon',
+  name: 'PHENO&CO Barbershop',
+  image: 'https://phenoandco.fr/logo-pheno.png',
+  description: 'Barbershop & coiffure afro à Montpellier. Dégradé, coupe homme, barbe — depuis 2009.',
+  '@id': 'https://phenoandco.fr',
+  url: 'https://phenoandco.fr',
+  telephone: '+33769432605',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '18 Rue d\'Alger',
+    addressLocality: 'Montpellier',
+    postalCode: '34000',
+    addressCountry: 'FR',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 43.6093,
+    longitude: 3.8797,
+  },
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    opens: '10:00',
+    closes: '18:00',
+  }],
+  priceRange: '€€',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5.0',
+    bestRating: '5',
+    reviewCount: '150',
+  },
+  sameAs: [
+    'https://www.instagram.com/pheno_barber/',
+    'https://www.tiktok.com/@pheno_barber',
+  ],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${poppins.variable} ${playfair.variable} ${bebasNeue.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body suppressHydrationWarning>
         {children}
       </body>
