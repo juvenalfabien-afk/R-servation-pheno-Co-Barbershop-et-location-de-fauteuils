@@ -213,10 +213,11 @@ export default function ConfirmationPage() {
               📧 Envoyer mes documents
             </a>
             <Link
-              href="/location"
-              style={{ textAlign: 'center', color: 'rgba(255,255,255,.35)', fontSize: '.82rem', marginTop: '.5rem', textDecoration: 'none' }}
+              href="/"
+              className="loc-hero-btn loc-btn-dark"
+              style={{ textDecoration: 'none', textAlign: 'center' }}
             >
-              ← Faire une nouvelle demande
+              ← Retour à l&apos;accueil
             </Link>
           </div>
 

@@ -98,10 +98,13 @@ export async function GET() {
   if (!await isAdminAuthenticated()) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
+  const cutoff = new Date()
+  cutoff.setDate(cutoff.getDate() - 14)
   const { data, error } = await getSupabase()
     .from('rdv_bookings')
     .select('*')
     .order('created_at', { ascending: false })
+    .or(`status.neq.cancelled,created_at.gte.${cutoff.toISOString()}`)
   if (error) {
     console.error('Supabase rdv select error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })

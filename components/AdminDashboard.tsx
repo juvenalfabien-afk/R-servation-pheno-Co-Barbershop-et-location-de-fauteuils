@@ -326,6 +326,10 @@ export default function AdminDashboard() {
   const [filterStatus, setFilterStatus] = useState<StatusType | "all">("all");
   const [filterFormule, setFilterFormule] = useState<FormulaType | "all">("all");
   const [rdvFilterStatus, setRdvFilterStatus] = useState<RdvStatus | "all">("all");
+  const [rdvDateFilter, setRdvDateFilter] = useState<"all" | "today" | "tomorrow" | "upcoming">("all");
+  const [rdvPage, setRdvPage] = useState(0);
+  const [locPage, setLocPage] = useState(0);
+  const PER_PAGE = 10;
   const [toast, setToast] = useState<{
     msg: string;
     type: "success" | "error";
@@ -377,11 +381,12 @@ export default function AdminDashboard() {
   }
 
   async function changeStatus(id: string, status: StatusType) {
-    await fetch(`/api/reservations/${id}`, {
+    const res = await fetch(`/api/reservations/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
+    if (!res.ok) { showToast("Erreur lors de la mise à jour", "error"); return; }
     await loadReservations();
     const msg =
       status === "confirmed"
@@ -393,11 +398,12 @@ export default function AdminDashboard() {
   }
 
   async function changeRdvStatus(id: string, status: RdvStatus) {
-    await fetch(`/api/rdv/${id}`, {
+    const res = await fetch(`/api/rdv/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
+    if (!res.ok) { showToast("Erreur lors de la mise à jour", "error"); return; }
     await loadRdvBookings();
     const msg = status === "confirmed" ? "RDV confirmé" : status === "cancelled" ? "RDV annulé" : "Statut mis à jour";
     showToast(msg, "success");
@@ -408,18 +414,34 @@ export default function AdminDashboard() {
     setTimeout(() => setToast(null), 3500);
   }
 
-  const filtered = useMemo(
-    () =>
-      reservations
-        .filter((r) => filterStatus === "all" || r.status === filterStatus)
-        .filter((r) => filterFormule === "all" || r.formule === filterFormule),
-    [reservations, filterStatus, filterFormule],
-  );
+  const filtered = useMemo(() => {
+    return reservations
+      .filter((r) => filterStatus === "all" || r.status === filterStatus)
+      .filter((r) => filterFormule === "all" || r.formule === filterFormule);
+  }, [reservations, filterStatus, filterFormule]);
 
-  const filteredRdv = useMemo(
-    () => rdvBookings.filter(b => rdvFilterStatus === "all" || b.status === rdvFilterStatus),
-    [rdvBookings, rdvFilterStatus],
-  );
+  useEffect(() => { setLocPage(0); }, [filterStatus, filterFormule]);
+
+  const filteredRdv = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    return rdvBookings
+      .filter(b => rdvFilterStatus === "all" || b.status === rdvFilterStatus)
+      .filter(b => {
+        if (rdvDateFilter === "today") return b.date === today;
+        if (rdvDateFilter === "tomorrow") return b.date === tomorrow;
+        if (rdvDateFilter === "upcoming") return b.date >= today;
+        return true;
+      })
+      .sort((a, b) => a.date === b.date ? a.slot.localeCompare(b.slot) : a.date.localeCompare(b.date));
+  }, [rdvBookings, rdvFilterStatus, rdvDateFilter]);
+
+  useEffect(() => { setRdvPage(0); }, [rdvFilterStatus, rdvDateFilter]);
+
+  const rdvPageCount = Math.ceil(filteredRdv.length / PER_PAGE);
+  const locPageCount = Math.ceil(filtered.length / PER_PAGE);
+  const rdvVisible = filteredRdv.slice(rdvPage * PER_PAGE, (rdvPage + 1) * PER_PAGE);
+  const locVisible = filtered.slice(locPage * PER_PAGE, (locPage + 1) * PER_PAGE);
 
   const rdvStats = useMemo(() => ({
     total: rdvBookings.length,
@@ -584,14 +606,43 @@ export default function AdminDashboard() {
               ))}
             </div>
 
-            <div className="filter-bar">
-              <select className="form-select filter-select" value={rdvFilterStatus} onChange={e => setRdvFilterStatus(e.target.value as RdvStatus | "all")}>
-                <option value="all">Tous les statuts</option>
-                <option value="pending">En attente</option>
-                <option value="confirmed">Confirmé</option>
-                <option value="cancelled">Annulé</option>
-              </select>
-              <span className="filter-count">{filteredRdv.length} résultat{filteredRdv.length !== 1 ? "s" : ""}</span>
+            <div className="filter-bar" style={{ flexDirection: "column", alignItems: "stretch", gap: ".65rem" }}>
+              <div style={{ display: "flex", gap: ".4rem", flexWrap: "wrap" }}>
+                {([
+                  { key: "all",      label: "Tous" },
+                  { key: "today",    label: "Aujourd'hui" },
+                  { key: "tomorrow", label: "Demain" },
+                  { key: "upcoming", label: "À venir" },
+                ] as const).map(f => (
+                  <button
+                    key={f.key}
+                    onClick={() => setRdvDateFilter(f.key)}
+                    style={{
+                      padding: ".3rem .8rem",
+                      borderRadius: 99,
+                      border: `1.5px solid ${rdvDateFilter === f.key ? "var(--yellow)" : "rgba(255,255,255,.12)"}`,
+                      background: rdvDateFilter === f.key ? "rgba(253,224,71,.12)" : "transparent",
+                      color: rdvDateFilter === f.key ? "var(--yellow)" : "rgba(255,255,255,.45)",
+                      fontWeight: rdvDateFilter === f.key ? 700 : 400,
+                      fontSize: ".8rem",
+                      cursor: "pointer",
+                      transition: "all .15s",
+                      letterSpacing: ".02em",
+                    }}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
+                <select className="form-select filter-select" value={rdvFilterStatus} onChange={e => setRdvFilterStatus(e.target.value as RdvStatus | "all")}>
+                  <option value="all">Tous les statuts</option>
+                  <option value="pending">En attente</option>
+                  <option value="confirmed">Confirmé</option>
+                  <option value="cancelled">Annulé</option>
+                </select>
+                <span className="filter-count">{filteredRdv.length} résultat{filteredRdv.length !== 1 ? "s" : ""}</span>
+              </div>
             </div>
 
             {filteredRdv.length === 0 ? (
@@ -600,11 +651,20 @@ export default function AdminDashboard() {
                 <p>Aucun rendez-vous trouvé.</p>
               </div>
             ) : (
-              <div className="res-list">
-                {filteredRdv.map(b => (
-                  <RdvBookingCard key={b.id} booking={b} onStatusChange={changeRdvStatus} />
-                ))}
-              </div>
+              <>
+                <div className="res-list">
+                  {rdvVisible.map(b => (
+                    <RdvBookingCard key={b.id} booking={b} onStatusChange={changeRdvStatus} />
+                  ))}
+                </div>
+                {rdvPageCount > 1 && (
+                  <div className="pagination">
+                    <button className="btn btn-ghost btn-sm" disabled={rdvPage === 0} onClick={() => setRdvPage(p => p - 1)}>← Précédent</button>
+                    <span className="page-info">{rdvPage + 1} / {rdvPageCount}</span>
+                    <button className="btn btn-ghost btn-sm" disabled={rdvPage >= rdvPageCount - 1} onClick={() => setRdvPage(p => p + 1)}>Suivant →</button>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
@@ -650,11 +710,20 @@ export default function AdminDashboard() {
                 <p>Aucune réservation trouvée.</p>
               </div>
             ) : (
-              <div className="res-list">
-                {filtered.map(r => (
-                  <ReservationCard key={r.id} reservation={r} onStatusChange={changeStatus} />
-                ))}
-              </div>
+              <>
+                <div className="res-list">
+                  {locVisible.map(r => (
+                    <ReservationCard key={r.id} reservation={r} onStatusChange={changeStatus} />
+                  ))}
+                </div>
+                {locPageCount > 1 && (
+                  <div className="pagination">
+                    <button className="btn btn-ghost btn-sm" disabled={locPage === 0} onClick={() => setLocPage(p => p - 1)}>← Précédent</button>
+                    <span className="page-info">{locPage + 1} / {locPageCount}</span>
+                    <button className="btn btn-ghost btn-sm" disabled={locPage >= locPageCount - 1} onClick={() => setLocPage(p => p + 1)}>Suivant →</button>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}

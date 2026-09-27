@@ -4,10 +4,14 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import emailjs from '@emailjs/browser'
-import '../vitrine.css'
 import './location.css'
 
-emailjs.init('uBxESnC6CTyqiNyS6')
+const EMAILJS_KEY = process.env.NEXT_PUBLIC_EMAILJS_KEY ?? 'uBxESnC6CTyqiNyS6'
+const EMAILJS_SERVICE = 'service_qph2t86'
+const EMAILJS_TEMPLATE = 'template_m6uvyuq'
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? 'location.phenoandco@gmail.com'
+
+emailjs.init(EMAILJS_KEY)
 
 const TIME_SLOTS: string[] = []
 for (let h = 10; h <= 18; h++) {
@@ -282,8 +286,8 @@ Commentaire : ${commentaire || 'Aucun'}
     let hasError = false
     try {
       await Promise.all([
-        emailjs.send('service_llizndy', 'template_m6uvyuq', { ...params, to_email: 'location.phenoandco@gmail.com', to_name: 'Manager PHENO&CO' }),
-        emailjs.send('service_llizndy', 'template_m6uvyuq', { ...params }),
+        emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params, to_email: ADMIN_EMAIL, to_name: 'Manager PHENO&CO' }),
+        emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params }),
       ])
     } catch { hasError = true }
 

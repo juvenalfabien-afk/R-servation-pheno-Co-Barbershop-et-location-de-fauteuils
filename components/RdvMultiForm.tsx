@@ -3,6 +3,14 @@
 import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import emailjs from '@emailjs/browser'
+
+const EMAILJS_KEY = process.env.NEXT_PUBLIC_EMAILJS_KEY ?? 'uBxESnC6CTyqiNyS6'
+const EMAILJS_SERVICE = 'service_qph2t86'
+const EMAILJS_TEMPLATE = 'template_m6uvyuq'
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? 'location.phenoandco@gmail.com'
+
+emailjs.init(EMAILJS_KEY)
 
 /* ────────────────────────────────────────────
    DATA
@@ -153,6 +161,7 @@ export default function RdvMultiForm() {
   const [bookedSlots, setBookedSlots] = useState<{ slot: string; duration: number }[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
   const [openDays, setOpenDays] = useState<number[]>([2, 3, 4, 5, 6])
   const [activeSlots, setActiveSlots] = useState<string[]>(SLOTS)
   const [closedDates, setClosedDates] = useState<string[]>([])
@@ -185,6 +194,58 @@ export default function RdvMultiForm() {
   function toggleOpt(id: string) {
     setOpts(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
   }
+
+  /* ── Restore form state on mount (sessionStorage > localStorage) ── */
+  useEffect(() => {
+    let sessionRestored = false
+    try {
+      const saved = sessionStorage.getItem('rdv_form')
+      if (saved) {
+        const s = JSON.parse(saved)
+        if (s.step && s.step < 8) {
+          if (s.cat) setCat(s.cat)
+          if (s.svcId) setSvcId(s.svcId)
+          if (s.degId) setDegId(s.degId)
+          if (Array.isArray(s.opts)) setOpts(s.opts)
+          if (s.date) setDate(s.date)
+          if (s.slot) setSlot(s.slot)
+          if (s.nom) setNom(s.nom)
+          if (s.tel) setTel(s.tel)
+          if (s.email) setEmail(s.email)
+          if (s.calY) setCalY(s.calY)
+          if (s.calM !== undefined) setCalM(s.calM)
+          setStep(s.step)
+          sessionRestored = true
+        }
+      }
+    } catch {}
+    if (!sessionRestored) {
+      try {
+        const saved = localStorage.getItem('rdv_user')
+        if (saved) {
+          const u = JSON.parse(saved)
+          if (u.nom) setNom(u.nom)
+          if (u.tel) setTel(u.tel)
+          if (u.email) setEmail(u.email)
+        }
+      } catch {}
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  /* ── Persist user identity to localStorage ── */
+  useEffect(() => {
+    if (!nom && !tel && !email) return
+    try { localStorage.setItem('rdv_user', JSON.stringify({ nom, tel, email })) } catch {}
+  }, [nom, tel, email])
+
+  /* ── Persist form state to sessionStorage ── */
+  useEffect(() => {
+    if (step === 8) { sessionStorage.removeItem('rdv_form'); return }
+    try {
+      sessionStorage.setItem('rdv_form', JSON.stringify({ step, cat, svcId, degId, opts, date, slot, nom, tel, email, calY, calM }))
+    } catch {}
+  }, [step, cat, svcId, degId, opts, date, slot, nom, tel, email, calY, calM])
 
   /* ── Fetch schedule config on mount ── */
   useEffect(() => {
@@ -231,7 +292,6 @@ export default function RdvMultiForm() {
     setSubmitError(false)
     const deg = degId ? DEGS.find(d => d.id === degId) : null
     const selectedOpts = opts.map(id => OPTS.find(o => o.id === id)).filter(Boolean) as typeof OPTS
-    // ID généré côté serveur — on n'envoie pas d'id
     const booking = {
       nom: nom.trim(),
       email: email.trim(),
@@ -255,12 +315,60 @@ export default function RdvMultiForm() {
         body: JSON.stringify(booking),
       })
       if (res.status === 409) {
-        // Créneau pris entre-temps — on revient au calendrier
         setSlot(null)
         setStep(6)
         return
       }
       if (!res.ok) throw new Error()
+
+      // ── Envoi emails de confirmation ──
+      const dateFormatted = date.split('-').reverse().join('/')
+      const optsList = selectedOpts.length > 0 ? selectedOpts.map(o => o.label).join(', ') : 'Aucune'
+      const summary = [
+        `RDV PHENO&CO Barbershop`,
+        ``,
+        `Client : ${nom.trim()} | Tél : ${tel.trim()} | Email : ${email.trim()}`,
+        `Profil : ${CAT_LABELS[cat]}`,
+        `Prestation : ${svc.label}`,
+        deg ? `Type dégradé : ${deg.label}` : '',
+        `Options : ${optsList}`,
+        ``,
+        `📅 Date : ${dateFormatted} à ${slot}`,
+        `⏱ Durée estimée : ${totalDur > 0 ? fmtD(totalDur) : 'Sur devis'}`,
+        `💶 Prix estimé : ${totalPrice > 0 ? totalPrice + ' €' : 'Sur devis'}`,
+        ``,
+        `📍 18 rue d'Alger, Saint-Roch — Montpellier`,
+      ].filter(l => l !== undefined).join('\n')
+
+      const calUrl = (() => {
+        const [hh, mm] = slot.split(':').map(Number)
+        const dur = Math.max(totalDur, 30)
+        const start = date.replace(/-/g, '') + 'T' + pad(hh) + pad(mm) + '00'
+        const endDt = new Date(new Date(date).setHours(hh, mm + dur))
+        const end = `${endDt.getFullYear()}${pad(endDt.getMonth()+1)}${pad(endDt.getDate())}T${pad(endDt.getHours())}${pad(endDt.getMinutes())}00`
+        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('RDV PHENO&CO — ' + svc.label)}&dates=${start}/${end}&location=${encodeURIComponent("18 Rue d'Alger, 34000 Montpellier")}`
+      })()
+
+      const params = {
+        name: nom.trim(),
+        message: summary,
+        title: 'Nouveau RDV PHENO&CO',
+        to_name: nom.trim(),
+        to_email: email.trim(),
+        telephone: tel.trim(),
+        commentaire: `${dateFormatted} à ${slot} — ${svc.label}`,
+        calendar_link: calUrl,
+      }
+
+      let mailFailed = false
+      try {
+        await Promise.all([
+          emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params, to_email: ADMIN_EMAIL, to_name: 'Manager PHENO&CO' }),
+          emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params }),
+        ])
+      } catch { mailFailed = true }
+      setEmailError(mailFailed)
+
       setStep(8)
     } catch {
       setSubmitError(true)
@@ -346,21 +454,27 @@ export default function RdvMultiForm() {
       <div className="rdv-top">
         {step > 1 && step < 8 ? (
           <button className="rdv-back-btn" onClick={goBack}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Retour
           </button>
         ) : (
           <Link href="/" className="rdv-back-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Accueil
           </Link>
         )}
         <span className="rdv-top-brand">PHENO&CO</span>
-        <div className="rdv-top-right" />
+        <div className="rdv-top-right">
+          {step > 1 && step < 8 && (
+            <Link href="/" className="rdv-back-btn" style={{ fontSize: '.7rem', opacity: .6 }}>
+              ✕
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Step header */}
@@ -778,7 +892,7 @@ export default function RdvMultiForm() {
 
       {/* ── STEP 8 : CONFIRMATION ── */}
       {step === 8 && (
-        <div className="rdv-main">
+        <div className="rdv-main" style={{ paddingBottom: '2rem' }}>
           <div className="rdv-card" style={{ textAlign: 'center', padding: '2rem 1.4rem' }}>
             <div className="rdv-conf-icon">✓</div>
             <div className="rdv-conf-title">Réservation confirmée !</div>
@@ -786,7 +900,10 @@ export default function RdvMultiForm() {
             <div className="rdv-conf-sub">
               Bonjour <strong>{nom}</strong>,<br /><br />
               Votre rendez-vous du <strong>{dateLabel} à {slot}</strong> est confirmé.<br />
-              Un e-mail de confirmation vous sera envoyé à l&apos;adresse indiquée.
+              {emailError
+                ? <>Un souci d&apos;envoi est survenu — contactez-nous par WhatsApp si besoin.</>
+                : <>Un e-mail de confirmation a été envoyé à <strong>{email}</strong>.</>
+              }
             </div>
 
             <div className="rdv-cal-add-btns">
@@ -814,6 +931,24 @@ export default function RdvMultiForm() {
               18 rue d&apos;Alger — Saint-Roch, Montpellier<br />
               07 69 43 26 05
             </div>
+
+            <Link
+              href="/"
+              style={{
+                display: 'inline-block',
+                marginTop: '1.25rem',
+                padding: '.5rem 1.25rem',
+                border: '1.5px solid rgba(201,168,76,.5)',
+                borderRadius: '8px',
+                color: '#C9A84C',
+                fontWeight: 600,
+                fontSize: '.85rem',
+                textDecoration: 'none',
+                transition: 'background .15s, border-color .15s',
+              }}
+            >
+              ← Retour à l&apos;accueil
+            </Link>
           </div>
         </div>
       )}

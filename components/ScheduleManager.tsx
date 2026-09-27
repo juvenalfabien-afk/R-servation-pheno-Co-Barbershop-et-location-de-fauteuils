@@ -15,12 +15,17 @@ export default function ScheduleManager() {
 
   // New closure form
   const [closDate, setClosDate] = useState('')
+  const [closDateEnd, setClosDateEnd] = useState('')
   const [closReason, setClosReason] = useState('')
 
   // New block form
   const [blkDate, setBlkDate] = useState('')
-  const [blkSlot, setBlkSlot] = useState('')
+  const [blkSlots, setBlkSlots] = useState<string[]>([])
   const [blkReason, setBlkReason] = useState('')
+
+  // Blocks pagination
+  const [blkPage, setBlkPage] = useState(0)
+  const BLK_PER_PAGE = 8
 
   const load = useCallback(async () => {
     const res = await fetch('/api/schedule')
@@ -47,33 +52,56 @@ export default function ScheduleManager() {
       body: JSON.stringify({ openDays, slots }),
     })
     setSaving(false)
-    if (res.ok) { showToast('Horaires sauvegardés ✓'); load() }
+    if (res.ok) { showToast('Créneaux mis à jour · visibles par les utilisateurs'); load() }
     else showToast('Erreur lors de la sauvegarde')
   }
 
   async function addClosure() {
     if (!closDate) return
-    const res = await fetch('/api/schedule/closures', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date: closDate, reason: closReason }),
-    })
-    if (res.ok) { setClosDate(''); setClosReason(''); load(); showToast('Fermeture ajoutée ✓') }
+    const dates: string[] = []
+    if (closDateEnd && closDateEnd > closDate) {
+      const cur = new Date(closDate)
+      const end = new Date(closDateEnd)
+      while (cur <= end) {
+        dates.push(cur.toISOString().slice(0, 10))
+        cur.setDate(cur.getDate() + 1)
+      }
+    } else {
+      dates.push(closDate)
+    }
+    await Promise.all(dates.map(date =>
+      fetch('/api/schedule/closures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date, reason: closReason }),
+      })
+    ))
+    setClosDate(''); setClosDateEnd(''); setClosReason(''); load()
+    showToast(dates.length > 1
+      ? `${dates.length} jours fermés · visibles par les utilisateurs`
+      : 'Fermeture ajoutée · visible par les utilisateurs'
+    )
   }
 
   async function deleteClosure(date: string) {
     await fetch(`/api/schedule/closures/${date}`, { method: 'DELETE' })
-    load()
   }
 
   async function addBlock() {
-    if (!blkDate || !blkSlot) return
-    const res = await fetch('/api/schedule/blocks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date: blkDate, slot: blkSlot, reason: blkReason }),
-    })
-    if (res.ok) { setBlkDate(''); setBlkSlot(''); setBlkReason(''); load(); showToast('Créneau bloqué ✓') }
+    if (!blkDate || blkSlots.length === 0) return
+    await Promise.all(blkSlots.map(slot =>
+      fetch('/api/schedule/blocks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: blkDate, slot, reason: blkReason }),
+      })
+    ))
+    setBlkDate(''); setBlkSlots([]); setBlkReason(''); load()
+    showToast(`${blkSlots.length} créneau${blkSlots.length > 1 ? 'x' : ''} bloqué${blkSlots.length > 1 ? 's' : ''} · visibles par les utilisateurs`)
+  }
+
+  function toggleBlkSlot(s: string) {
+    setBlkSlots(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])
   }
 
   async function deleteBlock(id: string) {
@@ -91,6 +119,24 @@ export default function ScheduleManager() {
 
   const fmtDate = (d: string) => d.split('-').reverse().join('/')
 
+  function groupClosures(closures: ScheduleClosure[]) {
+    const sorted = [...closures].sort((a, b) => a.date.localeCompare(b.date))
+    const groups: { dates: string[]; reason: string }[] = []
+    for (const c of sorted) {
+      const last = groups[groups.length - 1]
+      const prevDate = last?.dates[last.dates.length - 1]
+      const isNextDay = prevDate
+        ? new Date(c.date).getTime() - new Date(prevDate).getTime() === 86400000
+        : false
+      if (last && isNextDay && last.reason === (c.reason ?? '')) {
+        last.dates.push(c.date)
+      } else {
+        groups.push({ dates: [c.date], reason: c.reason ?? '' })
+      }
+    }
+    return groups
+  }
+
   if (!schedule) return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
       <span className="spinner" style={{ width: 28, height: 28, borderWidth: 3 }} />
@@ -101,8 +147,18 @@ export default function ScheduleManager() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
       {toast && (
-        <div className="toast show success" style={{ position: 'fixed', top: '1.5rem', right: '1.5rem', zIndex: 9999 }}>
-          <div className="toast-title">✓ {toast}</div>
+        <div style={{
+          position: 'fixed', top: '1.25rem', right: '1.25rem', zIndex: 9999,
+          background: 'rgba(22,163,74,.14)', border: '1px solid rgba(22,163,74,.28)',
+          borderRadius: 99, padding: '.35rem .85rem',
+          fontSize: '.78rem', fontWeight: 600, color: '#4ade80',
+          display: 'flex', alignItems: 'center', gap: '.35rem',
+          backdropFilter: 'blur(10px)', boxShadow: '0 2px 16px rgba(0,0,0,.35)',
+          animation: 'fadeInDown .18s ease',
+          letterSpacing: '.01em',
+        }}>
+          <span style={{ fontSize: '.82rem', lineHeight: 1 }}>✓</span>
+          {toast}
         </div>
       )}
 
@@ -187,16 +243,27 @@ export default function ScheduleManager() {
 
         <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', marginBottom: '1rem', alignItems: 'flex-end' }}>
           <div>
-            <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Date</div>
+            <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Du</div>
             <input
               type="date"
               className="form-input"
-              style={{ width: 160 }}
+              style={{ width: 152 }}
               value={closDate}
               onChange={e => setClosDate(e.target.value)}
             />
           </div>
-          <div style={{ flex: 1, minWidth: 140 }}>
+          <div>
+            <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Au <span style={{ opacity: .45, fontWeight: 400 }}>(optionnel)</span></div>
+            <input
+              type="date"
+              className="form-input"
+              style={{ width: 152 }}
+              value={closDateEnd}
+              min={closDate || undefined}
+              onChange={e => setClosDateEnd(e.target.value)}
+            />
+          </div>
+          <div style={{ flex: 1, minWidth: 130 }}>
             <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Motif (optionnel)</div>
             <input
               type="text"
@@ -213,25 +280,40 @@ export default function ScheduleManager() {
           <p style={{ color: 'rgba(255,255,255,.25)', fontSize: '.83rem' }}>Aucune fermeture prévue.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
-            {schedule.closures.map((c: ScheduleClosure) => (
-              <div key={c.date} style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '.5rem .75rem', borderRadius: 8,
-                background: 'rgba(255,100,100,.06)', border: '1px solid rgba(255,100,100,.15)',
-              }}>
-                <div>
-                  <span style={{ fontWeight: 600, color: '#fff', fontSize: '.85rem' }}>{fmtDate(c.date)}</span>
-                  {c.reason && <span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.78rem', marginLeft: '.5rem' }}>— {c.reason}</span>}
+            {groupClosures(schedule.closures).map(g => {
+              const isRange = g.dates.length > 1
+              const label = isRange
+                ? `${fmtDate(g.dates[0])} → ${fmtDate(g.dates[g.dates.length - 1])}`
+                : fmtDate(g.dates[0])
+              return (
+                <div key={g.dates[0]} style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '.5rem .75rem', borderRadius: 8,
+                  background: 'rgba(255,100,100,.06)', border: '1px solid rgba(255,100,100,.15)',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', flexWrap: 'wrap' }}>
+                    <span style={{ fontWeight: 600, color: '#fff', fontSize: '.85rem' }}>{label}</span>
+                    {isRange && (
+                      <span style={{
+                        fontSize: '.68rem', color: 'rgba(255,130,130,.7)',
+                        background: 'rgba(255,100,100,.1)', border: '1px solid rgba(255,100,100,.2)',
+                        borderRadius: 99, padding: '.1rem .45rem', fontWeight: 600,
+                      }}>
+                        {g.dates.length}j
+                      </span>
+                    )}
+                    {g.reason && <span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.78rem' }}>— {g.reason}</span>}
+                  </div>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => Promise.all(g.dates.map(d => deleteClosure(d))).then(load)}
+                    style={{ padding: '.25rem .6rem', fontSize: '.75rem', flexShrink: 0 }}
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => deleteClosure(c.date)}
-                  style={{ padding: '.25rem .6rem', fontSize: '.75rem' }}
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
@@ -245,7 +327,7 @@ export default function ScheduleManager() {
           Bloquer un seul horaire sur une date (rendez-vous perso, livraison…).
         </p>
 
-        <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', marginBottom: '1rem', alignItems: 'flex-end' }}>
+        <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', marginBottom: '.75rem', alignItems: 'flex-end' }}>
           <div>
             <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Date</div>
             <input
@@ -255,18 +337,6 @@ export default function ScheduleManager() {
               value={blkDate}
               onChange={e => setBlkDate(e.target.value)}
             />
-          </div>
-          <div>
-            <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Créneau</div>
-            <select
-              className="form-select"
-              style={{ width: 110 }}
-              value={blkSlot}
-              onChange={e => setBlkSlot(e.target.value)}
-            >
-              <option value="">--</option>
-              {ALL_SLOTS.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
           </div>
           <div style={{ flex: 1, minWidth: 140 }}>
             <div className="res-detail-label" style={{ marginBottom: '.3rem' }}>Motif (optionnel)</div>
@@ -278,35 +348,95 @@ export default function ScheduleManager() {
               onChange={e => setBlkReason(e.target.value)}
             />
           </div>
-          <button className="btn btn-primary btn-sm" onClick={addBlock} disabled={!blkDate || !blkSlot}>+ Bloquer</button>
         </div>
 
+        <div className="res-detail-label" style={{ marginBottom: '.5rem' }}>
+          Créneaux à bloquer
+          {blkSlots.length > 0 && (
+            <span style={{ marginLeft: '.5rem', color: 'var(--yellow)', fontWeight: 700 }}>
+              {blkSlots.length} sélectionné{blkSlots.length > 1 ? 's' : ''}
+            </span>
+          )}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))', gap: '.35rem', marginBottom: '1rem' }}>
+          {ALL_SLOTS.map(s => {
+            const sel = blkSlots.includes(s)
+            return (
+              <button
+                key={s}
+                onClick={() => toggleBlkSlot(s)}
+                style={{
+                  padding: '.35rem .25rem',
+                  borderRadius: 7,
+                  border: `1.5px solid ${sel ? 'var(--error)' : 'rgba(255,255,255,.1)'}`,
+                  background: sel ? 'rgba(239,68,68,.12)' : 'transparent',
+                  color: sel ? '#f87171' : 'rgba(255,255,255,.3)',
+                  fontWeight: sel ? 700 : 400,
+                  cursor: 'pointer',
+                  fontSize: '.78rem',
+                  transition: 'all .12s',
+                }}
+              >
+                {s}
+              </button>
+            )
+          })}
+        </div>
+
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={addBlock}
+          disabled={!blkDate || blkSlots.length === 0}
+          style={{ alignSelf: 'flex-start' }}
+        >
+          ✕ Bloquer {blkSlots.length > 0 ? `${blkSlots.length} créneau${blkSlots.length > 1 ? 'x' : ''}` : 'les créneaux'}
+        </button>
+
         {schedule.blocks.length === 0 ? (
-          <p style={{ color: 'rgba(255,255,255,.25)', fontSize: '.83rem' }}>Aucun créneau bloqué manuellement.</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
-            {schedule.blocks.map((b: ScheduleBlock) => (
-              <div key={b.id} style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '.5rem .75rem', borderRadius: 8,
-                background: 'rgba(253,224,71,.04)', border: '1px solid rgba(253,224,71,.12)',
-              }}>
-                <div>
-                  <span style={{ fontWeight: 600, color: '#fff', fontSize: '.85rem' }}>{fmtDate(b.date)}</span>
-                  <span style={{ color: 'var(--yellow)', fontSize: '.85rem', margin: '0 .4rem' }}>à {b.slot}</span>
-                  {b.reason && <span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.78rem' }}>— {b.reason}</span>}
-                </div>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => deleteBlock(b.id)}
-                  style={{ padding: '.25rem .6rem', fontSize: '.75rem' }}
-                >
-                  ✕
-                </button>
+          <p style={{ color: 'rgba(255,255,255,.25)', fontSize: '.83rem', marginTop: '1rem' }}>Aucun créneau bloqué manuellement.</p>
+        ) : (() => {
+          const pageCount = Math.ceil(schedule.blocks.length / BLK_PER_PAGE)
+          const safePage = Math.min(blkPage, pageCount - 1)
+          const visible = schedule.blocks.slice(safePage * BLK_PER_PAGE, (safePage + 1) * BLK_PER_PAGE)
+          return (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '1rem 0 .5rem' }}>
+                <span style={{ fontSize: '.75rem', color: 'rgba(255,255,255,.3)' }}>
+                  {schedule.blocks.length} créneau{schedule.blocks.length > 1 ? 'x' : ''} bloqué{schedule.blocks.length > 1 ? 's' : ''}
+                </span>
               </div>
-            ))}
-          </div>
-        )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
+                {visible.map((b: ScheduleBlock) => (
+                  <div key={b.id} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '.5rem .75rem', borderRadius: 8,
+                    background: 'rgba(253,224,71,.04)', border: '1px solid rgba(253,224,71,.12)',
+                  }}>
+                    <div>
+                      <span style={{ fontWeight: 600, color: '#fff', fontSize: '.85rem' }}>{fmtDate(b.date)}</span>
+                      <span style={{ color: 'var(--yellow)', fontSize: '.85rem', margin: '0 .4rem' }}>à {b.slot}</span>
+                      {b.reason && <span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.78rem' }}>— {b.reason}</span>}
+                    </div>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => deleteBlock(b.id)}
+                      style={{ padding: '.25rem .6rem', fontSize: '.75rem' }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {pageCount > 1 && (
+                <div className="pagination" style={{ marginTop: '.75rem' }}>
+                  <button className="btn btn-ghost btn-sm" disabled={safePage === 0} onClick={() => setBlkPage(p => p - 1)}>← Précédent</button>
+                  <span className="page-info">{safePage + 1} / {pageCount}</span>
+                  <button className="btn btn-ghost btn-sm" disabled={safePage >= pageCount - 1} onClick={() => setBlkPage(p => p + 1)}>Suivant →</button>
+                </div>
+              )}
+            </>
+          )
+        })()}
       </div>
 
     </div>

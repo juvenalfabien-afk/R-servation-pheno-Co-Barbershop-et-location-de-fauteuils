@@ -55,6 +55,7 @@ export async function POST(req: Request) {
     !VALID_FORMULES.includes(formule as FormulaType) ||
     !VALID_PACKS.includes(pack as PackType) ||
     typeof dateDebut !== 'string'    || !DATE_RE.test(dateDebut) ||
+    (dateFin !== undefined && (typeof dateFin !== 'string' || !DATE_RE.test(dateFin as string))) ||
     !VALID_STATUT.includes(statutPro as StatutPro) ||
     !VALID_EXP.includes(experience as ExperienceType) ||
     !Array.isArray(specialites)      || specialites.length === 0 ||
@@ -103,10 +104,13 @@ export async function GET() {
   if (!await isAdminAuthenticated()) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
+  const cutoff = new Date()
+  cutoff.setDate(cutoff.getDate() - 14)
   const { data, error } = await getSupabase()
     .from('reservations')
     .select('*')
     .order('created_at', { ascending: false })
+    .or(`status.neq.cancelled,created_at.gte.${cutoff.toISOString()}`)
   if (error) {
     console.error('Supabase select error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
