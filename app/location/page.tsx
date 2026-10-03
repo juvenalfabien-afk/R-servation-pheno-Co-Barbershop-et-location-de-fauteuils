@@ -220,6 +220,10 @@ export default function LocationPage() {
       showToast('Champs requis', 'Veuillez accepter les CGV et vous engager à fournir les documents.', true)
       return
     }
+    if (specialites.length === 0) {
+      showToast('Champs requis', 'Veuillez sélectionner au moins une spécialité.', true)
+      return
+    }
     setSending(true)
 
     const endDate = dateFin || dateDebut
@@ -256,25 +260,26 @@ export default function LocationPage() {
         body: JSON.stringify(reservationPayload),
       })
       if (!res.ok) throw new Error()
+      const json = await res.json().catch(() => ({}))
+
+      setSending(false)
+
+      /* ── Redirection vers la page de confirmation ── */
+      sessionStorage.setItem('phenoConfirmation', JSON.stringify({
+        nom, email, telephone,
+        formuleLabel: price?.formuleLabel,
+        packLabel: price?.packLabel,
+        durationDetails: price?.durationDetails,
+        dateDebut, dateFin: endDate, heureDebut, heureFin,
+        totalHT: price?.totalHT, tva: price?.tva, totalTTC: price?.totalTTC,
+        acompteTaux: price?.acompteTaux, acompteTTC: price?.acompteTTC, soldeTTC: price?.soldeTTC,
+        calLink, emailError: json.emailSent === false,
+      }))
     } catch {
       setSending(false)
       showToast('Erreur', 'Impossible d\'enregistrer votre demande. Veuillez réessayer ou nous contacter par WhatsApp.', true)
       return
     }
-
-    setSending(false)
-
-    /* ── Redirection vers la page de confirmation ── */
-    sessionStorage.setItem('phenoConfirmation', JSON.stringify({
-      nom, email, telephone,
-      formuleLabel: price?.formuleLabel,
-      packLabel: price?.packLabel,
-      durationDetails: price?.durationDetails,
-      dateDebut, dateFin: endDate, heureDebut, heureFin,
-      totalHT: price?.totalHT, tva: price?.tva, totalTTC: price?.totalTTC,
-      acompteTaux: price?.acompteTaux, acompteTTC: price?.acompteTTC, soldeTTC: price?.soldeTTC,
-      calLink, emailError: false,
-    }))
     router.push('/location/confirmation')
   }
 

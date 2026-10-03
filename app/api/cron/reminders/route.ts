@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabase'
-import { sendRdvReminder } from '@/lib/email'
+import { sendRdvReminder, sendRelance } from '@/lib/email'
 import { sendRdvReminderSms } from '@/lib/sms'
-import { sendRelance, sendRdvEmails } from '@/lib/email'
 import { getInactiveClients } from '@/lib/clients'
 
 // Appelé chaque jour à 18h via un cron externe (cron-job.org, Netlify, etc.)
