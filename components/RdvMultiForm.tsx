@@ -3,14 +3,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import emailjs from '@emailjs/browser'
-
-const EMAILJS_KEY = process.env.NEXT_PUBLIC_EMAILJS_KEY ?? 'uBxESnC6CTyqiNyS6'
-const EMAILJS_SERVICE = 'service_qph2t86'
-const EMAILJS_TEMPLATE = 'template_m6uvyuq'
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? 'location.phenoandco@gmail.com'
-
-emailjs.init(EMAILJS_KEY)
 
 /* ────────────────────────────────────────────
    DATA
@@ -162,6 +154,7 @@ export default function RdvMultiForm() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(false)
   const [emailError, setEmailError] = useState(false)
+  const [clientKnown, setClientKnown] = useState(false)
   const [openDays, setOpenDays] = useState<number[]>([2, 3, 4, 5, 6])
   const [activeSlots, setActiveSlots] = useState<string[]>(SLOTS)
   const [closedDates, setClosedDates] = useState<string[]>([])
@@ -321,54 +314,8 @@ export default function RdvMultiForm() {
       }
       if (!res.ok) throw new Error()
 
-      // ── Envoi emails de confirmation ──
-      const dateFormatted = date.split('-').reverse().join('/')
-      const optsList = selectedOpts.length > 0 ? selectedOpts.map(o => o.label).join(', ') : 'Aucune'
-      const summary = [
-        `RDV PHENO&CO Barbershop`,
-        ``,
-        `Client : ${nom.trim()} | Tél : ${tel.trim()} | Email : ${email.trim()}`,
-        `Profil : ${CAT_LABELS[cat]}`,
-        `Prestation : ${svc.label}`,
-        deg ? `Type dégradé : ${deg.label}` : '',
-        `Options : ${optsList}`,
-        ``,
-        `📅 Date : ${dateFormatted} à ${slot}`,
-        `⏱ Durée estimée : ${totalDur > 0 ? fmtD(totalDur) : 'Sur devis'}`,
-        `💶 Prix estimé : ${totalPrice > 0 ? totalPrice + ' €' : 'Sur devis'}`,
-        ``,
-        `📍 18 rue d'Alger, Saint-Roch — Montpellier`,
-      ].filter(l => l !== undefined).join('\n')
-
-      const calUrl = (() => {
-        const [hh, mm] = slot.split(':').map(Number)
-        const dur = Math.max(totalDur, 30)
-        const start = date.replace(/-/g, '') + 'T' + pad(hh) + pad(mm) + '00'
-        const endDt = new Date(new Date(date).setHours(hh, mm + dur))
-        const end = `${endDt.getFullYear()}${pad(endDt.getMonth()+1)}${pad(endDt.getDate())}T${pad(endDt.getHours())}${pad(endDt.getMinutes())}00`
-        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('RDV PHENO&CO — ' + svc.label)}&dates=${start}/${end}&location=${encodeURIComponent("18 Rue d'Alger, 34000 Montpellier")}`
-      })()
-
-      const params = {
-        name: nom.trim(),
-        message: summary,
-        title: 'Nouveau RDV PHENO&CO',
-        to_name: nom.trim(),
-        to_email: email.trim(),
-        telephone: tel.trim(),
-        commentaire: `${dateFormatted} à ${slot} — ${svc.label}`,
-        calendar_link: calUrl,
-      }
-
-      let mailFailed = false
-      try {
-        await Promise.all([
-          emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params, to_email: ADMIN_EMAIL, to_name: 'Manager PHENO&CO' }),
-          emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params }),
-        ])
-      } catch { mailFailed = true }
-      setEmailError(mailFailed)
-
+      const json = await res.json().catch(() => ({}))
+      setEmailError(json.emailSent === false)
       setStep(8)
     } catch {
       setSubmitError(true)
@@ -460,19 +407,12 @@ export default function RdvMultiForm() {
             Retour
           </button>
         ) : (
-          <Link href="/" className="rdv-back-btn">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Accueil
-          </Link>
+          <span className="rdv-top-right" />
         )}
-        <span className="rdv-top-brand">PHENO&CO</span>
+        <Link href="/" className="rdv-top-brand">PHENO&CO</Link>
         <div className="rdv-top-right">
-          {step > 1 && step < 8 && (
-            <Link href="/" className="rdv-back-btn" style={{ fontSize: '.7rem', opacity: .6 }}>
-              ✕
-            </Link>
+          {step < 8 && (
+            <Link href="/" className="rdv-quit-btn">Quitter</Link>
           )}
         </div>
       </div>
@@ -835,7 +775,37 @@ export default function RdvMultiForm() {
           <div className="rdv-main">
             <div className="rdv-card">
               <div className="rdv-card-title">Vos coordonnées</div>
-              <div className="rdv-card-sub">Pour recevoir votre confirmation par e-mail.</div>
+              <div className="rdv-card-sub">Pour recevoir votre confirmation par e-mail et SMS.</div>
+              {clientKnown && (
+                <div style={{ background: 'rgba(253,224,71,.08)', border: '1px solid rgba(253,224,71,.3)', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', fontSize: '13px', color: 'rgba(255,255,255,.75)' }}>
+                  👋 Bienvenue, on vous reconnaît ! Vos infos ont été pré-remplies.
+                </div>
+              )}
+              <div className="rdv-fg">
+                <label className="rdv-flbl">Adresse e-mail</label>
+                <input
+                  className="rdv-finput"
+                  type="email"
+                  placeholder="exemple@mail.com"
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setClientKnown(false) }}
+                  onBlur={async e => {
+                    const val = e.target.value.trim()
+                    if (!val.includes('@')) return
+                    try {
+                      const res = await fetch(`/api/clients/lookup?q=${encodeURIComponent(val)}`)
+                      if (res.ok) {
+                        const c = await res.json()
+                        if (c) {
+                          if (!nom) setNom(c.nom)
+                          if (!tel) setTel(c.telephone ?? '')
+                          setClientKnown(true)
+                        }
+                      }
+                    } catch {}
+                  }}
+                />
+              </div>
               <div className="rdv-fg">
                 <label className="rdv-flbl">Nom et prénom</label>
                 <input
@@ -847,23 +817,13 @@ export default function RdvMultiForm() {
                 />
               </div>
               <div className="rdv-fg">
-                <label className="rdv-flbl">Téléphone</label>
+                <label className="rdv-flbl">Téléphone / WhatsApp</label>
                 <input
                   className="rdv-finput"
                   type="tel"
                   placeholder="06 00 00 00 00"
                   value={tel}
                   onChange={e => setTel(e.target.value)}
-                />
-              </div>
-              <div className="rdv-fg">
-                <label className="rdv-flbl">Adresse e-mail</label>
-                <input
-                  className="rdv-finput"
-                  type="email"
-                  placeholder="exemple@mail.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
             </div>

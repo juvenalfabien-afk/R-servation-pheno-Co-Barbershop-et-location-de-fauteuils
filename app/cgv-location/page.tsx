@@ -11,7 +11,7 @@ export default function CgvPage() {
     <main>
       <div className="cgv-wrap">
         <nav className="cgv-nav">
-          <Link href="/" className="back-link">← Retour au formulaire</Link>
+          <Link href="/location" className="back-link">← Retour au formulaire</Link>
         </nav>
 
         <h1 className="cgv-heading">CGV &amp; Contrat de Location</h1>
@@ -154,7 +154,7 @@ export default function CgvPage() {
       <footer className="site-footer">
         <p>PHENO&CO — Barbershop &amp; Coworking · Montpellier</p>
         <p style={{ marginTop: '0.4rem' }}>
-          <Link href="/">← Retour au formulaire de réservation</Link>
+          <Link href="/location">← Retour au formulaire de réservation</Link>
         </p>
       </footer>
     </main>

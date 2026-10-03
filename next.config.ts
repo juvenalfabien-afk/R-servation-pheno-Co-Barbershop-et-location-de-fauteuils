@@ -10,11 +10,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.emailjs.com",
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob:",
-      "connect-src 'self' https://api.emailjs.com https://*.supabase.co",
+      "img-src 'self' data: blob: https://images.unsplash.com",
+      "connect-src 'self' https://*.supabase.co",
       "frame-src https://maps.google.com https://www.google.com",
     ].join('; '),
   },
@@ -22,7 +22,13 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   async headers() {
-    return [{ source: '/(.*)', headers: securityHeaders }]
+    return [
+      { source: '/(.*)', headers: securityHeaders },
+      {
+        source: '/admin(.*)',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ]
   },
   images: {
     formats: ['image/avif', 'image/webp'],

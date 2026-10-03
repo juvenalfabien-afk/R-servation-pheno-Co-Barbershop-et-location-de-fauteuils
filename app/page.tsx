@@ -3,15 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import emailjs from '@emailjs/browser'
 import './landing.css'
-
-const EMAILJS_SERVICE  = 'service_qph2t86'
-const EMAILJS_TEMPLATE = 'template_m6uvyuq'
-const EMAILJS_KEY      = process.env.NEXT_PUBLIC_EMAILJS_KEY ?? 'uBxESnC6CTyqiNyS6'
-const ADMIN_EMAIL      = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? 'location.phenoandco@gmail.com'
-
-emailjs.init(EMAILJS_KEY)
 
 const services = [
   {
@@ -65,16 +57,17 @@ export default function LandingPage() {
     if (!prenom || !email || !message) return
     setContactStatus('sending')
     try {
-      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
-        title:      'Message via site — PHENO&CO',
-        to_name:    'Manager PHENO&CO',
-        to_email:   ADMIN_EMAIL,
-        name:       `${prenom} ${nom}`.trim(),
-        message:    `De : ${prenom} ${nom}\nEmail : ${email}\nTél : ${tel || 'Non renseigné'}\n\n${message}`,
-        telephone:  tel || 'Non renseigné',
-        commentaire: 'Contact site web',
-        calendar_link: '',
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nom:       `${prenom} ${nom}`.trim(),
+          email,
+          telephone: tel || undefined,
+          message,
+        }),
       })
+      if (!res.ok) throw new Error()
       setContactStatus('ok')
       formRef.current?.reset()
     } catch {
@@ -322,7 +315,6 @@ export default function LandingPage() {
           <span>© 2026 PHENO&amp;CO — Montpellier</span>
           <div className="lp-footer-bar-links">
             <Link href="/mentions-legales">Mentions légales</Link>
-            <Link href="/admin" className="lp-admin-link">Admin</Link>
           </div>
         </div>
       </footer>

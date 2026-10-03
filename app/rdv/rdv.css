@@ -80,8 +80,19 @@
   font-size: 1.15rem;
   letter-spacing: .18em;
   color: var(--rdv-yellow);
+  text-decoration: none;
 }
 .rdv-top-right { width: 80px; display: flex; justify-content: flex-end; }
+.rdv-quit-btn {
+  font-size: .75rem;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 6px;
+  padding: .25rem .6rem;
+  transition: color .15s, border-color .15s;
+}
+.rdv-quit-btn:hover { color: #fff; border-color: rgba(255,255,255,.5); }
 
 /* â”€â”€ STEP HEADER â”€â”€ */
 .rdv-sh {

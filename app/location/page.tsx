@@ -3,15 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import emailjs from '@emailjs/browser'
 import './location.css'
-
-const EMAILJS_KEY = process.env.NEXT_PUBLIC_EMAILJS_KEY ?? 'uBxESnC6CTyqiNyS6'
-const EMAILJS_SERVICE = 'service_qph2t86'
-const EMAILJS_TEMPLATE = 'template_m6uvyuq'
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? 'location.phenoandco@gmail.com'
-
-emailjs.init(EMAILJS_KEY)
 
 const TIME_SLOTS: string[] = []
 for (let h = 10; h <= 18; h++) {
@@ -240,8 +232,6 @@ export default function LocationPage() {
     /* ── Sauvegarde Supabase ── */
     const formule = duree === 'courte' ? FORMULE_MAP[formuleCourte] : FORMULE_MAP[formuleLongue]
     const reservationPayload = {
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
       nom, email, telephone,
       typeDuration: duree === 'courte' ? 'court' : 'long',
       formule,
@@ -257,39 +247,20 @@ export default function LocationPage() {
       tva: price?.tva ?? 0,
       totalTTC: price?.totalTTC ?? 0,
       acompte: price?.acompteTTC ?? 0,
-      status: 'pending',
       notes: commentaire || undefined,
     }
-    fetch('/api/reservations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(reservationPayload),
-    }).catch(err => console.error('Supabase save error:', err))
-
-    const summaryText = `RÉCAPITULATIF
-
-Nom : ${nom} | Email : ${email} | Tél : ${telephone}
-Statut : ${getStatutLabel(statut)} | Expérience : ${getExperienceLabel(experience)}
-Spécialités : ${specialites.join(', ') || 'Aucune'}
-Formule : ${price?.formuleLabel} | Pack : ${price?.packLabel}
-Dates : ${dateDebut} → ${endDate} | Horaires : ${heureDebut}–${heureFin}
-Total TTC : ${price?.totalTTC.toFixed(2)} € | Acompte : ${price?.acompteTTC.toFixed(2)} €
-Commentaire : ${commentaire || 'Aucun'}
-📅 ${calLink}`.trim()
-
-    const params = {
-      name: nom, message: summaryText, title: 'Nouvelle Réservation Fauteuil',
-      to_name: nom, to_email: email,
-      telephone, commentaire: commentaire || 'Aucun', calendar_link: calLink,
-    }
-
-    let hasError = false
     try {
-      await Promise.all([
-        emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params, to_email: ADMIN_EMAIL, to_name: 'Manager PHENO&CO' }),
-        emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { ...params }),
-      ])
-    } catch { hasError = true }
+      const res = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reservationPayload),
+      })
+      if (!res.ok) throw new Error()
+    } catch {
+      setSending(false)
+      showToast('Erreur', 'Impossible d\'enregistrer votre demande. Veuillez réessayer ou nous contacter par WhatsApp.', true)
+      return
+    }
 
     setSending(false)
 
@@ -302,7 +273,7 @@ Commentaire : ${commentaire || 'Aucun'}
       dateDebut, dateFin: endDate, heureDebut, heureFin,
       totalHT: price?.totalHT, tva: price?.tva, totalTTC: price?.totalTTC,
       acompteTaux: price?.acompteTaux, acompteTTC: price?.acompteTTC, soldeTTC: price?.soldeTTC,
-      calLink, emailError: hasError,
+      calLink, emailError: false,
     }))
     router.push('/location/confirmation')
   }
@@ -533,7 +504,7 @@ Commentaire : ${commentaire || 'Aucun'}
                     </label>
                     <label className="loc-checkbox-item">
                       <input type="checkbox" required checked={cgv} onChange={e => setCgv(e.target.checked)} />
-                      <span>J&apos;ai lu et j&apos;accepte les CGV &amp; Contrat de location PHENO&amp;CO.</span>
+                      <span>J&apos;ai lu et j&apos;accepte les <Link href="/cgv-location" target="_blank" rel="noopener noreferrer" style={{ color: '#FDE047', textDecoration: 'underline' }}>CGV &amp; Contrat de location</Link> PHENO&amp;CO.</span>
                     </label>
                   </div>
                 </div>
@@ -687,9 +658,6 @@ Commentaire : ${commentaire || 'Aucun'}
 
       <footer className="loc-footer">
         <p>PHENO&amp;CO — Barbershop &amp; Coworking · Montpellier</p>
-        <Link href="/admin" style={{ color: '#333', fontSize: '0.75rem', textDecoration: 'none', marginTop: '0.5rem', display: 'inline-block' }}>
-          ⚙ Admin
-        </Link>
       </footer>
 
       {toast && (

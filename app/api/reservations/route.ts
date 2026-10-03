@@ -6,6 +6,9 @@ import type {
   Reservation, FormulaType, PackType,
   StatutPro, ExperienceType, SpecialiteType,
 } from '@/lib/types'
+import { sendLocationEmails } from '@/lib/email'
+import { sendLocationSmsClient } from '@/lib/sms'
+import { upsertClientLocation } from '@/lib/clients'
 
 const RATE_MAP = new Map<string, { count: number; reset: number }>()
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -31,6 +34,11 @@ function rateLimit(ip: string): boolean {
 }
 
 export async function POST(req: Request) {
+  const contentLength = parseInt(req.headers.get('content-length') ?? '0', 10)
+  if (contentLength > 32_768) {
+    return NextResponse.json({ error: 'Requête trop grande' }, { status: 413 })
+  }
+
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
   if (!rateLimit(ip)) {
     return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 })
@@ -97,7 +105,36 @@ export async function POST(req: Request) {
     console.error('Supabase insert error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
-  return NextResponse.json({ ok: true }, { status: 201 })
+
+  // Labels pour les templates email
+  const FORMULE_LABELS: Record<string, string> = {
+    horaire: "À l'heure — 10 € HT", 'demi-journee': 'Demi-journée (4h) — 35 € HT',
+    journee: 'Journée — 65 € HT', semaine: 'Semaine — 60 € HT / jour', mois: 'Mensuel — 55 € HT / jour',
+  }
+  const PACK_LABELS: Record<string, string> = {
+    aucun: 'Aucun — 0 €', essentiel: 'Pack Essentiel — 20 € HT / jour', premium: 'Pack Premium — 30 € HT / jour',
+  }
+
+  const emailData = {
+    nom: reservation.nom, email: reservation.email, telephone: reservation.telephone,
+    formuleLabel: FORMULE_LABELS[reservation.formule] ?? reservation.formule,
+    packLabel: PACK_LABELS[reservation.pack] ?? reservation.pack,
+    durationDetails: '',
+    dateDebut: reservation.dateDebut, dateFin: reservation.dateFin,
+    heureDebut: reservation.heureDebut ?? '10:00', heureFin: reservation.heureFin ?? '18:00',
+    totalHT: reservation.totalHT, tva: reservation.tva, totalTTC: reservation.totalTTC,
+    acompteTaux: reservation.typeDuration === 'court' ? 0.5 : 0.25,
+    acompteTTC: reservation.acompte,
+    soldeTTC: reservation.totalTTC - reservation.acompte,
+  }
+
+  const [emailSent] = await Promise.all([
+    sendLocationEmails(emailData),
+    sendLocationSmsClient({ nom: reservation.nom, telephone: reservation.telephone, dateDebut: reservation.dateDebut, formuleLabel: emailData.formuleLabel }),
+    upsertClientLocation({ nom: reservation.nom, email: reservation.email, telephone: reservation.telephone }),
+  ])
+
+  return NextResponse.json({ ok: true, emailSent }, { status: 201 })
 }
 
 export async function GET() {

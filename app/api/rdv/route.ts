@@ -4,6 +4,9 @@ import { toRdvRow, fromRdvRow } from '@/lib/rdv-supabase'
 import { isAdminAuthenticated } from '@/lib/auth'
 import type { RdvBooking } from '@/lib/rdv-types'
 import { randomUUID } from 'crypto'
+import { sendRdvEmails } from '@/lib/email'
+import { sendRdvSmsClient } from '@/lib/sms'
+import { upsertClientRdv } from '@/lib/clients'
 
 import { ALL_SLOTS } from '@/lib/schedule-types'
 
@@ -25,7 +28,11 @@ function rateLimit(ip: string, max = 5, windowMs = 60_000): boolean {
 }
 
 export async function POST(req: Request) {
-  // Rate limiting : 5 réservations par IP par minute
+  const contentLength = parseInt(req.headers.get('content-length') ?? '0', 10)
+  if (contentLength > 16_384) {
+    return NextResponse.json({ error: 'Requête trop grande' }, { status: 413 })
+  }
+
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
   if (!rateLimit(ip)) {
     return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 })
@@ -84,14 +91,28 @@ export async function POST(req: Request) {
     .insert([toRdvRow(booking)])
 
   if (error) {
-    // Conflit de créneau (UNIQUE constraint)
     if (error.code === '23505') {
       return NextResponse.json({ error: 'Ce créneau vient d\'être pris. Choisissez-en un autre.' }, { status: 409 })
     }
     console.error('Supabase rdv insert error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
-  return NextResponse.json({ ok: true }, { status: 201 })
+
+  // Emails + SMS + fiche client (non-bloquants)
+  const emailData = {
+    nom: booking.nom, email: booking.email, telephone: booking.telephone,
+    date: booking.date, slot: booking.slot,
+    prestationLabel: booking.prestationLabel, degradeLabel: booking.degradeLabel,
+    optionsLabels: booking.optionsLabels, totalPrice: booking.totalPrice,
+    totalDuration: booking.totalDuration, categorie: booking.categorie,
+  }
+  const [emailSent] = await Promise.all([
+    sendRdvEmails(emailData),
+    sendRdvSmsClient({ nom: booking.nom, telephone: booking.telephone, date: booking.date, slot: booking.slot, prestationLabel: booking.prestationLabel }),
+    upsertClientRdv({ nom: booking.nom, email: booking.email, telephone: booking.telephone }),
+  ])
+
+  return NextResponse.json({ ok: true, emailSent }, { status: 201 })
 }
 
 export async function GET() {

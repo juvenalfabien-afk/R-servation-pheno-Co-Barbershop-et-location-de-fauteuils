@@ -226,9 +226,6 @@ export default function ConfirmationPage() {
 
       <footer className="loc-footer">
         <p>PHENO&amp;CO — Barbershop &amp; Coworking · Montpellier</p>
-        <Link href="/admin" style={{ color: '#333', fontSize: '0.75rem', textDecoration: 'none', marginTop: '0.5rem', display: 'inline-block' }}>
-          ⚙ Admin
-        </Link>
       </footer>
 
     </div>
