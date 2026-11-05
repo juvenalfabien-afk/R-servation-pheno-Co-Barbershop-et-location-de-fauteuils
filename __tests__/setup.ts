@@ -20,3 +20,10 @@ process.env.NEXT_PUBLIC_SITE_URL = 'https://pheno.example.test'
 process.env.NEXT_PUBLIC_ADMIN_EMAIL = 'admin@pheno.example.test'
 process.env.TRUST_PROXY = 'false'
 process.env.HOSTING_PLATFORM = 'none'
+
+// A test must opt in to a mocked fetch. This prevents accidental calls to
+// Supabase, Resend, Twilio or any other external service from the test suite.
+globalThis.fetch = async input => {
+  const target = typeof input === 'string' ? input : input instanceof URL ? input.origin : input.url
+  throw new Error(`Network access is disabled in tests (${target})`)
+}

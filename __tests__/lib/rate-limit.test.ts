@@ -10,6 +10,7 @@ const originalEnvironment = { ...process.env }
 describe('distributed rate limiting', () => {
   beforeEach(() => {
     mockRpc.mockReset()
+    vi.stubEnv('NODE_ENV', 'test')
     process.env.RATE_LIMIT_SECRET = 'fictitious-rate-limit-secret-at-least-32-characters'
     process.env.TRUST_PROXY = 'false'
     process.env.HOSTING_PLATFORM = 'none'
@@ -54,6 +55,28 @@ describe('distributed rate limiting', () => {
     expect(parameters.p_key).not.toContain('203.0.113.20')
   })
 
+  it('refuse une requête lorsque la limite distribuée est atteinte', async () => {
+    mockRpc.mockResolvedValueOnce({ data: false, error: null })
+    await expect(enforceRateLimit(new Request('https://example.test'), {
+      namespace: 'limit-reached', limit: 1, windowSeconds: 60,
+    })).resolves.toBe(false)
+  })
+
+  it('laisse la RPC atomique arbitrer des requêtes concurrentes', async () => {
+    mockRpc
+      .mockResolvedValueOnce({ data: true, error: null })
+      .mockResolvedValueOnce({ data: false, error: null })
+
+    const request = new Request('https://example.test')
+    const results = await Promise.all([
+      enforceRateLimit(request, { namespace: 'concurrent', limit: 1, windowSeconds: 60 }),
+      enforceRateLimit(request, { namespace: 'concurrent', limit: 1, windowSeconds: 60 }),
+    ])
+
+    expect(results).toEqual([true, false])
+    expect(mockRpc).toHaveBeenCalledTimes(2)
+  })
+
   it('ne partage pas un unique bucket global si aucune IP fiable n’est disponible', async () => {
     mockRpc.mockResolvedValue({ data: true, error: null })
     await enforceRateLimit(new Request('https://example.test', {
@@ -68,15 +91,76 @@ describe('distributed rate limiting', () => {
 
   it('échoue fermé en production sans secret ou si la RPC échoue', async () => {
     vi.stubEnv('NODE_ENV', 'production')
+    process.env.HOSTING_PLATFORM = 'netlify'
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const request = new Request('https://example.test', {
+      headers: { 'x-nf-client-connection-ip': '203.0.113.20' },
+    })
     delete process.env.RATE_LIMIT_SECRET
-    await expect(enforceRateLimit(new Request('https://example.test'), {
+    await expect(enforceRateLimit(request, {
       namespace: 'missing', limit: 1, windowSeconds: 60,
     })).resolves.toBe(false)
 
     process.env.RATE_LIMIT_SECRET = 'fictitious-rate-limit-secret-at-least-32-characters'
     mockRpc.mockResolvedValueOnce({ data: null, error: new Error('unavailable') })
-    await expect(enforceRateLimit(new Request('https://example.test'), {
+    await expect(enforceRateLimit(request, {
       namespace: 'failure', limit: 1, windowSeconds: 60,
     })).resolves.toBe(false)
+    expect(errorSpy).toHaveBeenCalledTimes(2)
+  })
+
+  it('échoue fermé en production lorsque Supabase lève une exception', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    process.env.HOSTING_PLATFORM = 'netlify'
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockRpc.mockRejectedValueOnce(new Error('unavailable'))
+    await expect(enforceRateLimit(new Request('https://example.test', {
+      headers: { 'x-nf-client-connection-ip': '203.0.113.20' },
+    }), {
+      namespace: 'exception', limit: 1, windowSeconds: 60,
+    })).resolves.toBe(false)
+  })
+
+  it('utilise le fallback mémoire uniquement en environnement isolé', async () => {
+    delete process.env.RATE_LIMIT_SECRET
+    await expect(enforceRateLimit(new Request('https://example.test'), {
+      namespace: 'local-fallback', limit: 1, windowSeconds: 60,
+    })).resolves.toBe(true)
+    await expect(enforceRateLimit(new Request('https://example.test'), {
+      namespace: 'local-fallback', limit: 1, windowSeconds: 60,
+    })).resolves.toBe(false)
+  })
+
+  it('ignore les adresses falsifiées provenant de plateformes non configurées', () => {
+    const forged = new Request('https://example.test', { headers: {
+      'x-forwarded-for': '203.0.113.1',
+      'x-vercel-forwarded-for': '203.0.113.2',
+      'cf-connecting-ip': '203.0.113.3',
+      'x-nf-client-connection-ip': '203.0.113.4',
+    } })
+    expect(getClientAddress(forged)).toBe('unknown')
+  })
+
+  it('refuse en production une identité sans en-tête de plateforme fiable', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    process.env.HOSTING_PLATFORM = 'netlify'
+    process.env.TRUST_PROXY = 'true'
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    const forged = new Request('https://example.test', {
+      headers: { 'x-forwarded-for': '203.0.113.20' },
+    })
+    await expect(enforceRateLimit(forged, {
+      namespace: 'trusted-identity', limit: 5, windowSeconds: 60,
+    })).resolves.toBe(false)
+    expect(mockRpc).not.toHaveBeenCalled()
+
+    mockRpc.mockResolvedValueOnce({ data: true, error: null })
+    const trusted = new Request('https://example.test', {
+      headers: { 'x-nf-client-connection-ip': '203.0.113.21' },
+    })
+    await expect(enforceRateLimit(trusted, {
+      namespace: 'trusted-identity', limit: 5, windowSeconds: 60,
+    })).resolves.toBe(true)
   })
 })

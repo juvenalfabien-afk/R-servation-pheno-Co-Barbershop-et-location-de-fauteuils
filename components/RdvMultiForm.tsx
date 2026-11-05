@@ -9,6 +9,12 @@ import Link from 'next/link'
 ──────────────────────────────────────────── */
 import { SVCS, DEGS, OPTS, FIDELE_PRIX, type Cat } from '@/lib/rdv-catalog'
 import { minimumBookingDateTime } from '@/lib/booking-time'
+import { buildRdvCalendarDays, overlapsBookedSlot } from '@/lib/rdv-calendar'
+import {
+  clearRememberedContact,
+  readRememberedContact,
+  saveRememberedContact,
+} from '@/lib/rdv-contact-storage'
 const SLOTS = ['10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','16:00','16:30','17:00','17:30']
 const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
 const CAT_LABELS: Record<Cat, string> = { homme: 'Homme', femme: 'Femme', enfant: 'Enfant 2–16 ans' }
@@ -51,19 +57,21 @@ function pad(n: number) { return n < 10 ? '0' + n : '' + n }
 /* ────────────────────────────────────────────
    STEP INDICATOR
 ──────────────────────────────────────────── */
-function StepIndicator({ current, total }: { current: number; total: number }) {
+function StepIndicator({ current, total, label }: { current: number; total: number; label: string }) {
   return (
     <div className="rdv-si">
-      {Array.from({ length: total }, (_, i) => {
-        const n = i + 1
-        const cls = n < current ? 'done' : n === current ? 'active' : ''
-        return (
-          <span key={n} style={{ display: 'contents' }}>
-            <span className={`rdv-sdot ${cls}`}>{n < current ? '✓' : n}</span>
-            {i < total - 1 && <span className={`rdv-sline ${n < current ? 'done' : ''}`} />}
-          </span>
-        )
-      })}
+      <div className="rdv-si-copy">
+        <span className="rdv-si-label">{label}</span>
+        <span className="rdv-si-count">Étape {current} sur {total}</span>
+      </div>
+      <div className="rdv-si-track" aria-hidden="true">
+        {Array.from({ length: total }, (_, i) => (
+          <span
+            key={i}
+            className={`rdv-si-segment${i < current ? ' done' : ''}${i === current - 1 ? ' active' : ''}`}
+          />
+        ))}
+      </div>
     </div>
   )
 }
@@ -100,12 +108,14 @@ export default function RdvMultiForm() {
   const [tel, setTel] = useState('')
   const [email, setEmail] = useState('')
   const [marketingConsent, setMarketingConsent] = useState(false)
+  const [rememberContact, setRememberContact] = useState(false)
   const [step, setStep] = useState(1)
   const [bookedSlots, setBookedSlots] = useState<{ slot: string; duration: number }[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(false)
   const [emailError, setEmailError] = useState(false)
   const [clientKnown, setClientKnown] = useState(false)
+  const [contactRestored, setContactRestored] = useState(false)
   const [openDays, setOpenDays] = useState<number[]>([2, 3, 4, 5, 6])
   const [activeSlots, setActiveSlots] = useState<string[]>(SLOTS)
   const [closedDates, setClosedDates] = useState<string[]>([])
@@ -172,6 +182,7 @@ export default function RdvMultiForm() {
           if (s.nom) setNom(s.nom)
           if (s.tel) setTel(s.tel)
           if (s.email) setEmail(s.email)
+          if (s.rememberContact === true) setRememberContact(true)
           if (s.calY) setCalY(s.calY)
           if (s.calM !== undefined) setCalM(s.calM)
           setStep(s.step)
@@ -181,42 +192,29 @@ export default function RdvMultiForm() {
     } catch {}
     if (!sessionRestored) {
       try {
-        const saved = sessionStorage.getItem('rdv_user')
-        if (saved) {
-          const stored = JSON.parse(saved)
-          if (typeof stored.expiresAt !== 'number' || stored.expiresAt <= Date.now()) {
-            sessionStorage.removeItem('rdv_user')
-          } else {
-            const u = stored.data ?? {}
-            if (u.nom) setNom(u.nom)
-            if (u.tel) setTel(u.tel)
-            if (u.email) setEmail(u.email)
-          }
+        sessionStorage.removeItem('rdv_user')
+      } catch {}
+      try {
+        const contact = readRememberedContact(localStorage)
+        if (contact) {
+          setNom(contact.nom)
+          setTel(contact.tel)
+          setEmail(contact.email)
+          setRememberContact(true)
+          setContactRestored(true)
+          setClientKnown(true)
         }
       } catch {}
     }
-    // Supprime l’ancienne copie persistante utilisée par les versions précédentes.
-    try { localStorage.removeItem('rdv_user') } catch {}
   }, [])
-
-  /* ── Keep user identity only for the current tab, for at most eight hours ── */
-  useEffect(() => {
-    if (!nom && !tel && !email) return
-    try {
-      sessionStorage.setItem('rdv_user', JSON.stringify({
-        expiresAt: Date.now() + 8 * 60 * 60 * 1000,
-        data: { nom, tel, email },
-      }))
-    } catch {}
-  }, [nom, tel, email])
 
   /* ── Persist form state to sessionStorage ── */
   useEffect(() => {
     if (step === 9) { sessionStorage.removeItem('rdv_form'); return }
     try {
-      sessionStorage.setItem('rdv_form', JSON.stringify({ step, cat, svcId, degId, opts, lon, obj, nature, etats, message, date, slot, nom, tel, email, calY, calM }))
+      sessionStorage.setItem('rdv_form', JSON.stringify({ step, cat, svcId, degId, opts, lon, obj, nature, etats, message, date, slot, nom, tel, email, rememberContact, calY, calM }))
     } catch {}
-  }, [step, cat, svcId, degId, opts, lon, obj, nature, etats, message, date, slot, nom, tel, email, calY, calM])
+  }, [step, cat, svcId, degId, opts, lon, obj, nature, etats, message, date, slot, nom, tel, email, rememberContact, calY, calM])
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -278,18 +276,8 @@ export default function RdvMultiForm() {
   }, [date])
 
   /* ── Slot availability ── */
-  function toMin(s: string) {
-    const [h, m] = s.split(':').map(Number)
-    return h * 60 + m
-  }
   function isSlotBooked(s: string) {
-    const sMin = toMin(s)
-    const sEnd = sMin + Math.max(totalDur, 30)
-    return bookedSlots.some(b => {
-      const bMin = toMin(b.slot)
-      const bEnd = bMin + Math.max(b.duration, 30)
-      return sMin < bEnd && sEnd > bMin
-    })
+    return overlapsBookedSlot(s, totalDur, bookedSlots)
   }
 
   function isSlotTooSoon(s: string) {
@@ -346,6 +334,13 @@ export default function RdvMultiForm() {
       if (!res.ok) throw new Error()
 
       const json = await res.json().catch(() => ({}))
+      try {
+        if (rememberContact) {
+          saveRememberedContact(localStorage, { nom: nom.trim(), tel: tel.trim(), email: email.trim() })
+        } else {
+          clearRememberedContact(localStorage)
+        }
+      } catch {}
       setEmailError(json.emailSent === false)
       setStep(9)
     } catch {
@@ -360,26 +355,13 @@ export default function RdvMultiForm() {
   function nextM() { if (calM === 11) { setCalM(0); setCalY(y => y + 1) } else { setCalM(m => m + 1) } }
 
   function buildCalDays() {
-    const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const first = new Date(calY, calM, 1).getDay()
-    const off = (first + 6) % 7 // Monday = 0
-    const dim = new Date(calY, calM + 1, 0).getDate()
-    const days = []
-    for (let e = 0; e < off; e++) days.push({ n: 0, cls: 'rdv-cd off', ds: '' })
-    for (let n = 1; n <= dim; n++) {
-      const dt = new Date(calY, calM, n)
-      const ds = `${calY}-${pad(calM + 1)}-${pad(n)}`
-      const isPast = dt < today
-      const dow = dt.getDay()
-      const isClosed = !openDays.includes(dow) || closedDates.includes(ds)
-      let cls = 'rdv-cd'
-      if (isPast || isClosed) cls += ' off'
-      else if (date === ds) cls += ' csel'
-      else cls += ' avail'
-      days.push({ n, cls, ds })
-    }
-    return days
+    return buildRdvCalendarDays({
+      year: calY,
+      month: calM,
+      selectedDate: date,
+      openDays,
+      closedDates,
+    })
   }
 
   /* ── Confirmation text ── */
@@ -420,46 +402,60 @@ export default function RdvMultiForm() {
   const calDays = buildCalDays()
 
   const progPct = step >= 9 ? 100 : Math.round((displayStep(step) / totalDisplaySteps) * 100)
+  const stepLabel = [
+    '',
+    'Votre profil',
+    'Votre prestation',
+    'Votre coupe',
+    'Vos cheveux',
+    'Vos options',
+    'Votre récapitulatif',
+    'Votre créneau',
+    'Vos coordonnées',
+  ][step] ?? 'Votre rendez-vous'
 
   return (
     <div className="rdv-wrap">
-      {/* Progress bar */}
-      <div className="rdv-prog">
-        <div className="rdv-prog-fill" style={{ width: `${progPct}%` }} />
-      </div>
-
-      {/* Top bar */}
-      <div className="rdv-top">
-        {step > 1 && step < 9 ? (
-          <button className="rdv-back-btn" onClick={goBack}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Retour
-          </button>
-        ) : (
-          <span className="rdv-top-right" />
-        )}
-        <Link href="/" className="rdv-top-brand">PHENO&CO</Link>
-        <div className="rdv-top-right">
-          {step < 9 && (
-            <Link href="/" className="rdv-quit-btn">Quitter</Link>
-          )}
+      <header className="rdv-booking-header">
+        <div className="rdv-top">
+          <div className="rdv-top-side rdv-top-side-start">
+            {step > 1 && step < 9 && (
+              <button className="rdv-back-btn" onClick={goBack} aria-label="Revenir à l'étape précédente">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                <span>Retour</span>
+              </button>
+            )}
+          </div>
+          <Link href="/" className="rdv-top-brand" aria-label="PHENO&CO - Accueil">
+            <span>PHENO<span className="rdv-top-brand-amp">&amp;</span>CO</span>
+            <small>Rendez-vous</small>
+          </Link>
+          <div className="rdv-top-side rdv-top-side-end">
+            {step < 9 && (
+              <Link href="/" className="rdv-quit-btn">
+                <span>Quitter</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Step header */}
-      <div className="rdv-sh">
-        <span className="rdv-sh-sub">BARBERSHOP MONTPELLIER</span>
-      </div>
+        {step < 9 && (
+          <StepIndicator
+            current={displayStep(step)}
+            total={totalDisplaySteps}
+            label={stepLabel}
+          />
+        )}
 
-      {/* Step indicator (not on confirmation) */}
-      {step < 9 && (
-        <StepIndicator
-          current={displayStep(step)}
-          total={totalDisplaySteps}
-        />
-      )}
+        <div className="rdv-prog" aria-hidden="true">
+          <div className="rdv-prog-fill" style={{ width: `${progPct}%` }} />
+        </div>
+      </header>
 
       {/* ── STEP 1 : CATÉGORIE ── */}
       {step === 1 && (
@@ -502,9 +498,10 @@ export default function RdvMultiForm() {
           </div>
           <div className="rdv-sticky">
             <div className="rdv-sticky-in">
-              <div className="rdv-nav-btns">
+              <div className="rdv-nav-btns rdv-nav-btns-single">
                 <button className="rdv-btn-next" disabled={!cat} onClick={() => setStep(2)}>
-                  Continuer →
+                  <span>Voir les prestations</span>
+                  <span className="rdv-btn-arrow" aria-hidden="true">→</span>
                 </button>
               </div>
             </div>
@@ -678,7 +675,7 @@ export default function RdvMultiForm() {
 
               <div className="rdv-hair-group">
                 <div className="rdv-sec-lbl">Dans quel état sont-ils aujourd&apos;hui ?</div>
-                <div className="rdv-hair-grid rdv-hair-grid-3">
+                <div className="rdv-hair-grid rdv-hair-grid-3 rdv-hair-grid-state">
                   {HAIR_STATES.map(item => (
                     <button key={item.id} type="button" className={`rdv-hair-choice rdv-hair-multi${etats.includes(item.id) ? ' sel' : ''}`} onClick={() => toggleHairState(item.id)}>
                       <span className="rdv-hair-check" aria-hidden="true">{etats.includes(item.id) ? '✓' : ''}</span>
@@ -937,12 +934,29 @@ export default function RdvMultiForm() {
                   Votre fiche client a été reconnue{svc && FIDELE_PRIX[svc.id] !== undefined ? ' et votre tarif fidélité est appliqué.' : '.'}
                 </div>
               )}
+              {contactRestored && (
+                <div className="rdv-saved-contact">
+                  <span>Coordonnées préremplies depuis votre dernière réservation sur cet appareil.</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try { clearRememberedContact(localStorage) } catch {}
+                      setNom(''); setTel(''); setEmail('')
+                      setRememberContact(false)
+                      setContactRestored(false); setClientKnown(false)
+                    }}
+                  >
+                    Effacer
+                  </button>
+                </div>
+              )}
               <div className="rdv-fg">
                 <label className="rdv-flbl" htmlFor="rdv-name">Nom et prénom</label>
                 <input
                   id="rdv-name"
                   className="rdv-finput"
                   type="text"
+                  autoComplete="name"
                   placeholder="Ex : Jean Dupont"
                   value={nom}
                   onChange={e => setNom(e.target.value)}
@@ -954,6 +968,7 @@ export default function RdvMultiForm() {
                   id="rdv-phone"
                   className="rdv-finput"
                   type="tel"
+                  autoComplete="tel"
                   placeholder="06 00 00 00 00"
                   value={tel}
                   onChange={e => { setTel(e.target.value); setClientKnown(false) }}
@@ -965,6 +980,7 @@ export default function RdvMultiForm() {
                   id="rdv-email"
                   className="rdv-finput"
                   type="email"
+                  autoComplete="email"
                   placeholder="exemple@mail.com"
                   value={email}
                   onChange={e => { setEmail(e.target.value); setClientKnown(false) }}
@@ -996,6 +1012,22 @@ export default function RdvMultiForm() {
                   onChange={e => setMessage(e.target.value)}
                 />
                 <span className="rdv-char-count">{message.length}/500</span>
+              </div>
+              <div className="rdv-fg">
+                <label className="rdv-flbl" style={{ display: 'flex', gap: '.6rem', alignItems: 'flex-start' }}>
+                  <input
+                    type="checkbox"
+                    checked={rememberContact}
+                    onChange={event => {
+                      setRememberContact(event.target.checked)
+                      if (!event.target.checked) {
+                        try { clearRememberedContact(localStorage) } catch {}
+                        setContactRestored(false)
+                      }
+                    }}
+                  />
+                  <span>Mémoriser mes coordonnées sur cet appareil pendant 30 jours. Facultatif.</span>
+                </label>
               </div>
               <div className="rdv-fg">
                 <label className="rdv-flbl" style={{ display: 'flex', gap: '.6rem', alignItems: 'flex-start' }}>
@@ -1059,8 +1091,8 @@ export default function RdvMultiForm() {
                 style={{ background: 'rgba(201,168,76,.1)', borderColor: '#C9A84C', color: '#C9A84C', fontWeight: 700 }}
                 onClick={() => {
                   setCat(null); setSvcId(null); setDegId(null); setOpts([])
-                  setLon(''); setObj(''); setNature(''); setEtats([]); setMessage(''); setClientKnown(false)
-                  setDate(null); setSlot(null); setNom(''); setTel(''); setEmail('')
+                  setLon(''); setObj(''); setNature(''); setEtats([]); setMessage('')
+                  setDate(null); setSlot(null); setClientKnown(true)
                   setStep(1)
                 }}
               >

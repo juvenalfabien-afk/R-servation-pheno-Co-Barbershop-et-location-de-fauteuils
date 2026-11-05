@@ -10,6 +10,7 @@ const DEFAULT_CONFIG = {
 }
 
 export async function GET() {
+  const admin = await isAdminAuthenticated()
   const sb = getSupabase()
   const [cfgRes, closRes, blkRes] = await Promise.all([
     sb.from('schedule_config').select('*').eq('id', 'main').single(),
@@ -25,8 +26,12 @@ export async function GET() {
       slots:     cfg.slots,
       updatedAt: cfg.updated_at,
     },
-    closures: (closRes.data ?? []).map((r: { date: string; reason: string }) => ({ date: r.date, reason: r.reason ?? '' })),
-    blocks:   (blkRes.data ?? []).map((r: { id: string; date: string; slot: string; reason: string }) => ({ id: r.id, date: r.date, slot: r.slot, reason: r.reason ?? '' })),
+    closures: (closRes.data ?? []).map((r: { date: string; reason: string }) => admin
+      ? { date: r.date, reason: r.reason ?? '' }
+      : { date: r.date }),
+    blocks:   (blkRes.data ?? []).map((r: { id: string; date: string; slot: string; reason: string }) => admin
+      ? { id: r.id, date: r.date, slot: r.slot, reason: r.reason ?? '' }
+      : { date: r.date, slot: r.slot }),
   })
 }
 

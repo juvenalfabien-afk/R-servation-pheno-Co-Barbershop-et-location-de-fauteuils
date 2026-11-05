@@ -36,6 +36,10 @@ export default function SiteNav() {
     }
   }, [open])
 
+  // Le parcours de réservation possède son propre en-tête compact afin de
+  // conserver un maximum de hauteur utile sur mobile.
+  if (pathname.startsWith('/rdv')) return null
+
   return (
     <header className="site-nav-shell" ref={shellRef}>
       <nav className="site-nav" aria-label="Navigation principale">

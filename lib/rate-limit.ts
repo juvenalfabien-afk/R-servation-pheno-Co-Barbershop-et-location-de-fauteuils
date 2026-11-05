@@ -26,7 +26,7 @@ export function getClientAddress(request: Request): string {
         : null
 
   if (platformAddress) return platformAddress
-  if (process.env.TRUST_PROXY === 'true') {
+  if (platform === 'none' && process.env.TRUST_PROXY === 'true') {
     return firstHeaderAddress(request.headers.get('x-forwarded-for')) ?? 'unknown'
   }
   return 'unknown'
@@ -36,18 +36,23 @@ function boundedHeader(request: Request, name: string): string {
   return (request.headers.get(name) ?? '').slice(0, 160)
 }
 
-function opaqueKey(request: Request, namespace: string): string | null {
+function opaqueKey(request: Request, namespace: string): { key: string | null; reason?: 'missing_secret' | 'untrusted_identity' } {
   const secret = process.env.RATE_LIMIT_SECRET
-  if (!secret || secret.length < 32) return null
+  if (!secret || secret.length < 32) return { key: null, reason: 'missing_secret' }
   const address = getClientAddress(request)
-  // Ce fallback évite qu'une seule adresse « unknown » bloque tous les visiteurs.
-  // Il est seulement défensif : une source IP approuvée reste obligatoire en production.
+  // Les indices contrôlés par le navigateur ne servent qu'en développement/test.
+  // Une adresse fournie par le proxy explicitement déclaré est exigée en production.
+  if (address === 'unknown' && !mayUseLocalFallback()) {
+    return { key: null, reason: 'untrusted_identity' }
+  }
   const identity = address === 'unknown'
     ? `fallback:${boundedHeader(request, 'user-agent')}:${boundedHeader(request, 'accept-language')}:${boundedHeader(request, 'sec-ch-ua')}`
     : `ip:${address}`
-  return createHmac('sha256', secret)
-    .update(`${namespace}:${identity}`)
-    .digest('hex')
+  return {
+    key: createHmac('sha256', secret)
+      .update(`${namespace}:${identity}`)
+      .digest('hex'),
+  }
 }
 
 function localRateLimit(key: string, limit: number, windowSeconds: number): boolean {
@@ -62,11 +67,24 @@ function localRateLimit(key: string, limit: number, windowSeconds: number): bool
   return true
 }
 
+function mayUseLocalFallback(): boolean {
+  return process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
+}
+
+function reportUnavailable(namespace: string, reason: 'missing_secret' | 'untrusted_identity' | 'rpc_error' | 'rpc_exception'): void {
+  // Never log the client address, the opaque key or provider details.
+  console.error('[rate-limit] distributed limiter unavailable', { namespace, reason })
+}
+
 export async function enforceRateLimit(request: Request, options: RateLimitOptions): Promise<boolean> {
-  const key = opaqueKey(request, options.namespace)
+  const identity = opaqueKey(request, options.namespace)
+  const key = identity.key
   if (!key) {
-    // Sans secret configuré, utiliser le rate-limit en mémoire comme filet de sécurité minimal.
-    return localRateLimit(`${options.namespace}:local`, options.limit, options.windowSeconds)
+    if (mayUseLocalFallback()) {
+      return localRateLimit(`${options.namespace}:local`, options.limit, options.windowSeconds)
+    }
+    reportUnavailable(options.namespace, identity.reason ?? 'untrusted_identity')
+    return false
   }
 
   try {
@@ -76,8 +94,12 @@ export async function enforceRateLimit(request: Request, options: RateLimitOptio
       p_window_seconds: options.windowSeconds,
     })
     if (!error) return data === true
+    if (mayUseLocalFallback()) return localRateLimit(key, options.limit, options.windowSeconds)
+    reportUnavailable(options.namespace, 'rpc_error')
+    return false
   } catch {
-    // Supabase indisponible : fallback mémoire pour ne pas bloquer l'accès.
+    if (mayUseLocalFallback()) return localRateLimit(key, options.limit, options.windowSeconds)
+    reportUnavailable(options.namespace, 'rpc_exception')
+    return false
   }
-  return localRateLimit(key, options.limit, options.windowSeconds)
 }

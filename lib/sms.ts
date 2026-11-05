@@ -1,5 +1,6 @@
 import type { DeliveryResult } from './delivery'
 import { safeDeliveryLog } from './delivery'
+import { providerFetch } from './provider-fetch'
 
 const TWILIO_SID   = process.env.TWILIO_ACCOUNT_SID
 const TWILIO_AUTH  = process.env.TWILIO_AUTH_TOKEN
@@ -20,7 +21,7 @@ async function sendSMS(to: string, body: string): Promise<DeliveryResult> {
   const credentials = Buffer.from(`${TWILIO_SID}:${TWILIO_AUTH}`).toString('base64')
   const form = new URLSearchParams({ To: toFormatted, From: TWILIO_FROM, Body: body })
   try {
-    const res = await fetch(
+    const res = await providerFetch(
       `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`,
       {
         method: 'POST',

@@ -18,13 +18,23 @@ export async function deliverClaimed(
   channel: DeliveryChannel,
   send: (idempotencyKey: string) => Promise<DeliveryResult>,
 ): Promise<ClaimedDeliveryState> {
-  const supabase = getSupabase()
-  const { data, error } = await supabase.rpc('claim_notification_delivery', {
-    p_delivery_key: deliveryKey,
-    p_channel: channel,
-    p_max_attempts: 3,
-    p_lease_seconds: 300,
-  })
+  let supabase: ReturnType<typeof getSupabase>
+  let data: unknown
+  let error: unknown
+  try {
+    supabase = getSupabase()
+    const claimResult = await supabase.rpc('claim_notification_delivery', {
+      p_delivery_key: deliveryKey,
+      p_channel: channel,
+      p_max_attempts: 3,
+      p_lease_seconds: 300,
+    })
+    data = claimResult.data
+    error = claimResult.error
+  } catch {
+    console.error('[delivery] claim_failed', { channel })
+    return 'failed'
+  }
   if (error) {
     console.error('[delivery] claim_failed', { channel })
     return 'failed'
@@ -43,15 +53,21 @@ export async function deliverClaimed(
   const retryAfterSeconds = result.retryable
     ? Math.min(60 * 60, 60 * (2 ** Math.max(0, claim.attempt_count - 1)))
     : 0
-  const { error: finalizeError } = await supabase.rpc('finalize_notification_delivery', {
-    p_delivery_key: deliveryKey,
-    p_lease_token: claim.lease_token,
-    p_status: result.ok ? 'sent' : result.status === 'uncertain' ? 'uncertain' : 'failed',
-    p_retryable: result.retryable,
-    p_retry_after_seconds: retryAfterSeconds,
-    p_provider_message_id: result.providerMessageId ?? null,
-    p_error_code: result.errorCode ?? null,
-  })
+  let finalizeError: unknown
+  try {
+    const finalizeResult = await supabase.rpc('finalize_notification_delivery', {
+      p_delivery_key: deliveryKey,
+      p_lease_token: claim.lease_token,
+      p_status: result.ok ? 'sent' : result.status === 'uncertain' ? 'uncertain' : 'failed',
+      p_retryable: result.retryable,
+      p_retry_after_seconds: retryAfterSeconds,
+      p_provider_message_id: result.providerMessageId ?? null,
+      p_error_code: result.errorCode ?? null,
+    })
+    finalizeError = finalizeResult.error
+  } catch {
+    finalizeError = new Error('finalize unavailable')
+  }
   if (finalizeError) {
     console.error('[delivery] finalize_failed', { channel, providerAccepted: result.ok })
     return 'uncertain'

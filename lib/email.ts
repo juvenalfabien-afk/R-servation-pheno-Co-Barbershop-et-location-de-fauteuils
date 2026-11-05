@@ -1,6 +1,7 @@
 // ── Config ──────────────────────────────────────────────────
 import type { DeliveryBatchResult, DeliveryResult } from './delivery'
 import { safeDeliveryLog } from './delivery'
+import { providerFetch } from './provider-fetch'
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY
 const FROM = process.env.EMAIL_FROM ?? 'PHENO&CO <noreply@phenoandco.fr>'
@@ -28,7 +29,7 @@ async function sendEmail(
     return { ok: false, status: 'disabled', retryable: false, errorCode: 'provider_not_configured' }
   }
   try {
-    const res = await fetch('https://api.resend.com/emails', {
+    const res = await providerFetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,

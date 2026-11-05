@@ -1,8 +1,19 @@
 -- ============================================================
--- PHENO&CO — Seeds de démonstration
--- À exécuter dans Supabase > SQL Editor
--- Données réalistes pour tester le dashboard admin
+-- PHENO&CO — Seeds strictement réservés au développement et au staging isolé.
+-- Avant exécution : SET pheno.environment = 'development'; ou 'staging'.
+-- Les contacts utilisent example.test et un indicatif téléphonique volontairement non attribué.
 -- ============================================================
+
+begin;
+
+do $$
+begin
+  if current_setting('pheno.environment', true) not in ('development', 'staging', 'test') then
+    raise exception 'Seeds PHENO&CO refusés : définir explicitement pheno.environment sur une cible isolée';
+  end if;
+end $$;
+
+set local pheno.seed_mode = 'on';
 
 -- ── Création table clients si elle n'existe pas encore ────────────────────────
 create table if not exists clients (
@@ -46,7 +57,7 @@ insert into rdv_bookings (
 -- ── Passé confirmé : Karim, Dégradé skin fade + shampoing ───────────────────
 (
   'rdv-001', now() - interval '18 days',
-  'Karim Benali', 'karim.benali@gmail.com', '0612345601',
+  'Karim Benali', 'client01@example.test', '+999000000001',
   'homme', 'degrade', 'Dégradé',
   'skin', 'Skin fade',
   '{sham}', '{Shampoing}',
@@ -57,7 +68,7 @@ insert into rdv_bookings (
 -- ── Passé confirmé : Marie, Big Chop + shampoing ────────────────────────────
 (
   'rdv-002', now() - interval '15 days',
-  'Marie Dubois', 'marie.dubois@hotmail.fr', '0623456702',
+  'Marie Dubois', 'client02@example.test', '+999000000002',
   'femme', 'big-chop-s', 'Big Chop + shampoing + coupe',
   null, null,
   '{}', '{}',
@@ -68,7 +79,7 @@ insert into rdv_bookings (
 -- ── Passé annulé : Julien, Buzz Cut ─────────────────────────────────────────
 (
   'rdv-003', now() - interval '13 days',
-  'Julien Moreau', 'julien.moreau@gmail.com', '0678901203',
+  'Julien Moreau', 'client03@example.test', '+999000000003',
   'homme', 'buzz', 'Buzz Cut',
   null, null,
   '{}', '{}',
@@ -79,7 +90,7 @@ insert into rdv_bookings (
 -- ── Passé confirmé : Patricia, Horaire (location test RDV) ──────────────────
 (
   'rdv-004', now() - interval '10 days',
-  'Aminata Traoré', 'aminata.traore@yahoo.fr', '0645678904',
+  'Aminata Traoré', 'client04@example.test', '+999000000004',
   'femme', 'tresses-f', 'Tresses plaquées',
   null, null,
   '{sham}', '{Shampoing}',
@@ -90,7 +101,7 @@ insert into rdv_bookings (
 -- ── Passé confirmé : Isabelle, Forfait Curly ────────────────────────────────
 (
   'rdv-005', now() - interval '8 days',
-  'Isabelle Renard', 'isabelle.renard@gmail.com', '0656789005',
+  'Isabelle Renard', 'client05@example.test', '+999000000005',
   'femme', 'forfait-f-curl', 'Forfait Curly / Boucles',
   null, null,
   '{ssc}', '{Shampoing + soin + coiffage}',
@@ -101,7 +112,7 @@ insert into rdv_bookings (
 -- ── Passé confirmé : Youssef, Forfait soin + shampoing ──────────────────────
 (
   'rdv-006', now() - interval '5 days',
-  'Youssef Hamdi', 'youssef.hamdi@outlook.com', '0667890106',
+  'Youssef Hamdi', 'client06@example.test', '+999000000006',
   'homme', 'forfait-soin', 'Forfait complet — Coupe + shampoing + coiffage',
   null, null,
   '{sham}', '{Shampoing}',
@@ -112,7 +123,7 @@ insert into rdv_bookings (
 -- ── À venir (en attente) : Lucas, Coupe + barbe + twist ─────────────────────
 (
   'rdv-007', now() - interval '2 days',
-  'Lucas Martin', 'lucas.martin@gmail.com', '0698765407',
+  'Lucas Martin', 'client07@example.test', '+999000000007',
   'homme', 'coupe-barbe-c', 'Coupe + barbe complète',
   null, null,
   '{twist}', '{Twist éponge}',
@@ -123,7 +134,7 @@ insert into rdv_bookings (
 -- ── À venir (confirmé) : Fatoumata, Forfait Curly ───────────────────────────
 (
   'rdv-008', now() - interval '1 day',
-  'Fatoumata Konaté', 'fatoumata.konate@gmail.com', '0687654308',
+  'Fatoumata Konaté', 'client08@example.test', '+999000000008',
   'femme', 'forfait-f-curl', 'Forfait Curly / Boucles',
   null, null,
   '{ssc}', '{Shampoing + soin + coiffage}',
@@ -134,7 +145,7 @@ insert into rdv_bookings (
 -- ── À venir (confirmé) : Noah, Dégradé enfant ───────────────────────────────
 (
   'rdv-009', now() - interval '3 days',
-  'Noah Petit', 'christelle.petit@gmail.com', '0676543209',
+  'Noah Petit', 'client09@example.test', '+999000000009',
   'enfant', 'degrade-e', 'Dégradé enfant',
   null, null,
   '{}', '{}',
@@ -145,7 +156,7 @@ insert into rdv_bookings (
 -- ── À venir (en attente) : Ismaël, Waves ────────────────────────────────────
 (
   'rdv-010', now() - interval '1 day',
-  'Ismaël Diallo', 'ismael.diallo@gmail.com', '0665432110',
+  'Ismaël Diallo', 'client10@example.test', '+999000000010',
   'homme', 'waves', 'Waves',
   null, null,
   '{}', '{}',
@@ -156,7 +167,7 @@ insert into rdv_bookings (
 -- ── À venir (confirmé) : Sarah, Highlights Femme ────────────────────────────
 (
   'rdv-011', now() - interval '4 days',
-  'Sarah Lefebvre', 'sarah.lefebvre@hotmail.com', '0654321011',
+  'Sarah Lefebvre', 'client11@example.test', '+999000000011',
   'femme', 'color-f', 'Highlights / Mèches',
   null, null,
   '{}', '{}',
@@ -167,7 +178,7 @@ insert into rdv_bookings (
 -- ── À venir (en attente) : Thomas, Dégradé classique ────────────────────────
 (
   'rdv-012', now(),
-  'Thomas Bernard', 'thomas.bernard@gmail.com', '0643210912',
+  'Thomas Bernard', 'client12@example.test', '+999000000012',
   'homme', 'degrade', 'Dégradé',
   'classique', 'Dégradé classique',
   '{design-s}', '{Design simple}',
@@ -178,7 +189,7 @@ insert into rdv_bookings (
 -- ── À venir (confirmé) : Kevin, Dégradé high + design complexe ──────────────
 (
   'rdv-013', now() - interval '2 days',
-  'Kevin Nguessan', 'kevin.nguessan@gmail.com', '0632109813',
+  'Kevin Nguessan', 'client13@example.test', '+999000000013',
   'homme', 'degrade', 'Dégradé',
   'high', 'High fade',
   '{design-c,contour}', '{Design complexe,Contour + dégradé barbe}',
@@ -189,7 +200,7 @@ insert into rdv_bookings (
 -- ── À venir (en attente) : Emma, Forfait Femme ──────────────────────────────
 (
   'rdv-014', now() - interval '1 day',
-  'Emma Leblanc', 'emma.leblanc@gmail.com', '0621098714',
+  'Emma Leblanc', 'client14@example.test', '+999000000014',
   'femme', 'forfait-f', 'Forfait complet — Coupe + shampoing + soin + coiffage',
   null, null,
   '{}', '{}',
@@ -200,13 +211,14 @@ insert into rdv_bookings (
 -- ── À venir (en attente) : Chloé, Coupe enfant ──────────────────────────────
 (
   'rdv-015', now(),
-  'Chloé Roux', 'marie.roux@gmail.com', '0610987615',
+  'Chloé Roux', 'client15@example.test', '+999000000015',
   'enfant', 'coupe-e', 'Coupe enfant — moins de 15 ans',
   null, null,
   '{}', '{}',
   15, 25,
   '2026-10-18', '10:30', 'pending'
-);
+)
+on conflict (id) do nothing;
 
 
 -- ============================================================
@@ -226,7 +238,7 @@ insert into reservations (
 -- ── Passé confirmé : Patricia, Horaire 3h, 1 jour ───────────────────────────
 (
   'loc-001', now() - interval '8 days',
-  'Patricia Dumont', 'patricia.dumont@gmail.com', '0611223344',
+  'Patricia Dumont', 'client16@example.test', '+999000000016',
   'court', 'horaire', 'aucun',
   '2026-09-25', null, '10:00', '13:00',
   'auto-entrepreneur', '5-10', '{mixte}',
@@ -237,7 +249,7 @@ insert into reservations (
 -- ── Passé confirmé : Isabelle, Demi-journée + essentiel ─────────────────────
 (
   'loc-002', now() - interval '11 days',
-  'Isabelle Renard', 'isabelle.renard@pro.fr', '0622334455',
+  'Isabelle Renard', 'location02@example.test', '+999000000017',
   'court', 'demi-journee', 'essentiel',
   '2026-09-22', null, '10:00', '14:00',
   'auto-entrepreneur', '3-5', '{coloriste}',
@@ -248,7 +260,7 @@ insert into reservations (
 -- ── Passé confirmé : Mamadou, Mensuel octobre + premium ─────────────────────
 (
   'loc-003', now() - interval '30 days',
-  'Mamadou Coulibaly', 'mamadou.coulibaly@barbershop.fr', '0633445566',
+  'Mamadou Coulibaly', 'client17@example.test', '+999000000018',
   'long', 'mois', 'premium',
   '2026-10-01', '2026-10-31', '10:00', '18:00',
   'societe', '10+', '{barber,afro,design}',
@@ -259,7 +271,7 @@ insert into reservations (
 -- ── En cours (confirmé) : Sofiane, Semaine + premium ────────────────────────
 (
   'loc-004', now() - interval '5 days',
-  'Sofiane Belkacem', 'sofiane.belkacem@gmail.com', '0644556677',
+  'Sofiane Belkacem', 'client18@example.test', '+999000000019',
   'long', 'semaine', 'premium',
   '2026-10-06', '2026-10-10', '10:00', '18:00',
   'auto-entrepreneur', '5-10', '{barber,design}',
@@ -270,7 +282,7 @@ insert into reservations (
 -- ── À venir (confirmé) : Jessica, Demi-journée + essentiel ──────────────────
 (
   'loc-005', now() - interval '3 days',
-  'Jessica Morin', 'jessica.morin@haircolor.fr', '0655667788',
+  'Jessica Morin', 'client19@example.test', '+999000000020',
   'court', 'demi-journee', 'essentiel',
   '2026-10-07', null, '10:00', '14:00',
   'auto-entrepreneur', '3-5', '{coloriste,mixte}',
@@ -281,7 +293,7 @@ insert into reservations (
 -- ── À venir (confirmé) : Nathalie, Journée sans pack ────────────────────────
 (
   'loc-006', now() - interval '2 days',
-  'Nathalie Garnier', 'nathalie.garnier@gmail.com', '0666778899',
+  'Nathalie Garnier', 'client20@example.test', '+999000000021',
   'court', 'journee', 'aucun',
   '2026-10-14', null, '10:00', '18:00',
   'societe', '5-10', '{mixte,coloriste}',
@@ -292,7 +304,7 @@ insert into reservations (
 -- ── À venir (en attente) : Driss, Semaine + essentiel ───────────────────────
 (
   'loc-007', now() - interval '1 day',
-  'Driss El Amrani', 'driss.elamrani@gmail.com', '0677889900',
+  'Driss El Amrani', 'client21@example.test', '+999000000022',
   'long', 'semaine', 'essentiel',
   '2026-10-20', '2026-10-24', '10:00', '18:00',
   'auto-entrepreneur', '5-10', '{barber,design}',
@@ -303,13 +315,14 @@ insert into reservations (
 -- ── À venir (en attente) : Ahmed, Mensuel novembre + premium ────────────────
 (
   'loc-008', now(),
-  'Ahmed Zitouni', 'ahmed.zitouni@pro.fr', '0688990011',
+  'Ahmed Zitouni', 'client22@example.test', '+999000000023',
   'long', 'mois', 'premium',
   '2026-11-01', '2026-11-30', '10:00', '18:00',
   'societe', '10+', '{barber,afro,mixte}',
   1870.00, 374.00, 2244.00, 561.00,
   'pending', 'Gérant d''un salon à Lyon, vient tester Montpellier. SIREN en cours de vérification.'
-);
+)
+on conflict (id) do nothing;
 
 
 -- ============================================================
@@ -321,30 +334,32 @@ insert into clients (
   last_rdv_at, rdv_count, location_count, notes
 ) values
 
-('cli-001', now() - interval '90 days', 'Karim Benali',      'karim.benali@gmail.com',         '0612345601', now() - interval '18 days', 3, 0, null),
-('cli-002', now() - interval '60 days', 'Marie Dubois',      'marie.dubois@hotmail.fr',         '0623456702', now() - interval '15 days', 2, 0, null),
-('cli-003', now() - interval '30 days', 'Julien Moreau',     'julien.moreau@gmail.com',         '0678901203', now() - interval '13 days', 1, 0, 'RDV annulé sans prévenir'),
-('cli-004', now() - interval '45 days', 'Aminata Traoré',    'aminata.traore@yahoo.fr',         '0645678904', now() - interval '10 days', 4, 0, null),
-('cli-005', now() - interval '20 days', 'Isabelle Renard',   'isabelle.renard@gmail.com',       '0656789005', now() - interval '8 days',  2, 1, null),
-('cli-006', now() - interval '15 days', 'Youssef Hamdi',     'youssef.hamdi@outlook.com',       '0667890106', now() - interval '5 days',  2, 0, null),
-('cli-007', now() - interval '3 days',  'Lucas Martin',      'lucas.martin@gmail.com',          '0698765407', null,                       0, 0, null),
-('cli-008', now() - interval '2 days',  'Fatoumata Konaté',  'fatoumata.konate@gmail.com',      '0687654308', null,                       0, 0, null),
-('cli-009', now() - interval '5 days',  'Noah Petit',        'christelle.petit@gmail.com',      '0676543209', null,                       0, 0, 'Enfant — contact via la mère'),
-('cli-010', now() - interval '2 days',  'Ismaël Diallo',     'ismael.diallo@gmail.com',         '0665432110', null,                       0, 0, null),
-('cli-011', now() - interval '6 days',  'Sarah Lefebvre',    'sarah.lefebvre@hotmail.com',      '0654321011', null,                       0, 0, null),
-('cli-012', now(),                       'Thomas Bernard',    'thomas.bernard@gmail.com',        '0643210912', null,                       0, 0, null),
-('cli-013', now() - interval '4 days',  'Kevin Nguessan',    'kevin.nguessan@gmail.com',        '0632109813', null,                       1, 0, null),
-('cli-014', now() - interval '2 days',  'Emma Leblanc',      'emma.leblanc@gmail.com',          '0621098714', null,                       0, 0, null),
-('cli-015', now(),                       'Chloé Roux',        'marie.roux@gmail.com',            '0610987615', null,                       0, 0, 'Enfant'),
-('cli-016', now() - interval '8 days',  'Patricia Dumont',   'patricia.dumont@gmail.com',       '0611223344', now() - interval '8 days',  0, 1, 'Intéressée par un contrat mensuel'),
-('cli-017', now() - interval '30 days', 'Mamadou Coulibaly', 'mamadou.coulibaly@barbershop.fr', '0633445566', now() - interval '5 days',  0, 1, 'Contrat mensuel actif — client fidèle'),
-('cli-018', now() - interval '5 days',  'Sofiane Belkacem',  'sofiane.belkacem@gmail.com',      '0644556677', null,                       0, 1, null),
-('cli-019', now() - interval '3 days',  'Jessica Morin',     'jessica.morin@haircolor.fr',      '0655667788', null,                       0, 1, null),
-('cli-020', now() - interval '2 days',  'Nathalie Garnier',  'nathalie.garnier@gmail.com',      '0666778899', null,                       0, 1, null),
-('cli-021', now() - interval '1 day',   'Driss El Amrani',   'driss.elamrani@gmail.com',        '0677889900', null,                       0, 0, null),
-('cli-022', now(),                       'Ahmed Zitouni',     'ahmed.zitouni@pro.fr',            '0688990011', null,                       0, 0, 'Gérant salon Lyon — prospect mensuel')
+('cli-001', now() - interval '90 days', 'Karim Benali',      'client01@example.test', '+999000000001', now() - interval '18 days', 3, 0, null),
+('cli-002', now() - interval '60 days', 'Marie Dubois',      'client02@example.test', '+999000000002', now() - interval '15 days', 2, 0, null),
+('cli-003', now() - interval '30 days', 'Julien Moreau',     'client03@example.test', '+999000000003', now() - interval '13 days', 1, 0, 'RDV annulé sans prévenir'),
+('cli-004', now() - interval '45 days', 'Aminata Traoré',    'client04@example.test', '+999000000004', now() - interval '10 days', 4, 0, null),
+('cli-005', now() - interval '20 days', 'Isabelle Renard',   'client05@example.test', '+999000000005', now() - interval '8 days',  2, 1, null),
+('cli-006', now() - interval '15 days', 'Youssef Hamdi',     'client06@example.test', '+999000000006', now() - interval '5 days',  2, 0, null),
+('cli-007', now() - interval '3 days',  'Lucas Martin',      'client07@example.test', '+999000000007', null,                       0, 0, null),
+('cli-008', now() - interval '2 days',  'Fatoumata Konaté',  'client08@example.test', '+999000000008', null,                       0, 0, null),
+('cli-009', now() - interval '5 days',  'Noah Petit',        'client09@example.test', '+999000000009', null,                       0, 0, 'Enfant — contact via la mère'),
+('cli-010', now() - interval '2 days',  'Ismaël Diallo',     'client10@example.test', '+999000000010', null,                       0, 0, null),
+('cli-011', now() - interval '6 days',  'Sarah Lefebvre',    'client11@example.test', '+999000000011', null,                       0, 0, null),
+('cli-012', now(),                       'Thomas Bernard',    'client12@example.test', '+999000000012', null,                       0, 0, null),
+('cli-013', now() - interval '4 days',  'Kevin Nguessan',    'client13@example.test', '+999000000013', null,                       1, 0, null),
+('cli-014', now() - interval '2 days',  'Emma Leblanc',      'client14@example.test', '+999000000014', null,                       0, 0, null),
+('cli-015', now(),                       'Chloé Roux',        'client15@example.test', '+999000000015', null,                       0, 0, 'Enfant'),
+('cli-016', now() - interval '8 days',  'Patricia Dumont',   'client16@example.test', '+999000000016', now() - interval '8 days',  0, 1, 'Intéressée par un contrat mensuel'),
+('cli-017', now() - interval '30 days', 'Mamadou Coulibaly', 'client17@example.test', '+999000000018', now() - interval '5 days',  0, 1, 'Contrat mensuel actif — client fidèle'),
+('cli-018', now() - interval '5 days',  'Sofiane Belkacem',  'client18@example.test', '+999000000019', null,                       0, 1, null),
+('cli-019', now() - interval '3 days',  'Jessica Morin',     'client19@example.test', '+999000000020', null,                       0, 1, null),
+('cli-020', now() - interval '2 days',  'Nathalie Garnier',  'client20@example.test', '+999000000021', null,                       0, 1, null),
+('cli-021', now() - interval '1 day',   'Driss El Amrani',   'client21@example.test', '+999000000022', null,                       0, 0, null),
+('cli-022', now(),                       'Ahmed Zitouni',     'client22@example.test', '+999000000023', null,                       0, 0, 'Gérant salon Lyon — prospect mensuel')
 
 on conflict (email) do nothing;
+
+commit;
 
 -- ============================================================
 -- ✅ Seeds insérés.

@@ -1,8 +1,9 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
-const migration003 = readFileSync('supabase/migrations/003_security_hardening.sql', 'utf8')
-const migration004 = readFileSync('supabase/migrations/004_phone_and_client_search_fixes.sql', 'utf8')
+const normalizeLines = (value: string) => value.replace(/\r\n?/g, '\n')
+const migration003 = normalizeLines(readFileSync('supabase/migrations/003_security_hardening.sql', 'utf8'))
+const migration004 = normalizeLines(readFileSync('supabase/migrations/004_phone_and_client_search_fixes.sql', 'utf8'))
 
 describe('Supabase migration regression safeguards', () => {
   it.each([

@@ -143,6 +143,7 @@ export default function MentionsLegalesPage() {
             <li>Données de réservation : <strong>3 ans</strong> à compter de la fin de la relation contractuelle</li>
             <li>Données comptables : <strong>10 ans</strong> conformément au Code de commerce</li>
             <li>Données non suivies d&apos;une location : supprimées sous <strong>12 mois</strong></li>
+            <li>Coordonnées mémorisées sur l&apos;appareil avec votre accord : <strong>30 jours maximum</strong></li>
           </ul>
         </div>
 
@@ -194,9 +195,10 @@ export default function MentionsLegalesPage() {
           </p>
           <p style={{ marginTop: '0.75rem' }}>
             Pour faciliter une réservation interrompue, le navigateur conserve temporairement les informations
-            du formulaire et les coordonnées uniquement dans la session de l&apos;onglet, pendant au plus
-            <strong> 8 heures</strong>. Elles disparaissent à la fermeture de l&apos;onglet ou peuvent être supprimées
-            à tout moment depuis les données du site dans le navigateur.
+            du formulaire dans la session de l&apos;onglet. Elles disparaissent à sa fermeture. Si vous cochez
+            explicitement « Mémoriser mes coordonnées », le nom, le téléphone et l&apos;adresse e-mail sont conservés
+            localement sur cet appareil pendant <strong>30 jours maximum</strong>. Cette option est désactivée par
+            défaut et les informations peuvent être effacées depuis le formulaire à tout moment.
           </p>
           <div className="cgv-highlight" style={{ marginTop: '1rem' }}>
             Aucun consentement aux cookies n&apos;est requis car seuls des cookies strictement nécessaires

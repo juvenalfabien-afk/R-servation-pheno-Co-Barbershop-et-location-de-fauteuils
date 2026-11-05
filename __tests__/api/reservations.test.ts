@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // vi.hoisted : variables accessibles dans les factories vi.mock (qui sont hoistées)
 const {
   mockFrom, mockInsert, mockOrder, mockOr, mockEq, mockUpdate, mockSelect,
-  mockLocationEmail, mockLocationSms, mockUpsertClient,
+  mockLocationNotifications, mockUpsertClient,
 } = vi.hoisted(() => ({
   mockFrom:   vi.fn(),
   mockInsert: vi.fn(),
@@ -12,8 +12,7 @@ const {
   mockEq:     vi.fn(),
   mockUpdate: vi.fn(),
   mockSelect: vi.fn(),
-  mockLocationEmail: vi.fn(),
-  mockLocationSms: vi.fn(),
+  mockLocationNotifications: vi.fn(),
   mockUpsertClient: vi.fn(),
 }))
 
@@ -25,12 +24,8 @@ vi.mock('@/lib/rate-limit', () => ({
   enforceRateLimit: vi.fn().mockResolvedValue(true),
 }))
 
-vi.mock('@/lib/email', () => ({
-  sendLocationEmails: mockLocationEmail,
-}))
-
-vi.mock('@/lib/sms', () => ({
-  sendLocationSmsClient: mockLocationSms,
+vi.mock('@/lib/booking-notifications', () => ({
+  attemptLocationNotifications: mockLocationNotifications,
 }))
 
 vi.mock('@/lib/clients', () => ({
@@ -85,8 +80,7 @@ describe('POST /api/reservations', () => {
     vi.clearAllMocks()
     mockFrom.mockReturnValue({ insert: mockInsert })
     mockInsert.mockResolvedValue({ error: null })
-    mockLocationEmail.mockResolvedValue({ ok: true, deliveries: [] })
-    mockLocationSms.mockResolvedValue({ ok: true, status: 'sent', retryable: false })
+    mockLocationNotifications.mockResolvedValue({ email: 'sent', sms: 'sent' })
     mockUpsertClient.mockResolvedValue(undefined)
   })
 
@@ -99,6 +93,22 @@ describe('POST /api/reservations', () => {
     const res = await POST(req)
     expect(res.status).toBe(201)
     expect((await res.json()).ok).toBe(true)
+  })
+
+  it('ne transforme pas un échec de notification en échec de réservation', async () => {
+    mockLocationNotifications.mockResolvedValueOnce({ email: 'failed', sms: 'uncertain' })
+    const res = await POST(new Request('http://localhost/api/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reservationRequest),
+    }))
+
+    expect(res.status).toBe(201)
+    expect(await res.json()).toMatchObject({
+      ok: true,
+      emailSent: false,
+      notificationStatus: { email: 'failed', sms: 'uncertain' },
+    })
   })
 
   it('retourne 500 si Supabase échoue', async () => {
@@ -150,8 +160,7 @@ describe('POST /api/reservations', () => {
 
     expect(responses.map(response => response.status).sort()).toEqual([200, 201])
     expect(bodies.some(body => body.duplicate === true)).toBe(true)
-    expect(mockLocationEmail).toHaveBeenCalledTimes(1)
-    expect(mockLocationSms).toHaveBeenCalledTimes(1)
+    expect(mockLocationNotifications).toHaveBeenCalledTimes(1)
     expect(mockUpsertClient).toHaveBeenCalledTimes(1)
   })
 
@@ -174,8 +183,7 @@ describe('POST /api/reservations', () => {
     }))
 
     expect(response.status).toBe(409)
-    expect(mockLocationEmail).not.toHaveBeenCalled()
-    expect(mockLocationSms).not.toHaveBeenCalled()
+    expect(mockLocationNotifications).not.toHaveBeenCalled()
   })
 })
 

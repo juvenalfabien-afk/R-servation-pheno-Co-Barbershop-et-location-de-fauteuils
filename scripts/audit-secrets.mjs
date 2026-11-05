@@ -62,6 +62,8 @@ const providerSecretPatterns = [
   ['PRIVATE_KEY', /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],
 ]
 const genericAdminLiteralPattern = /ADMIN_(?:CODE|PASSWORD)\s*[=:]\s*['"]([^'"]+)['"]/g
+const isNonOperationalCiFixture = (file, value) =>
+  file === '.github/workflows/ci.yml' && value.includes('ci_only_non_operational')
 
 for (const [oid, paths] of objectPaths) {
   let contents
@@ -132,7 +134,10 @@ for (const file of trackedFiles) {
     if (contents.includes(secret)) currentFindings.push(`${name}:${file}`)
   }
   for (const [kind, pattern] of providerSecretPatterns) {
-    if (pattern.test(contents)) currentFindings.push(`${kind}:${file}`)
+    const matches = contents.matchAll(new RegExp(pattern.source, 'g'))
+    if ([...matches].some(match => !isNonOperationalCiFixture(file, match[0]))) {
+      currentFindings.push(`${kind}:${file}`)
+    }
   }
   for (const match of contents.matchAll(genericAdminLiteralPattern)) {
     if (!/example|exemple|placeholder|change|inactif|pas_utiliser|not_a_real/i.test(match[1])) {

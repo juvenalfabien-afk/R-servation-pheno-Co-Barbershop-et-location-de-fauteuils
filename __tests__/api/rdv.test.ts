@@ -11,8 +11,7 @@ const mocks = vi.hoisted(() => ({
   availability: vi.fn(),
   isReturning: vi.fn(),
   upsertClient: vi.fn(),
-  sendEmail: vi.fn(),
-  sendSms: vi.fn(),
+  attemptNotifications: vi.fn(),
   isAdmin: vi.fn(),
 }))
 
@@ -26,8 +25,7 @@ vi.mock('@/lib/clients', () => ({
   isReturningClient: mocks.isReturning,
   upsertClientRdv: mocks.upsertClient,
 }))
-vi.mock('@/lib/email', () => ({ sendRdvEmails: mocks.sendEmail }))
-vi.mock('@/lib/sms', () => ({ sendRdvSmsClient: mocks.sendSms }))
+vi.mock('@/lib/booking-notifications', () => ({ attemptRdvNotifications: mocks.attemptNotifications }))
 vi.mock('@/lib/auth', () => ({ isAdminAuthenticated: mocks.isAdmin }))
 
 import { POST as createRdv } from '@/app/api/rdv/route'
@@ -54,8 +52,7 @@ describe('appointment API', () => {
     mocks.availability.mockResolvedValue({ ok: true })
     mocks.isReturning.mockResolvedValue(false)
     mocks.upsertClient.mockResolvedValue(undefined)
-    mocks.sendEmail.mockResolvedValue({ ok: true, deliveries: [] })
-    mocks.sendSms.mockResolvedValue({ ok: true, status: 'sent', retryable: false })
+    mocks.attemptNotifications.mockResolvedValue({ email: 'sent', sms: 'sent' })
     mocks.isAdmin.mockResolvedValue(true)
     mocks.insert.mockResolvedValue({ error: null })
     mocks.eq.mockResolvedValue({ error: null })
@@ -88,6 +85,22 @@ describe('appointment API', () => {
     })
   })
 
+  it('confirme la réservation même si les notifications échouent après insertion', async () => {
+    mocks.attemptNotifications.mockResolvedValueOnce({ email: 'failed', sms: 'uncertain' })
+    const response = await createRdv(new Request('http://localhost/api/rdv', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(validRdv),
+    }))
+
+    expect(response.status).toBe(201)
+    expect(await response.json()).toMatchObject({
+      ok: true,
+      emailSent: false,
+      notificationStatus: { email: 'failed', sms: 'uncertain' },
+    })
+  })
+
   it('transforme une exclusion concurrente PostgreSQL en conflit HTTP sans notification', async () => {
     mocks.insert.mockResolvedValueOnce({ error: { code: '23P01' } })
     const response = await createRdv(new Request('http://localhost/api/rdv', {
@@ -97,8 +110,7 @@ describe('appointment API', () => {
     }))
 
     expect(response.status).toBe(409)
-    expect(mocks.sendEmail).not.toHaveBeenCalled()
-    expect(mocks.sendSms).not.toHaveBeenCalled()
+    expect(mocks.attemptNotifications).not.toHaveBeenCalled()
     expect(mocks.upsertClient).not.toHaveBeenCalled()
   })
 

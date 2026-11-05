@@ -46,6 +46,14 @@ if (bookingLead) {
   }
 }
 
+const notificationTimeout = process.env.NOTIFICATION_TIMEOUT_MS?.trim()
+if (notificationTimeout) {
+  const parsed = Number(notificationTimeout)
+  if (!Number.isInteger(parsed) || parsed < 1000 || parsed > 30000) {
+    invalid.push('NOTIFICATION_TIMEOUT_MS')
+  }
+}
+
 const twilio = ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_FROM_NUMBER']
 const configuredTwilio = twilio.filter(name => Boolean(process.env[name]?.trim()))
 if (configuredTwilio.length > 0 && configuredTwilio.length !== twilio.length) invalid.push('TWILIO_* (configuration partielle)')

@@ -6,8 +6,7 @@ import type {
   Reservation, FormulaType, PackType,
   StatutPro, ExperienceType, SpecialiteType,
 } from '@/lib/types'
-import { sendLocationEmails } from '@/lib/email'
-import { sendLocationSmsClient } from '@/lib/sms'
+import { attemptLocationNotifications } from '@/lib/booking-notifications'
 import { upsertClientLocation } from '@/lib/clients'
 import { calculateLocationPrice } from '@/lib/pricing'
 import { isIsoDate, normalizeEmail, normalizePersonName, normalizePhone, todayInParis } from '@/lib/validation'
@@ -178,9 +177,8 @@ export async function POST(req: Request) {
     soldeTTC: reservation.totalTTC - reservation.acompte,
   }
 
-  const [emailResult] = await Promise.all([
-    sendLocationEmails(emailData, `location:${reservation.id}`),
-    sendLocationSmsClient({ nom: reservation.nom, telephone: reservation.telephone, dateDebut: reservation.dateDebut, formuleLabel: emailData.formuleLabel }),
+  const [notificationResult] = await Promise.all([
+    attemptLocationNotifications(emailData, `location-confirmation:${reservation.id}`),
     upsertClientLocation({
       nom: reservation.nom,
       email: reservation.email,
@@ -189,7 +187,12 @@ export async function POST(req: Request) {
     }),
   ])
 
-  return NextResponse.json({ ok: true, duplicate: false, emailSent: emailResult.ok }, { status: 201 })
+  return NextResponse.json({
+    ok: true,
+    duplicate: false,
+    emailSent: notificationResult.email === 'sent',
+    notificationStatus: notificationResult,
+  }, { status: 201 })
 }
 
 export async function GET() {

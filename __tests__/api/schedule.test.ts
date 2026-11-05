@@ -50,6 +50,30 @@ describe('schedule API schema compatibility and validation', () => {
     })
   })
 
+  it('ne divulgue pas les motifs internes ni les identifiants au public', async () => {
+    mocks.isAdmin.mockResolvedValue(false)
+    mocks.from.mockImplementation((table: string) => {
+      if (table === 'schedule_config') return {
+        select: () => ({ eq: () => ({ single: () => Promise.resolve({
+          data: { open_days: [2, 3], slots: ['10:00'], updated_at: null }, error: null,
+        }) }) }),
+      }
+      if (table === 'schedule_closures') return {
+        select: () => ({ order: () => Promise.resolve({ data: [{ date: '2099-01-06', reason: 'Motif privé' }], error: null }) }),
+      }
+      return {
+        select: () => ({ order: () => Promise.resolve({ data: [{ id: 'internal-id', date: '2099-01-07', slot: '10:00', reason: 'Motif privé' }], error: null }) }),
+      }
+    })
+
+    const response = await getSchedule()
+    expect(await response.json()).toEqual({
+      config: { openDays: [2, 3], slots: ['10:00'], updatedAt: null },
+      closures: [{ date: '2099-01-06' }],
+      blocks: [{ date: '2099-01-07', slot: '10:00' }],
+    })
+  })
+
   it('rejette les jours/créneaux dupliqués et les heures hors catalogue', async () => {
     mocks.from.mockReturnValue({ upsert: mocks.upsert })
     for (const body of [

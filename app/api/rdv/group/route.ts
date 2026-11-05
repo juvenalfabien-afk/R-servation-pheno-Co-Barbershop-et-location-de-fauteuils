@@ -3,8 +3,7 @@ import { getSupabase } from '@/lib/supabase'
 import { toRdvRow } from '@/lib/rdv-supabase'
 import type { RdvBooking, RdvCat } from '@/lib/rdv-types'
 import { randomUUID } from 'crypto'
-import { sendRdvEmails } from '@/lib/email'
-import { sendRdvSmsClient } from '@/lib/sms'
+import { attemptRdvNotifications } from '@/lib/booking-notifications'
 import { isReturningClient, upsertClientRdv } from '@/lib/clients'
 import { ALL_SLOTS } from '@/lib/schedule-types'
 import { checkRdvAvailability } from '@/lib/rdv-availability'
@@ -190,24 +189,26 @@ export async function POST(req: Request) {
   const totalGroupPrice = bookings.reduce((s, b) => s + b.totalPrice, 0)
   const totalGroupDur   = bookings.reduce((s, b) => s + b.totalDuration, 0)
 
-  const [emailResult] = await Promise.all([
-    sendRdvEmails({
+  const [notificationResult] = await Promise.all([
+    attemptRdvNotifications({
       nom: normalizedName, email: normalizedEmail, telephone: normalizedPhone,
       date, slot: startSlot,
       prestationLabel: bookings.map(b => `${b.personLabel} : ${b.prestationLabel}`).join(' | '),
+      smsPrestationLabel: `Groupe de ${persons.length} personnes`,
       degradeLabel: undefined, optionsLabels: [],
       totalPrice: totalGroupPrice, totalDuration: totalGroupDur,
       categorie: bookings[0].categorie,
-    }, `rdv-group:${groupId}`),
-    sendRdvSmsClient({
-      nom: normalizedName, telephone: normalizedPhone, date, slot: startSlot,
-      prestationLabel: `Groupe de ${persons.length} personnes`,
-    }),
+    }, `rdv-group-confirmation:${groupId}`),
     upsertClientRdv({
       nom: normalizedName, email: normalizedEmail, telephone: normalizedPhone,
       marketingConsent: typeof body.marketingConsent === 'boolean' ? body.marketingConsent : undefined,
     }),
   ])
 
-  return NextResponse.json({ ok: true, groupId, emailSent: emailResult.ok }, { status: 201 })
+  return NextResponse.json({
+    ok: true,
+    groupId,
+    emailSent: notificationResult.email === 'sent',
+    notificationStatus: notificationResult,
+  }, { status: 201 })
 }

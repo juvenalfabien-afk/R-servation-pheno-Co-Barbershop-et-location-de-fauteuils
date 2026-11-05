@@ -4,8 +4,7 @@ import { toRdvRow, fromRdvRow } from '@/lib/rdv-supabase'
 import { isAdminAuthenticated } from '@/lib/auth'
 import type { RdvBooking } from '@/lib/rdv-types'
 import { randomUUID } from 'crypto'
-import { sendRdvEmails } from '@/lib/email'
-import { sendRdvSmsClient } from '@/lib/sms'
+import { attemptRdvNotifications } from '@/lib/booking-notifications'
 import { upsertClientRdv } from '@/lib/clients'
 import { isReturningClient } from '@/lib/clients'
 
@@ -114,9 +113,8 @@ export async function POST(req: Request) {
     optionsLabels: booking.optionsLabels, totalPrice: booking.totalPrice,
     totalDuration: booking.totalDuration, categorie: booking.categorie,
   }
-  const [emailResult] = await Promise.all([
-    sendRdvEmails(emailData, `rdv:${booking.id}`),
-    sendRdvSmsClient({ nom: booking.nom, telephone: booking.telephone, date: booking.date, slot: booking.slot, prestationLabel: booking.prestationLabel }),
+  const [notificationResult] = await Promise.all([
+    attemptRdvNotifications(emailData, `rdv-confirmation:${booking.id}`),
     upsertClientRdv({
       nom: booking.nom,
       email: booking.email,
@@ -125,7 +123,13 @@ export async function POST(req: Request) {
     }),
   ])
 
-  return NextResponse.json({ ok: true, emailSent: emailResult.ok, totalPrice: booking.totalPrice, totalDuration: booking.totalDuration }, { status: 201 })
+  return NextResponse.json({
+    ok: true,
+    emailSent: notificationResult.email === 'sent',
+    notificationStatus: notificationResult,
+    totalPrice: booking.totalPrice,
+    totalDuration: booking.totalDuration,
+  }, { status: 201 })
 }
 
 export async function GET() {

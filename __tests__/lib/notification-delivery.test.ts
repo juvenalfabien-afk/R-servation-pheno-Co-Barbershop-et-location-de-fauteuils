@@ -56,4 +56,13 @@ describe('atomic notification delivery claims', () => {
       async () => ({ ok: true, status: 'sent', retryable: false }),
     )).resolves.toBe('uncertain')
   })
+
+  it('retourne un échec contrôlé si le claim lève une exception', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    rpc.mockRejectedValueOnce(new Error('database unavailable'))
+    const send = vi.fn()
+
+    await expect(deliverClaimed('rdv:test:email', 'email', send)).resolves.toBe('failed')
+    expect(send).not.toHaveBeenCalled()
+  })
 })

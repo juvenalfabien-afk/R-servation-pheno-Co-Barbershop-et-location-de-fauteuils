@@ -28,11 +28,6 @@
   overflow-x: hidden;
 }
 
-/* La navigation principale est commune à toutes les pages. */
-.rdv-prog { position: sticky; top: 68px; }
-.rdv-top { position: sticky; top: 70px; }
-.rdv-sh { margin-top: 0; }
-
 .rdv-hair-group { margin-top: 1.5rem; }
 .rdv-hair-grid {
   display: grid;
@@ -1084,4 +1079,358 @@
 .rdv-page :is(button, [role="button"], [role="checkbox"], input, textarea):focus-visible {
   outline: 2px solid var(--rdv-yellow);
   outline-offset: 3px;
+}
+
+/* ── PARCOURS RDV COMPACT ─────────────────────────────────────────────── */
+.rdv-booking-header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background:
+    radial-gradient(circle at 50% -90%, rgba(201,168,76,.16), transparent 55%),
+    rgba(11,22,41,.97);
+  border-bottom: 1px solid rgba(201,168,76,.2);
+  box-shadow: 0 10px 30px rgba(2,8,18,.24);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.rdv-booking-header .rdv-top {
+  position: static;
+  width: min(100%, 680px);
+  min-height: 50px;
+  height: auto;
+  margin: 0 auto;
+  padding: .42rem 1rem .25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.rdv-top-side {
+  width: 92px;
+  display: flex;
+  align-items: center;
+}
+.rdv-top-side-start { justify-content: flex-start; }
+.rdv-top-side-end { justify-content: flex-end; }
+.rdv-booking-header .rdv-top-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #f7f0e4;
+  font-family: var(--font-playfair, Georgia, serif);
+  font-size: .94rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  line-height: 1.05;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.rdv-top-brand-amp { color: var(--rdv-yellow); }
+.rdv-booking-header .rdv-top-brand small {
+  margin-top: .18rem;
+  color: rgba(240,235,225,.48);
+  font-family: var(--rdv-sans);
+  font-size: .48rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.rdv-booking-header .rdv-back-btn,
+.rdv-booking-header .rdv-quit-btn {
+  min-height: 32px;
+  padding: .3rem .58rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border-radius: 999px;
+  font-family: var(--rdv-sans);
+  font-size: .7rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .18s, border-color .18s, background .18s;
+}
+.rdv-booking-header .rdv-back-btn {
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.8);
+}
+.rdv-booking-header .rdv-quit-btn {
+  color: rgba(255,255,255,.58);
+  border: 1px solid transparent;
+}
+.rdv-booking-header .rdv-back-btn:hover,
+.rdv-booking-header .rdv-quit-btn:hover {
+  color: #fff;
+  border-color: rgba(201,168,76,.4);
+  background: rgba(201,168,76,.07);
+}
+.rdv-booking-header .rdv-si {
+  width: min(100%, 680px);
+  margin: 0 auto;
+  padding: .1rem 1rem .52rem;
+  display: block;
+  background: transparent;
+  border: 0;
+}
+.rdv-si-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .36rem;
+}
+.rdv-si-label {
+  color: rgba(240,235,225,.9);
+  font-size: .69rem;
+  font-weight: 600;
+}
+.rdv-si-count {
+  color: var(--rdv-yellow);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.rdv-si-track { display: flex; gap: .28rem; }
+.rdv-si-segment {
+  height: 3px;
+  flex: 1;
+  border-radius: 999px;
+  background: rgba(255,255,255,.09);
+  transition: background .3s, box-shadow .3s;
+}
+.rdv-si-segment.done { background: rgba(201,168,76,.58); }
+.rdv-si-segment.active {
+  background: #e8c76f;
+  box-shadow: 0 0 9px rgba(201,168,76,.34);
+}
+.rdv-booking-header .rdv-prog {
+  position: static;
+  height: 2px;
+  background: rgba(255,255,255,.04);
+  overflow: hidden;
+}
+.rdv-booking-header .rdv-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b9943d, #efd37e);
+}
+
+/* Contenu resserré : on évite le double espace entre l'étape et la carte. */
+.rdv-main,
+.rdv-main-wide { padding: .6rem .85rem 7.5rem; }
+.rdv-card {
+  margin-top: 0;
+  padding: .85rem 1rem;
+  border-radius: 14px;
+}
+.rdv-card-title { font-size: 1.18rem; line-height: 1.1; }
+.rdv-card-sub {
+  margin-top: .12rem;
+  margin-bottom: .6rem;
+  font-size: .76rem;
+  line-height: 1.38;
+}
+.rdv-sec-lbl { margin: .48rem 0 .32rem; font-size: .58rem; }
+.rdv-grid-2 { gap: .38rem; }
+.rdv-cbtn-svc,
+.rdv-cbtn-deg,
+.rdv-opt-grid-row { min-height: 52px; padding: .5rem .68rem; }
+.rdv-svc-name,
+.rdv-deg-name,
+.rdv-opt-grid-name { font-size: .76rem; line-height: 1.2; }
+.rdv-svc-price,
+.rdv-deg-desc,
+.rdv-opt-grid-price { font-size: .67rem; }
+
+/* Les portraits occupent leur carte sans le grand vide au-dessus des têtes. */
+.rdv-cat-grid { gap: .5rem; }
+.rdv-cat-card { padding: 0 .3rem .72rem; border-radius: 12px; }
+.rdv-cat-img {
+  width: 100%;
+  height: clamp(105px, 28vw, 148px);
+  margin: -.15rem 0 .2rem;
+  object-fit: contain;
+  object-position: center top;
+}
+.rdv-cat-div { margin-bottom: .3rem; }
+.rdv-cat-name { font-size: .88rem; }
+.rdv-cat-desc { margin-top: .12rem; font-size: .63rem; line-height: 1.25; }
+
+/* Étape cheveux : davantage de choix visibles simultanément. */
+.rdv-hair-group { margin-top: .7rem; }
+.rdv-hair-grid { gap: .38rem; }
+.rdv-hair-choice {
+  min-height: 40px;
+  padding: .46rem .48rem;
+  border-radius: 8px;
+  font-size: .7rem;
+  line-height: 1.2;
+}
+.rdv-hair-check { width: 17px; height: 17px; flex-basis: 17px; }
+.rdv-hair-tip,
+.rdv-loyalty { margin-top: .65rem; padding: .65rem .75rem; font-size: .72rem; line-height: 1.45; }
+
+/* Récapitulatif, calendrier et coordonnées plus denses. */
+.rdv-rl { padding: .43rem 0; font-size: .8rem; }
+.rdv-recap-tot { padding: .6rem 0 .2rem; margin-top: .3rem; }
+.rdv-recap-note { margin-top: .6rem; padding: .55rem .7rem; font-size: .69rem; }
+.rdv-cal-nav { margin-bottom: .55rem; }
+.rdv-cal-nav-btn { width: 30px; height: 30px; }
+.rdv-cal-grid { gap: 2px; margin-bottom: .55rem; }
+.rdv-cd { padding: .38rem .05rem; font-size: .75rem; }
+.rdv-cdh { padding: .2rem 0; }
+.rdv-slots-grid { gap: .35rem; }
+.rdv-slot { padding: .5rem .3rem; font-size: .76rem; }
+.rdv-info-box { margin-top: .55rem; padding: .5rem .65rem; }
+.rdv-fg { margin-bottom: .62rem; }
+.rdv-flbl { margin-bottom: .28rem; font-size: .58rem; }
+.rdv-finput { padding: .68rem .75rem; font-size: .84rem; }
+.rdv-ftextarea { min-height: 72px; }
+.rdv-saved-contact {
+  margin-bottom: .65rem;
+  padding: .58rem .68rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  border: 1px solid rgba(201,168,76,.24);
+  border-radius: 9px;
+  background: rgba(201,168,76,.065);
+  color: rgba(240,235,225,.72);
+  font-size: .68rem;
+  line-height: 1.35;
+}
+.rdv-saved-contact button {
+  padding: .3rem .48rem;
+  border: 1px solid rgba(201,168,76,.35);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--rdv-yellow);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Navigation basse flottante, sans grande barre noire. */
+.rdv-sticky {
+  padding: .65rem max(.65rem, env(safe-area-inset-right)) max(.65rem, env(safe-area-inset-bottom)) max(.65rem, env(safe-area-inset-left));
+  background: transparent;
+  pointer-events: none;
+}
+.rdv-sticky::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 145%;
+  background: linear-gradient(to top, rgba(11,22,41,.9), rgba(11,22,41,.58) 52%, transparent);
+  pointer-events: none;
+}
+.rdv-sticky-in {
+  position: relative;
+  padding: .45rem;
+  background: rgba(17,31,53,.94);
+  border: 1px solid rgba(201,168,76,.22);
+  border-radius: 15px;
+  box-shadow: 0 15px 38px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  pointer-events: auto;
+}
+.rdv-price-bar {
+  margin-bottom: .4rem;
+  padding: .25rem .55rem .5rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  border-radius: 0;
+}
+.rdv-nav-btns { gap: .45rem; }
+.rdv-nav-btns-single { justify-content: center; }
+.rdv-nav-btns-single .rdv-btn-next { max-width: 330px; }
+.rdv-btn-back { min-height: 46px; padding: .7rem .85rem; }
+.rdv-btn-next {
+  min-height: 46px;
+  padding: .7rem .9rem;
+  background: linear-gradient(135deg, #e0bc5d 0%, #c9a84c 62%, #b68e33 100%);
+  border: 1px solid rgba(255,238,180,.36);
+  border-radius: 11px;
+  color: #101a2a;
+  font-size: .84rem;
+  letter-spacing: .02em;
+  box-shadow: 0 7px 20px rgba(201,168,76,.18), inset 0 1px 0 rgba(255,255,255,.3);
+  transition: transform .18s, box-shadow .18s, filter .18s, opacity .18s;
+}
+.rdv-btn-next:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 10px 24px rgba(201,168,76,.24);
+}
+.rdv-btn-next:disabled { opacity: .35; box-shadow: none; }
+.rdv-nav-btns-single .rdv-btn-next {
+  padding-right: .48rem;
+  padding-left: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .9rem;
+}
+.rdv-btn-arrow {
+  width: 33px;
+  height: 33px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 33px;
+  border-radius: 8px;
+  background: rgba(11,22,41,.14);
+  font-size: 1rem;
+}
+
+.rdv-wrap :is(button, [role="button"], [role="checkbox"], input, textarea):focus-visible {
+  outline: 2px solid var(--rdv-yellow);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .rdv-hair-grid-5,
+  .rdv-hair-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rdv-hair-grid-state { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 430px) {
+  .rdv-booking-header .rdv-top { padding-inline: .72rem; }
+  .rdv-top-side { width: 74px; }
+  .rdv-booking-header .rdv-top-brand { font-size: .84rem; }
+  .rdv-booking-header .rdv-si { padding-inline: .72rem; }
+  .rdv-main,
+  .rdv-main-wide { padding: .5rem .58rem 7.25rem; }
+  .rdv-card { padding: .75rem .78rem; }
+  .rdv-card-sub { font-size: .72rem; }
+  .rdv-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rdv-opt-grid-name { white-space: normal; line-height: 1.15; }
+  .rdv-cbtn-svc,
+  .rdv-cbtn-deg,
+  .rdv-opt-grid-row { min-height: 50px; padding: .45rem .55rem; }
+  .rdv-cat-img { height: clamp(96px, 27vw, 118px); }
+  .rdv-cat-card { padding-inline: .18rem; }
+  .rdv-cat-name { font-size: .78rem; }
+  .rdv-cat-desc { font-size: .58rem; }
+  .rdv-sticky-in { border-radius: 13px; }
+}
+
+@media (max-width: 360px) {
+  .rdv-booking-header .rdv-back-btn span,
+  .rdv-booking-header .rdv-quit-btn span { display: none; }
+  .rdv-top-side { width: 42px; }
+  .rdv-booking-header .rdv-back-btn,
+  .rdv-booking-header .rdv-quit-btn { width: 32px; justify-content: center; padding: 0; }
+  .rdv-cat-grid { gap: .3rem; }
+  .rdv-hair-grid-5,
+  .rdv-hair-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
